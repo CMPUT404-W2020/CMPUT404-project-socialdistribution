@@ -23,7 +23,68 @@
 		$("#header").load("static/sd/header.html");
 	}
 
+	function github() {
+		var repos = [];
+		var current_date = new Date();
+		var dateOffset = (24 * 60 * 60 * 1000) * 30; // 30 days
+		fetch('https://api.github.com/users/nienna73/repos', {
+			method: 'GET',
+			headers: {
+				'Content-Type': 'application/json',
+			},
+		}).then((response) => {
+			return response.json()
+		}).then((data) => {
+
+			for (var d of data) {
+				// Only get activity from repos that were worked on in the past 30 days
+				var repo_date = new Date(d.pushed_at.split('T')[0]);
+				if (repo_date.getTime() >= current_date.getTime() - dateOffset) {
+					repos.push(d.name);
+				}
+			}
+
+			fetchRepos(repos);
+		});
+
+		console.log(repos);
+
+		
+	}
+
+	function fetchRepos(repos) {
+		var current_date = new Date();
+		var dateOffset = (24 * 60 * 60 * 1000) * 30; // 30 days
+		for (let r of repos) {
+			fetch('https://api.github.com/repos/nienna73/' + r + '/commits', {
+				method: 'GET',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+			}).then((response) => {
+				return response.json()
+			}).then((data) => {
+				posts = [];
+				for (let d of data) {
+					// Only get comments made in the past 30 days
+					var comment_date = new Date(d.commit.author.date.split('T')[0]);
+					if (comment_date.getTime() >= current_date.getTime() - dateOffset) {
+						var post = {};
+						// console.log(d);
+						post['repo'] = r;
+						post['message'] = d.commit.message;
+						post['time'] = d.commit.author.date.split('T')[0];
+						posts.push(post);
+					}
+				}
+				console.log(posts);
+			});
+		}
+
+	}
+
 	function feed() {
+		github();
 		document.getElementById("feed-items").innerHTML = `{% for post in results.feed %}
             <div class="feeditem">
 				<!-- if I am the author, make this div -->
