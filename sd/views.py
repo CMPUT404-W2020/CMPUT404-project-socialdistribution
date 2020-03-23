@@ -103,8 +103,8 @@ def search(request):
 def notifications(request):
     if valid_method(request):
         print_state(request)
-        if authenticated(request):
-            user = get_current_user(request)
+        user = get_current_user(request)
+        if authenticated(request) and user:
             fr_requests = FriendRequest.objects.filter(Q(to_author=user))
             all_requests = []
             for a in fr_requests:
@@ -386,7 +386,6 @@ def edit_post(request, post_id):
             print("CONSOLE: Redirecting from edit_post because no one is logged in.")
             return redirect('login')
 
-        user = get_current_user(request)
         post = Post.objects.get(uuid=post_id)
         if(user.uuid != post.author_id):
             print(
@@ -435,11 +434,11 @@ def delete_post(request, post_id):
 def edit_account(request):
     if valid_method(request):
         print_state(request)
-        if not authenticated(request):
+        user = get_current_user(request)
+        if not authenticated(request) or not user:
             print("CONSOLE: Redirecting from edit_post because no one is logged in.")
             return redirect('login')
 
-        user = get_current_user(request)
         details = Author.objects.get(uuid=user.uuid)
         if request.method == "GET":
             form = EditAccountForm(instance=user)
