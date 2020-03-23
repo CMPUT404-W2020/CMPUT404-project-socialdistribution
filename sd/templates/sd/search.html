@@ -42,7 +42,9 @@
         
         // filter authors for matching results
         var results = [];
-        authors = authors.sort();
+        authors = authors.sort(function(a, b) {
+            return a.toUpperCase().localeCompare(b.toUpperCase());
+        });
         for (let a of authors) {
             if (a.toUpperCase().includes(val.toUpperCase())) {
                 var entry = {};
