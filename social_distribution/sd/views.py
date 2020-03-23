@@ -447,3 +447,7 @@ def image_upload(request):
     return render(request, 'sd/image_upload.html', {
         'form': form
     })
+
+@csrf_exempt
+def github_feed(request):
+    pdb.set_trace()
