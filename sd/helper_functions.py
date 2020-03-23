@@ -47,7 +47,6 @@ def paginated_result(objects, request, keyword, **result):
 def print_state(request):
     user = get_current_user(request)
     if user and authenticated(request):
-        load_github_feed(get_current_user(request))
         print("CONSOLE: Authenticated user: "+user.username)
     else:
         print("CONSOLE: Browsing as non-authenticated user.")
@@ -79,16 +78,15 @@ def load_github_feed(user):
             repo_names = []
             current = datetime.datetime.now()
             for repo in repo_data:
-                d = repo['pushed_at'].split('T')[0].split('-')
-                date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
-                if(current-date).days < 30:
-                    repo_names.append(repo['name'])
+                if 'pushed_at' in repo_data:
+                    d = repo_data['pushed_at'].split('T')[0].split('-')
+                    date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
+                    if(current-date).days < 30:
+                        repo_names.append(repo['name'])
             for r in repo_names:
-                # import pdb; pdb.set_trace()
                 commit_data = json.loads(requests.get('https://api.github.com/repos/'+user.github+'/' + r + '/commits').content.decode())
                 posts = []
                 for com in commit_data:
-                    # import pdb; pdb.set_trace()
                     d = com['commit']['author']['date'].split('T')[0].split('-')
                     date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
                     if(current-date).days < 30:
@@ -99,7 +97,6 @@ def load_github_feed(user):
                                 print("CONSOLE: Created a Github post: "+com['commit']['message'])
                                 post.save()
                             except Exception as e:
-                                import pdb; pdb.set_trace()
                                 print("CONSOLE: Error creating Github post", e)
                         else:
                             pass
