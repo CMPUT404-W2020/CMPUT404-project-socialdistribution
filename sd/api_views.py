@@ -95,6 +95,11 @@ class AuthorUpdateAPIView(APIView):
     serializer = AuthorSerializer
 
     def put(self, request, pk, format=None):
+        # print(request.user.uuid)
+        if request.user.uuid != pk:
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+            )
         author = Author.objects.get(pk=pk)
         serializer = AuthorSerializer(
             instance=author, data=request.data, partial=True)
@@ -193,7 +198,7 @@ class GetAllAuthorPostAPIView(APIView):
     # Returns All Author's Posts by sending UUID of Author
     def get(self, request, pk, format=None):
         posts = Post.objects.filter(author=pk)
-        posts = posts.filter(visibility='pub')
+        posts = posts.filter(visibility='1')
         serializer = GetPostSerializer(posts, many=True)
         return Response(serializer.data, status=status.HTTP_200_OK)
 
@@ -221,16 +226,19 @@ class GetAllPublicPostsAPIView(APIView):
 
 class GetAllVisiblePostsAPIView(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
     serializer_class = GetPostSerializer
 
     def get(self, request, format=None):
-        userUUID = request.user
-        if userUUID == "AnonymousUser":
+        user = request.user
+        print(user)
+        if str(user) == "AnonymousUser":
+            print("Anonymous user")
             posts = Post.objects.filter(visibility='1')
             serializer = GetPostSerializer(posts, many=True)
             return Response(serializer.data, status=status.HTTP_200_OK)
         else:
+            userUUID = user.uuid
+            print(userUUID)
             # -------------
             # public posts
             # -------------
@@ -288,14 +296,24 @@ class GetAllVisiblePostsAPIView(APIView):
             author = Author.objects.get(uuid=userUUID)
 
             serverAuthors = Author.objects.filter(host=author.host)
+            print(serverAuthors)
 
-            serverPosts = Post.objects
+            serverPostUUIDs = []
             for author in serverAuthors:
-                serverPosts.union(Post.objects.filter(
-                    author=author.uuid).filter(visibility='5'))
+                temp = Post.objects.filter(author=author.uuid, visibility='5')
+                # print('temp ok')
+                for post in temp:
+                    print(post.uuid)
+                    print(Post.objects.get(uuid=post.uuid))
+                    filteredPosts = filteredPosts.union(
+                        Post.objects.filter(uuid=post.uuid))
+                    # print('post ok')
 
-            filteredPosts.union(serverPosts)
+            # filteredPosts.union(serverPosts)
 
+            # print("serverposts done")
+
+            # print(filteredPosts)
             serializer = GetPostSerializer(filteredPosts, many=True)
             return Response(
                 serializer.data, status=status.HTTP_200_OK
@@ -304,8 +322,22 @@ class GetAllVisiblePostsAPIView(APIView):
 
 class DeletePostAPIView(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-    permission_classes = [IsAuthenticated]
-    serializer_class = DeletePostSerializer
+    # permission_classes = [IsAuthenticated]
+    # serializer_class = DeletePostSerializer
+
+    def delete(self, request, pk):
+        # print(request)
+        try:
+            post = Post.objects.get(uuid=pk)
+        except Exception:
+            print("Post Not Found!")
+            return Response(
+                status=status.HTTP_404_NOT_FOUND
+            )
+        post.delete()
+        return Response(
+            status=status.HTTP_200_OK
+        )
 
     # def get(self, request, format=None):
     #     token = request.META["HTTP_AUTHORIZATION"]
@@ -327,13 +359,14 @@ class DeletePostAPIView(APIView):
 
 class CreateCommentAPIView(CreateAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
-
+    permission_classes = [IsAuthenticated]
     serializer_class = CreateCommentSerializer
 
     def create(self, request, pk):
         print(pk)
         data = request.data.copy()
         data['post'] = pk
+        data['author'] = request.user.uuid
         print(data)
         serializer = self.get_serializer(data=data)
         # print(serializer)
