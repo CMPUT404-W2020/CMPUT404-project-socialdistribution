@@ -14,11 +14,13 @@ function showDropdown(that) {
 }
 
 function confirmDelete(post) {
+	const origin = window.location.origin;
+	console.log(origin);
 	console.log(post);
 	var yes = confirm("Are you sure you want to delete this post?\nThis action cannot be undone.");
 
 	if (yes) {
-		fetch('http://127.0.0.1:8000/delete/' + post, {
+		fetch(origin + '/delete/' + post, {
 				method: 'DELETE',
 				headers: {
 					'Content-Type': 'application/json',
@@ -105,12 +107,13 @@ function createStatusId(name) {
 
 function sendRequest(author) {
 	console.log("Author:", author);
+	const origin = window.location.origin;
 
 	const data = {
 		"target_author": author
 	};
 
-	fetch('http://127.0.0.1:8000/friendrequest', {
+	fetch(origin + '/friendrequest', {
 		method: 'POST',
 		headers: {
 			'Content-Type': 'application/json',
@@ -131,7 +134,8 @@ function removeFriend(uuid, author) {
 	var yes = confirm("Would you like to remove this friend?\nThis author can still follow your posts even if you remove them as a friend.");
 
 	if (yes) {
-		fetch('http://127.0.0.1:8000/remove_friend/' + uuid, {
+		const origin = window.location.origin;
+		fetch(origin + '/remove_friend/' + uuid, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
@@ -151,7 +155,8 @@ function unfollow(uuid, author) {
 	var yes = confirm("Would you like to unfollow this author?");
 
 	if (yes) {
-		fetch('http://127.0.0.1:8000/remove_follow/' + uuid, {
+		const origin = window.location.origin;
+		fetch(origin + '/remove_follow/' + uuid, {
 			method: 'POST',
 			headers: {
 				'Content-Type': 'application/json',
