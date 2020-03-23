@@ -46,10 +46,8 @@
 
 			fetchRepos(repos);
 		});
-
-		console.log(repos);
-
 		
+		console.log(repos);
 	}
 
 	function fetchRepos(repos) {
@@ -77,6 +75,13 @@
 						posts.push(post);
 					}
 				}
+				fetch('http://127.0.0.1:8000/github_feed',{
+					method: 'POST',
+					headers: {
+						'Content-Type': 'application/json',
+					},
+					body: JSON.stringify(posts),
+				});
 				console.log(posts);
 			});
 		}
