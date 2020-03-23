@@ -17,8 +17,9 @@ from django.core.files.storage import FileSystemStorage
 def explore(request):
     if valid_method(request):
         print_state(request)
-        posts = Post.objects.filter(Q(visibility='1') & (
-            Q(unlisted='0') | Q(unlisted=False)))
+        posts = Post.objects.filter(Q(visibility=1) & (
+            Q(unlisted=0) | Q(unlisted=False)))
+        print(posts)
         results = paginated_result(posts, request, "feed", query="feed")
         is_authenticated = authenticated(request)
         user = get_current_user(request) if is_authenticated else None
