@@ -101,5 +101,4 @@ urlpatterns = [
     # """Optional Pages"""
     path('search', search, name='search'),
     path('account', account, name='account'),
-    path('github_feed', github_feed, name='github_feed'),
 ]
