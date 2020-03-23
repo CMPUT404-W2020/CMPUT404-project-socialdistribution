@@ -28,7 +28,7 @@ Base Contributors (pre 2020):
 
 Project base requirements, setup and licensing defined by the Contributors listed above
 
-Django is LICENSES'D under the 3-clause BSD License https://github.com/django/django/blob/master/LICENSE
+Django is LICENSED under the 3-clause BSD License https://github.com/django/django/blob/master/LICENSE
 
 Django (Version 3.0.3) [Computer Software]. (2013). Retrieved from https://djangoproject.com.
 
@@ -52,7 +52,7 @@ Contributions:
 
 # Squawk Documentation
 
-Squawk is a distributed social network that gives control back to the user. With Squawk, you get all the features you expect from a modern social network without sacrificing privacy or being flooded with promotional content. For every post you create, you can choose exactly who can view it. When viewing content, you can access the Explore page to see all public posts connected to your node, or head to Your Feed to see only the currated content that you choose to follow.
+Squawk is a distributed social network that gives control back to the user. With Squawk, you get all the features you expect from a modern social network without sacrificing privacy or being flooded with promotional content. For every post you create, you can choose exactly who can view it. When viewing content, you can access the Explore page to see all public posts connected to your node, or head to Your Feed to see only the curated content that you choose to follow.
 
 ## User Access
 
@@ -97,7 +97,7 @@ The format of requests are found in the example_requests folder (https://github.
 
 **TODO**: update this
 
-The system only allows GET and POST requests; all other requests will be responded to with an HTTP 405 response
+The system allows GET, PUT, POST, and DELETE requests; all other requests will be responded to with an HTTP 405 response
 (will be updated to match social_distribution/sd/urls.py found on the api branch)
 
     auth/register
