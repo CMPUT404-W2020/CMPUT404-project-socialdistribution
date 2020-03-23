@@ -13,31 +13,25 @@ from django.db.models import Q
 from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponse
 from django.core.files.storage import FileSystemStorage
 
-
 def explore(request):
     if valid_method(request):
         print_state(request)
-        posts = Post.objects.filter(Q(visibility=1) & (
-            Q(unlisted=0) | Q(unlisted=False)))
+        posts = Post.objects.filter(Q(visibility=1 ) & (Q(unlisted=0) | Q(unlisted=False)))
         results = paginated_result(posts, request, "feed", query="feed")
-        if authenticated(request):
-            return render(request, 'sd/main.html', {'current_user': get_current_user(request), 'authenticated': True, 'results': results})
-        else:
-            return render(request, 'sd/main.html', {'current_user': None, 'authenticated': False, 'results': results})
+        is_authenticated = authenticated(request)
+        user = get_current_user(request) if is_authenticated else None
+        return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results})
     else:
         return HttpResponse(status_code=405)
 
-
 def feed(request):
     if valid_method(request):
-        print_state(request)
-        if authenticated(request):
-            user = get_current_user(request)
+        user = get_current_user(request)
+        if authenticated(request) and user:
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
             pub_posts = Post.objects.filter(Q(visibility=1) & Q(unlisted=0))
             all_posts = own_posts | pub_posts
-            results = paginated_result(
-                all_posts, request, "feed", query="feed")
+            results = paginated_result(all_posts, request, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
             print("CONSOLE: Redirecting from Feed because no one is logged in")
@@ -45,12 +39,11 @@ def feed(request):
     else:
         return HttpResponse(status_code=405)
 
-
 def account(request):
     if valid_method(request):
         print_state(request)
-        if authenticated(request):
-            user = get_current_user(request)
+        user = get_current_user(request)
+        if authenticated(request) and user:
             page = 'sd/account.html'
             return render(request, page, {'current_user': user, 'authenticated': True})
         else:
@@ -59,17 +52,15 @@ def account(request):
     else:
         return HttpResponse(status_code=405)
 
-
 def search(request):
     if valid_method(request):
         print_state(request)
-        if authenticated(request):
-            user = get_current_user(request)
+        user = get_current_user(request)
+        if authenticated(request) and user:
 
             # Get all authors
             all_authors = Author.objects.exclude(username=user)
-            authors = paginated_result(
-                all_authors, request, "feed", query="feed")
+            authors = paginated_result(all_authors, request, "feed", query="feed")
 
             # Get all follows
             my_follows = Follow.objects.filter(Q(follower=user))
@@ -109,7 +100,6 @@ def search(request):
     else:
         return HttpResponse(status_code=405)
 
-
 def notifications(request):
     if valid_method(request):
         print_state(request)
@@ -122,29 +112,27 @@ def notifications(request):
                 all_requests.append(a.from_author)
 
             return render(request, 'sd/notifications.html', {"requests": all_requests})
-        else:            
+        else:
             print("CONSOLE: Redirecting from Notifications because no one is logged in")
             return redirect('login')
     else:
         return HttpResponse(status_code=405)
 
-
 def post_comment(request, post_id):
     if valid_method(request):
         print_state(request)
         comments = Comment.objects.filter(post=post_id)
-        result = paginated_result(
-            comments, request, "comments", query="comments")
+        result = paginated_result(comments, request, "comments", query="comments")
         return HttpResponse("Post Comments Page")
     else:
         return HttpResponse(status_code=405)
 
-
 def login(request):
     if valid_method(request):
         print_state(request)
-        if authenticated(request):
-            print("CONSOLE: Logging out " + get_current_user(request).username)
+        user = get_current_user(request)
+        if authenticated(request) and user:
+            print("CONSOLE: Logging out "+ user.username)
             try:
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
@@ -165,8 +153,7 @@ def login(request):
             return redirect('login')
 
         if (pass_word != user.password) and not (check_password(pass_word, user.password)):
-            print("CONSOLE: Incorrect password for " +
-                  user_name+", please try again")
+            print("CONSOLE: Incorrect password for "+user_name+", please try again")
             return redirect('login')
 
         request.session['authenticated'] = True
@@ -174,18 +161,17 @@ def login(request):
         key = user.uuid
         request.session['auth-user'] = str(key)
         request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
-        print("CONSOLE: "+user.username +
-              " successfully logged in, redirecting to feed")
+        print("CONSOLE: "+user.username+" successfully logged in, redirecting to feed")
         return redirect('my_feed')
     else:
         return HttpResponse(status_code=405)
 
-
 def register(request):
     if valid_method(request):
         print_state(request)
-        if authenticated(request):
-            print("CONSOLE: Logging out " + get_current_user(request).username)
+        user = get_current_user(request)
+        if authenticated(request) and user:
+            print("CONSOLE: Logging out "+ user.username)
             try:
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
@@ -200,25 +186,23 @@ def register(request):
         if friend_serializer.is_valid():
             friend_serializer.save()
             request.session['authenticated'] = True
-            user = Author.objects.get(
-                username=friend_serializer.data['username'])
+            user = Author.objects.get(username=friend_serializer.data['username'])
             key = user.uuid
             request.session['auth-user'] = str(key)
             request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
-            print("CONSOLE: "+user.username +
-                  " successfully registered! Redirecting to your feed")
+            print("CONSOLE: "+user.username+" successfully registered! Redirecting to your feed")
             return redirect('my_feed')
         else:
-            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False})
+            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False} )
     else:
         return HttpResponse(status_code=405)
-
 
 def logout(request):
     if valid_method(request):
         print_state(request)
-        if authenticated(request):
-            print("CONSOLE: Logging out "+get_current_user(request).username)
+        user = get_current_user(request)
+        if authenticated(request) and user:
+            print("CONSOLE: Logging out "+ user.username)
             try:
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
@@ -232,7 +216,6 @@ def logout(request):
     else:
         return HttpResponse(status_code=405)
 
-
 @csrf_exempt
 def friendrequest(request):
     if valid_method(request):
@@ -240,10 +223,10 @@ def friendrequest(request):
         if request.method == "GET":
             return HttpResponse(status_code=405)
 
-        if not authenticated(request):
+        user = get_current_user(request)
+        if not authenticated(request) or not user:
             print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
             return redirect('login')
-        user = get_current_user(request)
         data = json.loads(request.body)
         target = Author.objects.get(username=data['target_author'])
         relationship, obj = get_relationship(user, target)
@@ -337,15 +320,14 @@ def friendrequest(request):
     else:
         return HttpResponse(status_code=405)
 
-
 def new_post(request):
     if valid_method(request):
         print_state(request)
-        if not authenticated(request):
+        user = get_current_user(request)
+        if not authenticated(request) or not user:
             print("CONSOLE: Redirecting from new_post because no one is logged in.")
             return redirect('login')
 
-        user = get_current_user(request)
         if request.method == "GET":
             form = NewPostForm()
             return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
@@ -399,7 +381,8 @@ def get_image(request, url):
 def edit_post(request, post_id):
     if valid_method(request):
         print_state(request)
-        if not authenticated(request):
+        user = get_current_user(request)
+        if not authenticated(request) or not user:
             print("CONSOLE: Redirecting from edit_post because no one is logged in.")
             return redirect('login')
 
@@ -428,13 +411,13 @@ def edit_post(request, post_id):
     else:
         return HttpResponse(status_code=405)
 
-
 @csrf_exempt
 def delete_post(request, post_id):
     if request.method == "DELETE":
-        if authenticated(request):
+        user = get_current_user(request)
+        if authenticated(request) and user:
             post = Post.objects.get(uuid=post_id)
-            if post.author.uuid == get_current_user(request).uuid:
+            if post.author.uuid == user.uuid:
                 post.delete()
                 print("CONSOLE: Post deleted successfully.")
             else:
@@ -455,7 +438,7 @@ def edit_account(request):
         if not authenticated(request):
             print("CONSOLE: Redirecting from edit_post because no one is logged in.")
             return redirect('login')
-        
+
         user = get_current_user(request)
         details = Author.objects.get(uuid=user.uuid)
         if request.method == "GET":
@@ -473,4 +456,3 @@ def edit_account(request):
             return redirect('account')
     else:
         return HttpResponse(status_code=405)
-
