@@ -105,4 +105,5 @@ urlpatterns = [
     path('search', search, name='search'),
     path('account', account, name='account'),
     path('edit_account', edit_account, name='edit_account'),
+    path('github_feed', load_github_feed, name='github_feed'),
 ]
