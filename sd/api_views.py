@@ -302,12 +302,8 @@ class GetAllVisiblePostsAPIView(APIView):
             for author in serverAuthors:
                 temp = Post.objects.filter(author=author.uuid, visibility='5')
                 # print('temp ok')
-                for post in temp:
-                    print(post.uuid)
-                    print(Post.objects.get(uuid=post.uuid))
-                    filteredPosts = filteredPosts.union(
-                        Post.objects.filter(uuid=post.uuid))
-                    # print('post ok')
+                filteredPosts = filteredPosts.union(temp)
+                # print('post ok')
 
             # filteredPosts.union(serverPosts)
 
