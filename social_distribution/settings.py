@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import django_heroku
+import socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -152,6 +153,11 @@ AUTH_USER_MODEL = "sd.Author"
 LOGIN_REDIRECT_URL = 'explore'
 
 django_heroku.settings(locals())
+
+try:
+    HOSTNAME = socket.gethostname()
+except:
+    HOSTNAME = 'localhost'
 
 
 # Set for photo upload
