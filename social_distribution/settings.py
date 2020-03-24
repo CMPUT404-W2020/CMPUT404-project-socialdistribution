@@ -155,7 +155,7 @@ LOGIN_REDIRECT_URL = 'explore'
 django_heroku.settings(locals())
 
 try:
-    HOSTNAME = socket.gethostname()
+    HOSTNAME = socket.gethostbyname(socket.gethostname())
 except:
     HOSTNAME = 'localhost'
 
