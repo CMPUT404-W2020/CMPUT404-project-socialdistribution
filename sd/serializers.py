@@ -25,6 +25,13 @@ class CreateAuthorSerializer(serializers.ModelSerializer):
     # def update(self, instance, validated_data):
 
 
+class AuthorSmallSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = get_user_model()
+        fields = ['displayName', 'host', 'uuid', 'github']
+
+
 class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:
