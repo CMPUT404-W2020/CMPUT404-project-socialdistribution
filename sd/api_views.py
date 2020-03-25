@@ -519,7 +519,7 @@ class CheckFriendAPIView(APIView):
         return Response(
             {"query": "friends",
              "authors": [author1dict['id'], author2dict['id']],
-             "friends": len(list(friends.all()))
+             "friends": len(list(friends.all())) != 0
              }
         )
 
