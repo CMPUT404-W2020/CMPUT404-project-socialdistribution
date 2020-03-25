@@ -49,14 +49,28 @@ class CreateAuthorAPIView(CreateAPIView):
 
 
 class GetAllAuthorsAPIView(APIView):
-    serializer_class = AuthorSerializer
+    # serializer_class = AuthorSmallSerializer
 
     def get(self, request):
-        authors = Author.objects.all()
-        serializer = AuthorSerializer(authors, many=True)
-        return Response(
-            serializer.data, status=status.HTTP_200_OK
-        )
+        localNode = Node.objects.get(hostname=settings.HOSTNAME)
+        authors = Author.objects.filter(host=localNode)
+        # serializer = AuthorSmallSerializer(authors, many=True)
+
+        authorList = []
+        for author in authors:
+            temp = {}
+            temp['id'] = str(author.host.hostname) + \
+                'author/' + str(author.uuid)
+            temp['host'] = author.host.hostname
+            temp['displayName'] = author.displayName
+            temp['github'] = author.github
+            temp['url'] = str(author.host.hostname) + \
+                'author/' + str(author.uuid)
+            authorList.append(temp)
+
+        return Response(authorList,
+                        status=status.HTTP_200_OK
+                        )
 
 
 class AuthorLoginAPIView(CreateAPIView):

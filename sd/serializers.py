@@ -26,10 +26,13 @@ class CreateAuthorSerializer(serializers.ModelSerializer):
 
 
 class AuthorSmallSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(source=("host.name"+"uuid"))
+    url = serializers.CharField(source=("host.name"+"uuid"))
 
     class Meta:
         model = get_user_model()
-        fields = ['displayName', 'host', 'uuid', 'github']
+
+        fields = ['displayName', 'host', 'id', 'github', 'url']
 
 
 class AuthorSerializer(serializers.ModelSerializer):
