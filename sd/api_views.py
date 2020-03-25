@@ -174,7 +174,7 @@ class GetAuthorAPIView(APIView):
         friendObjects = Friend.objects.filter(friend=author)
 
         for friendObject in friendObjects:
-            tempAuthor = friendObject.friend
+            tempAuthor = friendObject.author
             temp = serializeAuthor(tempAuthor)
             friendList.append(temp)
 
@@ -251,28 +251,14 @@ class GetAllAuthorFriendsAPIView(APIView):
 
         for friendObject in friendObjects:
             tempAuthor = friendObject.friend
-            temp = {}
-            temp['id'] = str(tempAuthor.host.hostname) + \
-                'author/' + str(tempAuthor.uuid)
-            temp['host'] = tempAuthor.host.hostname
-            temp['displayName'] = tempAuthor.displayName
-            temp['github'] = tempAuthor.github
-            temp['url'] = str(tempAuthor.host.hostname) + \
-                'author/' + str(tempAuthor.uuid)
+            temp = serializeAuthor(tempAuthor)
             friendList.append(temp)
 
         friendObjects = Friend.objects.filter(friend=pk)
 
         for friendObject in friendObjects:
             tempAuthor = friendObject.author
-            temp = {}
-            temp['id'] = str(tempAuthor.host.hostname) + \
-                'author/' + str(tempAuthor.uuid)
-            temp['host'] = tempAuthor.host.hostname
-            temp['displayName'] = tempAuthor.displayName
-            temp['github'] = tempAuthor.github
-            temp['url'] = str(tempAuthor.host.hostname) + \
-                'author/' + str(tempAuthor.uuid)
+            temp = serializeAuthor(tempAuthor)
             friendList.append(temp)
 
         return Response(
@@ -516,6 +502,25 @@ class CreateFriendAPIView(CreateAPIView):
             {**serializer.data},
             status=status.HTTP_201_CREATED,
             headers=headers
+        )
+
+
+class CheckFriendAPIView(APIView):
+
+    def get(self, request, pk1, pk2):
+        # checking for friendship
+        author1 = Author.objects.get(uuid=pk1)
+        author1dict = serializeAuthor(author1)
+        author2 = Author.objects.get(uuid=pk2)
+        author2dict = serializeAuthor(author2)
+        friends = Friend.objects.filter(author=author1, friend=author2).union(
+            Friend.objects.filter(author=author2, friend=author1))
+
+        return Response(
+            {"query": "friends",
+             "authors": [author1dict['id'], author2dict['id']],
+             "friends": len(list(friends.all()))
+             }
         )
 
 

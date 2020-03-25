@@ -17,35 +17,6 @@ import requests
 
 
 class foreignData():
-    # def foreignDB(self):
-    #     for node in Node.objects.exclude(hostname=settings.HOSTNAME):
-    #         # populate authors
-    #         response = requests.get(node.hostname + 'author')
-    #             response = response.json()
-    #             print(json.dumps(response, indent=4))
-    #             for item in response:
-    #                 print(item)
-    #                 node = Node.objects.get(hostname=item['host'])
-    #                 author = Author(username=item['displayName'], password='1234567890',
-    #                                 github=item['github'], host=node)
-    #                 author.save()
-
-    def authors(self):
-        for node in Node.objects.all():
-            if node.hostname != settings.HOSTNAME:
-                # return all authors
-                response = requests.get(node.hostname + 'author')
-                response = response.json()
-                print(json.dumps(response, indent=4))
-
-                authorList = []
-                for item in response:
-                    authorList.append(item)
-
-                authors = {"authors": authorList}
-                print(authors)
-
-                return authors
 
     def authorObjects(self):
         for node in Node.objects.all():
@@ -69,7 +40,6 @@ class foreignData():
 
 def explore(request):
     if valid_method(request):
-        foreignData().authors()
         print_state(request)
         posts = Post.objects.filter(Q(visibility=1) & (
             Q(unlisted=0) | Q(unlisted=False)))

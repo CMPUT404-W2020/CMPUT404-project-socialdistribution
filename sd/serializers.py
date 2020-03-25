@@ -25,16 +25,6 @@ class CreateAuthorSerializer(serializers.ModelSerializer):
     # def update(self, instance, validated_data):
 
 
-class AuthorSmallSerializer(serializers.ModelSerializer):
-    id = serializers.CharField(source=("host.name"+"uuid"))
-    url = serializers.CharField(source=("host.name"+"uuid"))
-
-    class Meta:
-        model = get_user_model()
-
-        fields = ['displayName', 'host', 'id', 'github', 'url']
-
-
 class AuthorSerializer(serializers.ModelSerializer):
 
     class Meta:

@@ -69,3 +69,15 @@
   }
 ]
 
+
+/author/<uuid:pk1>/friends/<uuid:pk2>
+- GET
+- returns bool to indicate whether or not two users are friends
+{
+  "query": "friends",
+  "authors": [
+    "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+    "192.168.0.143author/ac29def6-dde8-44f7-af24-781a36fb891f"
+  ],
+  "friends": 1
+}

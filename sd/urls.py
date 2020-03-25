@@ -72,6 +72,10 @@ urlpatterns = [
     # Create friend (pk of friend request)
     path('friend/<uuid:pk>', CreateFriendAPIView.as_view(), name='create_friend'),
 
+    # check if friends
+    path('author/<uuid:pk1>/friends/<uuid:pk2>',
+         CheckFriendAPIView.as_view(), name='check_friend'),
+
     # Delete friend (pk of friend)
     path('friend/<uuid:pk>/delete',
          DeleteFriendAPIView.as_view(), name='delete_friend'),

@@ -25,25 +25,6 @@ def get_current_user(request):
         return None
 
 
-def new_paginated_result(objects, request, keyword, **result):
-    page_num = int(request.GET.get('page', 0))
-    size = int(request.GET.get('size', 10))
-    first_result = size*page_num
-    count = len(objects)
-    if count <= first_result:
-        first_result = 0
-        page_num = 0
-    last_result = first_result + size
-
-    result["count"] = count
-    result["size"] = size
-    result["previous"] = page_num - 1 if page_num >= 1 else None
-    result["next"] = page_num + 1 if len(objects) >= last_result else None
-    result[keyword] = list(objects[first_result:last_result])
-    # print(result)
-    return result
-
-
 def paginated_result(objects, request, keyword, **result):
     page_num = int(request.GET.get('page', 0))
     size = int(request.GET.get('size', 10))
