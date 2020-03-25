@@ -1,0 +1,67 @@
+/author/
+- GET
+- Returns all users
+- Example,
+[
+  {
+    "id": "192.168.0.143author/ac29def6-dde8-44f7-af24-781a36fb891f",
+    "host": "192.168.0.143",
+    "displayName": "admin",
+    "github": "",
+    "url": "192.168.0.143author/ac29def6-dde8-44f7-af24-781a36fb891f"
+  },
+  {
+    "id": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+    "host": "192.168.0.143",
+    "displayName": "1211pmUser",
+    "github": "",
+    "url": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174"
+  },
+  {
+    "id": "192.168.0.143author/44df6b5a-7f11-4f87-8a35-16daa2a7eab4",
+    "host": "192.168.0.143",
+    "displayName": "1258pmUser",
+    "github": "",
+    "url": "192.168.0.143author/44df6b5a-7f11-4f87-8a35-16daa2a7eab4"
+  }
+]
+
+/author/<uuid>
+- GET
+- Returns user details
+- Example:
+{
+  "id": "192.168.0.143author/ac29def6-dde8-44f7-af24-781a36fb891f",
+  "host": "192.168.0.143",
+  "displayName": "admin",
+  "github": "",
+  "url": "192.168.0.143author/ac29def6-dde8-44f7-af24-781a36fb891f",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": "",
+  "friends": [
+    {
+      "id": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+      "host": "192.168.0.143",
+      "displayName": "1211pmUser",
+      "github": "",
+      "url": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174"
+    }
+  ]
+}
+
+/author/<uuid>/friends
+- GET
+- Returns all friends of user
+- Example:
+[
+  {
+    "id": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+    "host": "192.168.0.143",
+    "displayName": "1211pmUser",
+    "github": "",
+    "url": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174"
+  }
+]
+

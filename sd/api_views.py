@@ -265,10 +265,45 @@ class GetAllAuthorFriendsAPIView(APIView):
 
     # Returns All Author's friends
     def get(self, request, pk, format=None):
-        friends = Friend.objects.filter(author=pk)
-        serializer = FriendSerializer(friends, many=True)
-        response = {"authors": [x['friend'] for x in serializer.data]}
-        return Response(response, status=status.HTTP_200_OK)
+        # friends = Friend.objects.filter(author=pk)
+        # serializer = FriendSerializer(friends, many=True)
+        # response = {"authors": [x['friend'] for x in serializer.data]}
+        # return Response(response, status=status.HTTP_200_OK)
+
+        friendList = []
+
+        friendObjects = Friend.objects.filter(author=pk)
+
+        for friendObject in friendObjects:
+            tempAuthor = friendObject.friend
+            temp = {}
+            temp['id'] = str(tempAuthor.host.hostname) + \
+                'author/' + str(tempAuthor.uuid)
+            temp['host'] = tempAuthor.host.hostname
+            temp['displayName'] = tempAuthor.displayName
+            temp['github'] = tempAuthor.github
+            temp['url'] = str(tempAuthor.host.hostname) + \
+                'author/' + str(tempAuthor.uuid)
+            friendList.append(temp)
+
+        friendObjects = Friend.objects.filter(friend=pk)
+
+        for friendObject in friendObjects:
+            tempAuthor = friendObject.author
+            temp = {}
+            temp['id'] = str(tempAuthor.host.hostname) + \
+                'author/' + str(tempAuthor.uuid)
+            temp['host'] = tempAuthor.host.hostname
+            temp['displayName'] = tempAuthor.displayName
+            temp['github'] = tempAuthor.github
+            temp['url'] = str(tempAuthor.host.hostname) + \
+                'author/' + str(tempAuthor.uuid)
+            friendList.append(temp)
+
+        return Response(
+            friendList,
+            status=status.HTTP_200_OK,
+        )
 
 
 class GetAllPublicPostsAPIView(APIView):
