@@ -12,6 +12,7 @@ https://docs.djangoproject.com/en/2.2/ref/settings/
 
 import os
 import django_heroku
+import socket
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -153,9 +154,15 @@ LOGIN_REDIRECT_URL = 'explore'
 
 django_heroku.settings(locals())
 
+try:
+    HOSTNAME = socket.gethostbyname(socket.gethostname())
+except:
+    HOSTNAME = 'localhost'
+
 
 # Set for photo upload
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
-CORS_ORIGIN_WHITELIST = 'https://localhost:3000',
+# Roy's group, etc.
+CORS_ORIGIN_WHITELIST = 'https://cmput404-socialdistribution.herokuapp.com',

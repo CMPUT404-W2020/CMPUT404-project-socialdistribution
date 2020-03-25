@@ -12,6 +12,30 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponse
 from django.core.files.storage import FileSystemStorage
+import social_distribution.settings
+import requests
+
+
+class foreignData():
+
+    def authorObjects(self):
+        for node in Node.objects.all():
+            if node.hostname != settings.HOSTNAME:
+                # delete existing cache
+                for author in Author.objects.filter(host=node):
+                    author.delete()
+
+                # return all authors
+                response = requests.get(node.hostname + 'author')
+                response = response.json()
+                print(json.dumps(response, indent=4))
+
+                for item in response:
+                    print(item)
+                    node = Node.objects.get(hostname=item['host'])
+                    author = Author(
+                        username=item['displayName'], password='1234567890', github=item['github'], host=node)
+                    author.save()
 
 
 def explore(request):
@@ -19,7 +43,6 @@ def explore(request):
         print_state(request)
         posts = Post.objects.filter(Q(visibility=1) & (
             Q(unlisted=0) | Q(unlisted=False)))
-        print(posts)
         results = paginated_result(posts, request, "feed", query="feed")
         is_authenticated = authenticated(request)
         user = get_current_user(request) if is_authenticated else None
@@ -65,8 +88,12 @@ def search(request):
         user = get_current_user(request)
         if authenticated(request) and user:
 
+            foreignData().authorObjects()
+
             # Get all authors
             all_authors = Author.objects.exclude(username=user)
+            print("all_authors")
+            print(all_authors)
             authors = paginated_result(
                 all_authors, request, "feed", query="feed")
 
@@ -101,7 +128,7 @@ def search(request):
                     entry["name"] = f.friend.username
                 ret_friends.append(entry)
 
-            return render(request, 'sd/search.html', {'authors': authors, 'current_user': user, 'follows': ret_follows, 'friends': ret_friends})
+            return render(request, 'sd/search.html', {"authors": authors, "current_user": user, "follows": ret_follows, "friends": ret_friends})
         else:
             print("CONSOLE: Redirecting from Search because no one is logged in")
             return redirect('login')

@@ -25,6 +25,22 @@ import uuid
 from uuid import uuid4
 
 
+def serializeAuthor(author):
+    authorDict = {}
+    authorDict['id'] = str(author.host.hostname) + \
+        'author/' + str(author.uuid)
+    authorDict['host'] = author.host.hostname
+    authorDict['displayName'] = author.displayName
+    authorDict['github'] = author.github
+    authorDict['url'] = str(author.host.hostname) + \
+        'author/' + str(author.uuid)
+    authorDict['bio'] = author.bio
+    authorDict['firstName'] = author.first_name
+    authorDict['lastName'] = author.last_name
+    authorDict['email'] = author.email
+    return authorDict
+
+
 class CreateAuthorAPIView(CreateAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [AllowAny]
@@ -49,14 +65,21 @@ class CreateAuthorAPIView(CreateAPIView):
 
 
 class GetAllAuthorsAPIView(APIView):
-    serializer_class = AuthorSerializer
+    # serializer_class = AuthorSmallSerializer
 
     def get(self, request):
-        authors = Author.objects.all()
-        serializer = AuthorSerializer(authors, many=True)
-        return Response(
-            serializer.data, status=status.HTTP_200_OK
-        )
+        localNode = Node.objects.get(hostname=settings.HOSTNAME)
+        authors = Author.objects.filter(host=localNode)
+        # serializer = AuthorSmallSerializer(authors, many=True)
+
+        authorList = []
+        for author in authors:
+            temp = serializeAuthor(author)
+            authorList.append(temp)
+
+        return Response(authorList,
+                        status=status.HTTP_200_OK
+                        )
 
 
 class AuthorLoginAPIView(CreateAPIView):
@@ -137,11 +160,28 @@ class GetAuthorAPIView(APIView):
 
     def get(self, request, pk, format=None):
         author = Author.objects.get(uuid=pk)
-        serializer = AuthorSerializer(author)
-        print(serializer.data)
+        authorDict = serializeAuthor(author)
+
+        friendList = []
+
+        friendObjects = Friend.objects.filter(author=author)
+
+        for friendObject in friendObjects:
+            tempAuthor = friendObject.friend
+            temp = serializeAuthor(tempAuthor)
+            friendList.append(temp)
+
+        friendObjects = Friend.objects.filter(friend=author)
+
+        for friendObject in friendObjects:
+            tempAuthor = friendObject.author
+            temp = serializeAuthor(tempAuthor)
+            friendList.append(temp)
+
+        authorDict['friends'] = friendList
 
         return Response(
-            serializer.data,
+            authorDict,
             status=status.HTTP_200_OK,
         )
 
@@ -151,15 +191,6 @@ class CreatePostAPIView(CreateAPIView):
     # permission_classes = [IsAuthenticated]
     serializer_class = CreatePostSerializer
 
-    # Creates Post by sending (example):
-    # {
-    #   "title": "ExampleTitle",
-    #   "content": "ExampleBody",
-    #   "visibility": "pub",
-    #   "link_to_image": "https://github.com/UAlberta-CMPUT401/ResuscitationSim/blob/master/backend/haptik/views.py",
-    #   "author": "0248f053-b2a7-433a-a970-dffa58b66b91",
-    #   "uuid": "714b1e76-da65-445f-91f8-4f54da332e3d"
-    # }
     def create(self, request, pk):
         data = request.data.copy()
         data['author'] = pk
@@ -209,10 +240,31 @@ class GetAllAuthorFriendsAPIView(APIView):
 
     # Returns All Author's friends
     def get(self, request, pk, format=None):
-        friends = Friend.objects.filter(author=pk)
-        serializer = FriendSerializer(friends, many=True)
-        response = {"authors": [x['friend'] for x in serializer.data]}
-        return Response(response, status=status.HTTP_200_OK)
+        # friends = Friend.objects.filter(author=pk)
+        # serializer = FriendSerializer(friends, many=True)
+        # response = {"authors": [x['friend'] for x in serializer.data]}
+        # return Response(response, status=status.HTTP_200_OK)
+
+        friendList = []
+
+        friendObjects = Friend.objects.filter(author=pk)
+
+        for friendObject in friendObjects:
+            tempAuthor = friendObject.friend
+            temp = serializeAuthor(tempAuthor)
+            friendList.append(temp)
+
+        friendObjects = Friend.objects.filter(friend=pk)
+
+        for friendObject in friendObjects:
+            tempAuthor = friendObject.author
+            temp = serializeAuthor(tempAuthor)
+            friendList.append(temp)
+
+        return Response(
+            friendList,
+            status=status.HTTP_200_OK,
+        )
 
 
 class GetAllPublicPostsAPIView(APIView):
@@ -335,23 +387,6 @@ class DeletePostAPIView(APIView):
             status=status.HTTP_200_OK
         )
 
-    # def get(self, request, format=None):
-    #     token = request.META["HTTP_AUTHORIZATION"]
-    #     token = token.split()[1]
-    #     token_author_uuid = Author.objects.get(auth_token=token).uuid
-    #     post_author_uuid = Post.objects.get(
-    #         uuid=request.data['uuid']).author.uuid
-
-    #     print(token_author_uuid)
-    #     print(post_author_uuid)
-
-    #     if token_author_uuid == post_author_uuid:
-    #         Post.objects.get(uuid=request.data['uuid']).delete()
-    #         return Response(status=status.HTTP_200_OK)
-    #     else:
-    #         print("INEQUAL")
-    #         return Response(status=status.HTTP_401_UNAUTHORIZED)
-
 
 class CreateCommentAPIView(CreateAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -467,6 +502,25 @@ class CreateFriendAPIView(CreateAPIView):
             {**serializer.data},
             status=status.HTTP_201_CREATED,
             headers=headers
+        )
+
+
+class CheckFriendAPIView(APIView):
+
+    def get(self, request, pk1, pk2):
+        # checking for friendship
+        author1 = Author.objects.get(uuid=pk1)
+        author1dict = serializeAuthor(author1)
+        author2 = Author.objects.get(uuid=pk2)
+        author2dict = serializeAuthor(author2)
+        friends = Friend.objects.filter(author=author1, friend=author2).union(
+            Friend.objects.filter(author=author2, friend=author1))
+
+        return Response(
+            {"query": "friends",
+             "authors": [author1dict['id'], author2dict['id']],
+             "friends": len(list(friends.all())) != 0
+             }
         )
 
 

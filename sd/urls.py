@@ -59,7 +59,7 @@ urlpatterns = [
          CreateCommentAPIView.as_view(), name='create_comment'),
 
     # Get all author's friends
-    path('author/<uuid:pk>/friends',
+    path('author/<uuid:pk>/friends/',
          GetAllAuthorFriendsAPIView.as_view(), name='all_author_friends'),
 
     # Get all author's foaf (includes friends)
@@ -67,10 +67,14 @@ urlpatterns = [
          GetAllFOAFAPIView.as_view(), name='get_author_foaf'),
 
     # Get all authors
-    path('author/all/', GetAllAuthorsAPIView.as_view(), name='all_authors'),
+    path('author/', GetAllAuthorsAPIView.as_view(), name='all_authors'),
 
     # Create friend (pk of friend request)
     path('friend/<uuid:pk>', CreateFriendAPIView.as_view(), name='create_friend'),
+
+    # check if 2 authors are friends
+    path('author/<uuid:pk1>/friends/<uuid:pk2>',
+         CheckFriendAPIView.as_view(), name='check_friend'),
 
     # Delete friend (pk of friend)
     path('friend/<uuid:pk>/delete',
