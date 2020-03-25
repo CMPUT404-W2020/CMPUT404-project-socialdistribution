@@ -25,6 +25,22 @@ import uuid
 from uuid import uuid4
 
 
+def serializeAuthor(author):
+    authorDict = {}
+    authorDict['id'] = str(author.host.hostname) + \
+        'author/' + str(author.uuid)
+    authorDict['host'] = author.host.hostname
+    authorDict['displayName'] = author.displayName
+    authorDict['github'] = author.github
+    authorDict['url'] = str(author.host.hostname) + \
+        'author/' + str(author.uuid)
+    authorDict['bio'] = author.bio
+    authorDict['firstName'] = author.first_name
+    authorDict['lastName'] = author.last_name
+    authorDict['email'] = author.email
+    return authorDict
+
+
 class CreateAuthorAPIView(CreateAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     permission_classes = [AllowAny]
@@ -58,14 +74,7 @@ class GetAllAuthorsAPIView(APIView):
 
         authorList = []
         for author in authors:
-            temp = {}
-            temp['id'] = str(author.host.hostname) + \
-                'author/' + str(author.uuid)
-            temp['host'] = author.host.hostname
-            temp['displayName'] = author.displayName
-            temp['github'] = author.github
-            temp['url'] = str(author.host.hostname) + \
-                'author/' + str(author.uuid)
+            temp = serializeAuthor(author)
             authorList.append(temp)
 
         return Response(authorList,
@@ -151,18 +160,7 @@ class GetAuthorAPIView(APIView):
 
     def get(self, request, pk, format=None):
         author = Author.objects.get(uuid=pk)
-        authorDict = {}
-        authorDict['id'] = str(author.host.hostname) + \
-            'author/' + str(author.uuid)
-        authorDict['host'] = author.host.hostname
-        authorDict['displayName'] = author.displayName
-        authorDict['github'] = author.github
-        authorDict['url'] = str(author.host.hostname) + \
-            'author/' + str(author.uuid)
-        authorDict['bio'] = author.bio
-        authorDict['firstName'] = author.first_name
-        authorDict['lastName'] = author.last_name
-        authorDict['email'] = author.email
+        authorDict = serializeAuthor(author)
 
         friendList = []
 
@@ -170,28 +168,14 @@ class GetAuthorAPIView(APIView):
 
         for friendObject in friendObjects:
             tempAuthor = friendObject.friend
-            temp = {}
-            temp['id'] = str(tempAuthor.host.hostname) + \
-                'author/' + str(tempAuthor.uuid)
-            temp['host'] = tempAuthor.host.hostname
-            temp['displayName'] = tempAuthor.displayName
-            temp['github'] = tempAuthor.github
-            temp['url'] = str(tempAuthor.host.hostname) + \
-                'author/' + str(tempAuthor.uuid)
+            temp = serializeAuthor(tempAuthor)
             friendList.append(temp)
 
         friendObjects = Friend.objects.filter(friend=author)
 
         for friendObject in friendObjects:
             tempAuthor = friendObject.friend
-            temp = {}
-            temp['id'] = str(tempAuthor.host.hostname) + \
-                'author/' + str(tempAuthor.uuid)
-            temp['host'] = tempAuthor.host.hostname
-            temp['displayName'] = tempAuthor.displayName
-            temp['github'] = tempAuthor.github
-            temp['url'] = str(tempAuthor.host.hostname) + \
-                'author/' + str(tempAuthor.uuid)
+            temp = serializeAuthor(tempAuthor)
             friendList.append(temp)
 
         authorDict['friends'] = friendList
@@ -207,15 +191,6 @@ class CreatePostAPIView(CreateAPIView):
     # permission_classes = [IsAuthenticated]
     serializer_class = CreatePostSerializer
 
-    # Creates Post by sending (example):
-    # {
-    #   "title": "ExampleTitle",
-    #   "content": "ExampleBody",
-    #   "visibility": "pub",
-    #   "link_to_image": "https://github.com/UAlberta-CMPUT401/ResuscitationSim/blob/master/backend/haptik/views.py",
-    #   "author": "0248f053-b2a7-433a-a970-dffa58b66b91",
-    #   "uuid": "714b1e76-da65-445f-91f8-4f54da332e3d"
-    # }
     def create(self, request, pk):
         data = request.data.copy()
         data['author'] = pk
@@ -425,23 +400,6 @@ class DeletePostAPIView(APIView):
         return Response(
             status=status.HTTP_200_OK
         )
-
-    # def get(self, request, format=None):
-    #     token = request.META["HTTP_AUTHORIZATION"]
-    #     token = token.split()[1]
-    #     token_author_uuid = Author.objects.get(auth_token=token).uuid
-    #     post_author_uuid = Post.objects.get(
-    #         uuid=request.data['uuid']).author.uuid
-
-    #     print(token_author_uuid)
-    #     print(post_author_uuid)
-
-    #     if token_author_uuid == post_author_uuid:
-    #         Post.objects.get(uuid=request.data['uuid']).delete()
-    #         return Response(status=status.HTTP_200_OK)
-    #     else:
-    #         print("INEQUAL")
-    #         return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class CreateCommentAPIView(CreateAPIView):
