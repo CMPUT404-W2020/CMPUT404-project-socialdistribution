@@ -67,7 +67,7 @@ urlpatterns = [
          GetAllFOAFAPIView.as_view(), name='get_author_foaf'),
 
     # Get all authors
-    path('author/all/', GetAllAuthorsAPIView.as_view(), name='all_authors'),
+    path('author/', GetAllAuthorsAPIView.as_view(), name='all_authors'),
 
     # Create friend (pk of friend request)
     path('friend/<uuid:pk>', CreateFriendAPIView.as_view(), name='create_friend'),

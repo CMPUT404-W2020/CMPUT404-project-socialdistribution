@@ -151,11 +151,53 @@ class GetAuthorAPIView(APIView):
 
     def get(self, request, pk, format=None):
         author = Author.objects.get(uuid=pk)
-        serializer = AuthorSerializer(author)
-        print(serializer.data)
+        authorDict = {}
+        authorDict['id'] = str(author.host.hostname) + \
+            'author/' + str(author.uuid)
+        authorDict['host'] = author.host.hostname
+        authorDict['displayName'] = author.displayName
+        authorDict['github'] = author.github
+        authorDict['url'] = str(author.host.hostname) + \
+            'author/' + str(author.uuid)
+        authorDict['bio'] = author.bio
+        authorDict['firstName'] = author.first_name
+        authorDict['lastName'] = author.last_name
+        authorDict['email'] = author.email
+
+        friendList = []
+
+        friendObjects = Friend.objects.filter(author=author)
+
+        for friendObject in friendObjects:
+            tempAuthor = friendObject.friend
+            temp = {}
+            temp['id'] = str(tempAuthor.host.hostname) + \
+                'author/' + str(tempAuthor.uuid)
+            temp['host'] = tempAuthor.host.hostname
+            temp['displayName'] = tempAuthor.displayName
+            temp['github'] = tempAuthor.github
+            temp['url'] = str(tempAuthor.host.hostname) + \
+                'author/' + str(tempAuthor.uuid)
+            friendList.append(temp)
+
+        friendObjects = Friend.objects.filter(friend=author)
+
+        for friendObject in friendObjects:
+            tempAuthor = friendObject.friend
+            temp = {}
+            temp['id'] = str(tempAuthor.host.hostname) + \
+                'author/' + str(tempAuthor.uuid)
+            temp['host'] = tempAuthor.host.hostname
+            temp['displayName'] = tempAuthor.displayName
+            temp['github'] = tempAuthor.github
+            temp['url'] = str(tempAuthor.host.hostname) + \
+                'author/' + str(tempAuthor.uuid)
+            friendList.append(temp)
+
+        authorDict['friends'] = friendList
 
         return Response(
-            serializer.data,
+            authorDict,
             status=status.HTTP_200_OK,
         )
 
