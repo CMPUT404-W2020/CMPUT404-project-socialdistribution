@@ -28,7 +28,7 @@ Base Contributors (pre 2020):
 
 Project base requirements, setup and licensing defined by the Contributors listed above
 
-Django is LICENSES'D under the 3-clause BSD License https://github.com/django/django/blob/master/LICENSE
+Django is LICENSED under the 3-clause BSD License https://github.com/django/django/blob/master/LICENSE
 
 Django (Version 3.0.3) [Computer Software]. (2013). Retrieved from https://djangoproject.com.
 
@@ -52,7 +52,7 @@ Contributions:
 
 # Squawk Documentation
 
-Squawk is a distributed social network that gives control back to the user. With Squawk, you get all the features you expect from a modern social network without sacrificing privacy or being flooded with promotional content. For every post you create, you can choose exactly who can view it. When viewing content, you can access the Explore page to see all public posts connected to your node, or head to Your Feed to see only the currated content that you choose to follow.
+Squawk is a distributed social network that gives control back to the user. With Squawk, you get all the features you expect from a modern social network without sacrificing privacy or being flooded with promotional content. For every post you create, you can choose exactly who can view it. When viewing content, you can access the Explore page to see all public posts connected to your node, or head to Your Feed to see only the curated content that you choose to follow.
 
 ## User Access
 
@@ -97,22 +97,89 @@ The format of requests are found in the example_requests folder (https://github.
 
 **TODO**: update this
 
-The system only allows GET and POST requests; all other requests will be responded to with an HTTP 405 response
+The system allows GET, PUT, POST, and DELETE requests; all other requests will be responded to with an HTTP 405 response
 (will be updated to match social_distribution/sd/urls.py found on the api branch)
 
-    auth/register               (POST)
-    auth/logout                 (GET)
-    auth/getuser                (GET)
-    auth/edituser/<uuid>        (POST)
-    auth/getpost                (GET)
-    auth/deletepost             (GET)
-    auth/getallpost             (GET)
-    posts/<uuid>                (GET)
-    posts/<uuid>/comments       (GET)
-    author/<uuid>/post          (POST)
-    author/<uuid>/posts         (GET)
-    author/posts                (GET)
-    posts/<uuid>/comment        (POST)
+    auth/register
+    - POST
+        - create user
+        {
+            first_name : fname,
+            last_name: lname,
+            username: uname,
+            password: password,
+            email : email
+        }
+
+    author/<uuid>
+    - GET
+        - returns author information
+        - uuid = author UUID
+
+    auth/edituser/<uuid>
+    - PUT
+        - edit user
+        {
+            first_name : fname,
+            last_name: lname,
+            username: uname,
+            password: password,
+            email : email
+        }
+
+    deletepost/<uuid>
+    - DELETE
+        - requires auth
+
+    posts/<uuid>
+    - GET
+        - gets post
+        - uuid = post UUID
+
+    posts/<uuid>/comment
+    - POST
+        - create comment
+        - requires auth
+        - uuid = post UUID
+        {
+            author : uuid,
+            comment : comments,
+            post : uuid
+        }
+
+    posts/<uuid>/comments
+    - GET
+        - get post comments
+        - uuid = post UUID
+
+
+    author/<uuid>/post
+    - POST
+        - create post
+        - uuid = Author UUID
+        {
+            title : title,
+            source : source,
+            description : description,
+            contentType : text/markdown,
+            content : content,
+            author : uuid,
+            categories : categories,
+            visibility : 1,2,3,4, or 5,
+            unlisted : 1 or 0,
+            link_to_image : url,
+            image : image
+        }
+
+    author/<uuid>/posts
+    - GET
+        - get all of author's posts
+        - uuid = Author UUID
+
+
+    author/posts
+    - GET
+        - gets all visible posts to user
 
 ## Web-Browser Page Paths:
 
