@@ -14,12 +14,13 @@ urlpatterns = [
          AuthorUpdateAPIView.as_view(), name='auth_user_update'),
     url(r'^auth/createpost/$', CreatePostAPIView.as_view(), name='auth_post_create'),
     url(r'^auth/getpost/$', GetPostAPIView.as_view(), name='auth_post_get'),
-    url(r'^auth/deletepost/$', DeletePostAPIView.as_view(), name='auth_post_delete'),
+    path('deletepost/<uuid:pk>',
+         DeletePostAPIView.as_view(), name='post_delete'),
     url(r'^auth/getallpost/$', GetAllAuthorPostAPIView.as_view(),
         name='auth_post_getall'),
 
 
-    # Get post
+    # Get post (uuid of post)
     path('posts/<uuid:pk>', GetPostAPIView.as_view(), name='get_post'),
 
     # Get post comments
@@ -74,6 +75,7 @@ urlpatterns = [
     # Delete friend (pk of friend)
     path('friend/<uuid:pk>/delete',
          DeleteFriendAPIView.as_view(), name='delete_friend'),
+
 
     # url(r'^author/<uuid:pk>/friends/<uuid:pk2>',
     #     GetAllAuthorFriends.as_view(), name='get_all_author_friends'),
