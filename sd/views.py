@@ -17,6 +17,19 @@ import requests
 
 
 class foreignData():
+    # def foreignDB(self):
+    #     for node in Node.objects.exclude(hostname=settings.HOSTNAME):
+    #         # populate authors
+    #         response = requests.get(node.hostname + 'author')
+    #             response = response.json()
+    #             print(json.dumps(response, indent=4))
+    #             for item in response:
+    #                 print(item)
+    #                 node = Node.objects.get(hostname=item['host'])
+    #                 author = Author(username=item['displayName'], password='1234567890',
+    #                                 github=item['github'], host=node)
+    #                 author.save()
+
     def authors(self):
         for node in Node.objects.all():
             if node.hostname != settings.HOSTNAME:
@@ -37,22 +50,21 @@ class foreignData():
     def authorObjects(self):
         for node in Node.objects.all():
             if node.hostname != settings.HOSTNAME:
+                # delete existing cache
+                for author in Author.objects.filter(host=node):
+                    author.delete()
+
                 # return all authors
                 response = requests.get(node.hostname + 'author')
                 response = response.json()
                 print(json.dumps(response, indent=4))
+
                 for item in response:
                     print(item)
                     node = Node.objects.get(hostname=item['host'])
-                    author = Author(username=item['displayName'], password='1234567890',
-                                    github=item['github'], host=node)
+                    author = Author(
+                        username=item['displayName'], password='1234567890', github=item['github'], host=node)
                     author.save()
-
-    def removeAuthorObjects(self):
-        myNode = Node.objects.get(hostname=settings.HOSTNAME)
-
-        for author in Author.objects.exclude(host=myNode):
-            author.delete()
 
 
 def explore(request):
@@ -145,13 +157,6 @@ def search(request):
                     entry["uuid"] = f.friend.uuid
                     entry["name"] = f.friend.username
                 ret_friends.append(entry)
-
-            foreignData().removeAuthorObjects()
-
-            print('authors')
-            print(authors)
-            print('currently saved authors')
-            print(Author.objects.all())
 
             return render(request, 'sd/search.html', {"authors": authors, "current_user": user, "follows": ret_follows, "friends": ret_friends})
         else:
