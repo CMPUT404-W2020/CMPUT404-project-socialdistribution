@@ -1,24 +1,26 @@
 
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Author, Post, Comment, FriendRequest, Follow, Friend
+from .models import Author, Post, Comment, FriendRequest, Follow, Friend, get_host_node
 
 
 class CreateAuthorSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True,
                                      style={'input_type': 'password'})
+    host = get_host_node()
 
     class Meta:
         model = get_user_model()
         fields = ['first_name', 'last_name',
-                  'username', 'password', 'email', 'uuid']
+                  'username', 'password', 'email', 'uuid', 'host']
         write_only_fields = ('password')
         # read_only_fields = ('uuid',)
 
     def create(self, validated_data):
         author = super(CreateAuthorSerializer, self).create(validated_data)
         author.set_password(validated_data['password'])
+        author.host = get_host_node()
         author.save()
         return author
 
@@ -50,10 +52,13 @@ class CreatePostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = ['title', 'source', 'description', 'contentType', 'content', 'author', 'categories',
-                  'published', 'uuid', 'visibility', 'visibleTo', 'unlisted', 'link_to_image', 'image']
+                  'published', 'uuid', 'visibility', 'visibleTo', 'unlisted', 'link_to_image', 'image', 'host']
 
     def create(self, validated_data):
-        return Post.objects.create(**validated_data)
+        post = super(CreatePostSerializer, self).create(validated_data)
+        post.host = get_host_node()
+        post.save()
+        return post
 
 
 class GetPostSerializer(serializers.ModelSerializer):

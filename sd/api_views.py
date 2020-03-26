@@ -48,7 +48,9 @@ class CreateAuthorAPIView(CreateAPIView):
 
     def create(self, request, *args, **kwargs):
         print(request.data)
-        serializer = self.get_serializer(data=request.data)
+        data = request.data.copy()
+        data['host'] = get_host_node()
+        serializer = self.get_serializer(data=data)
         # print(serializer)
         serializer.is_valid(raise_exception=True)
         print("VALID")
@@ -194,6 +196,7 @@ class CreatePostAPIView(CreateAPIView):
     def create(self, request, pk):
         data = request.data.copy()
         data['author'] = pk
+        data['host'] = get_host_node()
         serializer = self.get_serializer(data=data)
         print(serializer)
         serializer.is_valid(raise_exception=True)
