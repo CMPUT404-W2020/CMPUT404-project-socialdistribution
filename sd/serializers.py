@@ -1,14 +1,14 @@
 
 from django.contrib.auth import get_user_model
+import social_distribution.settings as settings
 from rest_framework import serializers
-from .models import Author, Post, Comment, FriendRequest, Follow, Friend, get_host_node
+from .models import Author, Post, Comment, FriendRequest, Follow, Friend, Node
 
 
 class CreateAuthorSerializer(serializers.ModelSerializer):
     username = serializers.CharField()
     password = serializers.CharField(write_only=True,
                                      style={'input_type': 'password'})
-    host = get_host_node()
 
     class Meta:
         model = get_user_model()
@@ -20,7 +20,8 @@ class CreateAuthorSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         author = super(CreateAuthorSerializer, self).create(validated_data)
         author.set_password(validated_data['password'])
-        author.host = get_host_node()
+        print(settings.HOSTNAME)
+        author.host = Node.objects.get(hostname=(settings.HOSTNAME))
         author.save()
         return author
 
@@ -56,7 +57,7 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         post = super(CreatePostSerializer, self).create(validated_data)
-        post.host = get_host_node()
+        post.host = Node.objects.get(hostname=(settings.HOSTNAME))
         post.save()
         return post
 

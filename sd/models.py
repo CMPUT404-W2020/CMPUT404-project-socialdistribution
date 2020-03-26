@@ -19,14 +19,8 @@ class Node(models.Model):
 
 
 def get_host_node():
-    try:
-        node = Node.objects.get(hostname=settings.HOSTNAME)
-    except:
-        node = Node(server_name="squawk", server_password="squawk")
-        node.save()
-        print(node)
-
-    return node
+    # node = Node.objects.get(hostname=settings.HOSTNAME)
+    return None
 
 
 class Author(AbstractUser):
