@@ -19,9 +19,6 @@ class Node(models.Model):
 
 
 def get_host_node():
-    import sys
-    print(list(Node.objects.all()), file=sys.stderr)
-    print(settings.HOSTNAME, file=sys.stderr)
     return Node.objects.get(hostname=settings.HOSTNAME)
 
 
