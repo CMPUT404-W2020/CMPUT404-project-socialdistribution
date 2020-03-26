@@ -13,15 +13,19 @@ class Node(models.Model):
     uuid = models.UUIDField(
         primary_key=True, default=uuid4, editable=False, unique=True)
     hostname = models.URLField(
-        default='127.0.0.1:8000')
+        default=settings.HOSTNAME)
     server_name = models.CharField(max_length=100)
     server_password = models.CharField(max_length=100)
 
 
+def get_host_node():
+    return Node.objects.get(hostname=settings.HOSTNAME)
+
+
 class Author(AbstractUser):
     # Using username, password, first_name, last_name, email from AbstractUser
-    # host = models.URLField(default=socket.gethostbyname(socket.gethostname()))
-    host = models.URLField(default='127.0.0.1:8000')
+    host = models.ForeignKey(
+        Node, on_delete=models.CASCADE, default=get_host_node())
     uuid = models.UUIDField(
         primary_key=True, default=uuid4, editable=False, unique=True)
     displayName = AbstractUser.username
@@ -58,7 +62,8 @@ class Post(models.Model):
     # TODO: update url with the post id and correct path based on api
     image = models.ImageField(blank=True)
     link_to_image = models.CharField(max_length=100, blank=True)
-
+    host = models.ForeignKey(
+        Node, on_delete=models.CASCADE, default=get_host_node())
 
 
 class Comment(models.Model):

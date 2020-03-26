@@ -2,6 +2,7 @@
 <!doctype html>
 <!DOCTYPE html>
 <html>
+
 <head>
 	<title>Squawk</title>
 	<meta charset="UTF-8">
@@ -18,7 +19,7 @@
 	var explore = false;
 
 	function loadBar() {
-        $("#navbar").load("static/sd/navbar.html");
+		$("#navbar").load("static/sd/navbar.html");
 		$("#header").load("static/sd/header.html");
 	}
 
@@ -74,7 +75,7 @@
 
 	}
 
-	
+
 </script>
 
 <body onload="loadBar(); feed();">
@@ -89,7 +90,7 @@
 
 		</div>
 		{% endif %}
-		
+
 
 
 		<div class="feed" {% if not authenticated %} id="nosidebar" {% endif %}>
@@ -100,8 +101,9 @@
 			{% endif %}
 			<div id="feed-items">
 			</div>
-			
+
 		</div>
 	</div>
 </body>
+
 </html>

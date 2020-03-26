@@ -14,12 +14,13 @@ urlpatterns = [
          AuthorUpdateAPIView.as_view(), name='auth_user_update'),
     url(r'^auth/createpost/$', CreatePostAPIView.as_view(), name='auth_post_create'),
     url(r'^auth/getpost/$', GetPostAPIView.as_view(), name='auth_post_get'),
-    url(r'^auth/deletepost/$', DeletePostAPIView.as_view(), name='auth_post_delete'),
+    path('deletepost/<uuid:pk>',
+         DeletePostAPIView.as_view(), name='post_delete'),
     url(r'^auth/getallpost/$', GetAllAuthorPostAPIView.as_view(),
         name='auth_post_getall'),
 
 
-    # Get post
+    # Get post (uuid of post)
     path('posts/<uuid:pk>', GetPostAPIView.as_view(), name='get_post'),
 
     # Get post comments
@@ -58,7 +59,7 @@ urlpatterns = [
          CreateCommentAPIView.as_view(), name='create_comment'),
 
     # Get all author's friends
-    path('author/<uuid:pk>/friends',
+    path('author/<uuid:pk>/friends/',
          GetAllAuthorFriendsAPIView.as_view(), name='all_author_friends'),
 
     # Get all author's foaf (includes friends)
@@ -66,14 +67,19 @@ urlpatterns = [
          GetAllFOAFAPIView.as_view(), name='get_author_foaf'),
 
     # Get all authors
-    path('author/all/', GetAllAuthorsAPIView.as_view(), name='all_authors'),
+    path('author/', GetAllAuthorsAPIView.as_view(), name='all_authors'),
 
     # Create friend (pk of friend request)
     path('friend/<uuid:pk>', CreateFriendAPIView.as_view(), name='create_friend'),
 
+    # check if 2 authors are friends
+    path('author/<uuid:pk1>/friends/<uuid:pk2>',
+         CheckFriendAPIView.as_view(), name='check_friend'),
+
     # Delete friend (pk of friend)
     path('friend/<uuid:pk>/delete',
          DeleteFriendAPIView.as_view(), name='delete_friend'),
+
 
     # url(r'^author/<uuid:pk>/friends/<uuid:pk2>',
     #     GetAllAuthorFriends.as_view(), name='get_all_author_friends'),
