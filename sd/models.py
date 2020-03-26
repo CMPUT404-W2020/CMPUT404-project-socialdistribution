@@ -20,6 +20,7 @@ class Node(models.Model):
 
 def get_host_node():
     import sys
+    print(list(Node.objects.all()), file=sys.stderr)
     print(settings.HOSTNAME, file=sys.stderr)
     return Node.objects.get(hostname=settings.HOSTNAME)
 
@@ -27,7 +28,7 @@ def get_host_node():
 class Author(AbstractUser):
     # Using username, password, first_name, last_name, email from AbstractUser
     host = models.ForeignKey(
-        Node, on_delete=models.CASCADE, default=get_host_node())
+        Node, on_delete=models.CASCADE, default=get_host_node(), db_column='host')
     uuid = models.UUIDField(
         primary_key=True, default=uuid4, editable=False, unique=True)
     displayName = AbstractUser.username
