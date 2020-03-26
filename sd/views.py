@@ -55,8 +55,9 @@ def feed(request):
     if valid_method(request):
         user = get_current_user(request)
         if authenticated(request) and user:
+            load_github_feed(get_current_user(request))
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
-            pub_posts = Post.objects.filter(Q(visibility=1) & Q(unlisted=0))
+            pub_posts = Post.objects.filter(Q(visibility=1) & (Q(unlisted=0)|Q(unlisted=False)))
             all_posts = own_posts | pub_posts
             results = paginated_result(
                 all_posts, request, "feed", query="feed")
