@@ -26,10 +26,8 @@ class foreignData():
             # return all authors
             response = requests.get(node.hostname + 'author')
             response = response.json()
-            print(json.dumps(response, indent=4))
 
             for item in response:
-                print(item)
                 node = Node.objects.get(hostname=item['host'])
                 author = Author(
                     username=item['displayName'], password='1234567890', github=item['github'], host=node)

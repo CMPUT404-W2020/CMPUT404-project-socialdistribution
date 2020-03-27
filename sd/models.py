@@ -19,15 +19,13 @@ class Node(models.Model):
 
 
 def get_host_node():
-    import sys
-    print(settings.HOSTNAME, file=sys.stderr)
     return Node.objects.get(hostname=settings.HOSTNAME)
 
 
 class Author(AbstractUser):
     # Using username, password, first_name, last_name, email from AbstractUser
     host = models.ForeignKey(
-        Node, on_delete=models.CASCADE, null=True, default=get_host_node())
+        Node, on_delete=models.CASCADE, default=get_host_node(), db_column='host')
     uuid = models.UUIDField(
         primary_key=True, default=uuid4, editable=False, unique=True)
     displayName = AbstractUser.username
@@ -65,7 +63,7 @@ class Post(models.Model):
     image = models.ImageField(blank=True)
     link_to_image = models.CharField(max_length=100, blank=True)
     host = models.ForeignKey(
-        Node, on_delete=models.CASCADE, null=True, default=get_host_node())
+        Node, on_delete=models.CASCADE, default=get_host_node(), db_column='host')
 
 
 class Comment(models.Model):
