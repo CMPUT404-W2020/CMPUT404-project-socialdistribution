@@ -198,4 +198,6 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
 
 ## Testing
 
+From the root directory of the project, run `python3 manage.py test`. There is one test for each model and one test for each front-end url as represented in the files models.py and urls.py.
+
 **TODO**: Update to explain the tests briefly, where they can be found and how to run them.
