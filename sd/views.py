@@ -61,7 +61,7 @@ def feed(request):
             following = Follow.objects.filter(Q(follower_id=user.uuid))
             f1 = Friend.objects.filter(Q(author_id=user.uuid)).values('friend_id')
             f2 = Friend.objects.filter(Q(friend_id=user.uuid)).values('author_id')
-            if(f1 and f2)
+            if(f1 and f2):
                 friends = f1|f2      
             elif f1:
                 friends = f1
