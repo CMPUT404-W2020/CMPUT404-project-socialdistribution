@@ -78,11 +78,22 @@ You can access the admin page through https://cmput-404.herokuapp.com/admin and 
 When running locally, you can run this command to create a superuser and access the admin interface:
 python3 manage.py createsuperuser
 
-## API Call Formats:
+## API Information:
+
+API Endpoint URL = https://cmput-404.herokuapp.com/
+credentials = warren:cmput404
+example HTTPIE = http GET https://cmput-404.herokuapp.com/posts
+Web Service Endpoint URL = https://cmput-404.herokuapp.com/
+
+Current Connections:
+| Remote API Endpoint                                  | Username   | Password        |
+| ---------------------------------------------------- | ---------- | --------------  |
+| https://cmput404-socialdistribution.herokuapp.com/   | admindemo  |  ualberta01!    |
+| https://glacial-earth-37816.herokuapp.com/api/       | group8     |  group8password |
+
+### API Call Formats:
 
 The format of requests are found in the example_requests folder (https://github.com/CMPUT404-W2020/CMPUT404-project-socialdistribution/tree/master/example_requests).
-
-**TODO**: update this
 
 The system allows GET, PUT, POST, and DELETE requests; all other requests will be responded to with an HTTP 405 response
 (will be updated to match social_distribution/sd/urls.py found on the api branch)
