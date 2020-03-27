@@ -444,6 +444,8 @@ form>.row {
 #save-button {
   width: auto;
   font-size: medium;
+  padding: 0.3em;
+  margin: 0.2em;
 }
 
 #cancel-button{
@@ -454,7 +456,6 @@ form>.row {
   border-radius: 10px;
   background-color: white;
   margin: 0.2em;
-  border: 1.5px solid;
   width: auto;
   font-size: medium;
   border: 1.5px solid #f0f0f0;
@@ -758,8 +759,8 @@ input[type=submit]{
   color: #ed9a00;
   border-radius: 10px;
   border: 1.5px solid #f0f0f0;
-  padding: 0.3em;
-  margin: 0.2em;
+  padding: 0.4em;
+  margin: 0.3em;
 }
 
 
