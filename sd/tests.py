@@ -1,14 +1,19 @@
-from django.test import TestCase
+from django.test import SimpleTestCase
 from django.urls import resolve
 from unittest import skip
 
 from sd.models import *
 from sd.views import *
+import social_distribution.settings as settings
 
 
-class ModelTests(TestCase):
+class ModelTests(SimpleTestCase):
+    def create_node(self):
+        return Node()
+
     def create_author(self, first_name="Test", last_name="Author", bio="I am a test author"):
         return Author(
+            host = self.create_node(),
             first_name = first_name,
             last_name = last_name,
             bio = "I am a test author"
@@ -18,19 +23,21 @@ class ModelTests(TestCase):
         a = author if author != None else self.create_author()
 
         return Post(
-            contentType = 2,
+            contentType = 'text/plain',
             author = a,
             title = title,
             content = content,
             visibility = visibility,
             link_to_image = link_to_image,
+            unlisted = False,
+            host = self.create_node()
         )
 
     def create_comment(self, author, post, comment="comment"):
         return Comment(
             author = author,
             comment = comment,
-            contentType = 2,
+            contentType = 'text/plain',
             post = post
         )
 
@@ -52,10 +59,17 @@ class ModelTests(TestCase):
             friend = friend
         )
 
+    def test_node(self):
+        self.n = self.create_node()
+        self.assertTrue(isinstance(self.n, Node))
+
+        self.assertEqual(self.n.hostname, settings.HOSTNAME)
+
     def test_author(self):
         a = self.create_author()
         self.assertTrue(isinstance(a, Author))
 
+        self.assertEqual(a.host.hostname, settings.HOSTNAME)
         self.assertEqual(a.first_name, "Test")
         self.assertEqual(a.last_name, "Author")
         self.assertEqual(a.bio, "I am a test author")
@@ -67,7 +81,7 @@ class ModelTests(TestCase):
 
         self.assertEqual(p.title, "test post")
         self.assertEqual(p.content, "this is a test")
-        self.assertEqual(p.visibility, 1)
+        self.assertEqual(p.visibility, 'PUBLIC')
         self.assertEqual(p.link_to_image, "")
 
         self.assertEqual(p.author.first_name, "Test")
@@ -117,7 +131,11 @@ class ModelTests(TestCase):
         self.assertEqual(a1, fr.author)
         self.assertEqual(a2, fr.friend)
 
-class URLTests(TestCase):
+class URLTests(SimpleTestCase):
+    def test_get_login(self):
+        r = resolve('')
+        self.assertEqual(r.func, explore)
+
     def test_get_login(self):
         r = resolve('/login')
         self.assertEqual(r.func, login)
@@ -134,161 +152,30 @@ class URLTests(TestCase):
         r = resolve('/newpost')
         self.assertEqual(r.func, new_post)
 
-    @skip("Not implemented")
-    def test_get_requests(self):
-        r = resolve('/requests')
-        self.assertEqual(r.func, requests)
+    def test_get_feed(self):
+        r = resolve('/feed')
+        self.assertEqual(r.func, feed)
 
     def test_get_notifications(self):
         r = resolve('/notifications')
         self.assertEqual(r.func, notifications)
 
-    def test_get_my_feed(self):
-        r = resolve('/feed')
-        self.assertEqual(r.func, feed)
+    def test_get_friendrequest(self):
+        r = resolve('/friendrequest')
+        self.assertEqual(r.func, friendrequest)
 
-    def test_get_account(self):
-        r = resolve('/account')
-        self.assertEqual(r.func, account)
+    def test_get_media(self):
+        r = resolve('/media/1')
+        self.assertEqual(r.func, get_image)
 
     def test_get_search(self):
         r = resolve('/search')
         self.assertEqual(r.func, search)
 
-    @skip("This page doesn't exist right now")
-    def test_get_author_posts(self):
-        r = resolve('/author/posts')
-        self.assertEqual(r.func, feed)
+    def test_get_account(self):
+        r = resolve('/account')
+        self.assertEqual(r.func, account)
 
-    @skip("IDs aren't working yet")
-    def test_get_author_id_posts(self):
-        r = resolve('/author/1/posts')
-        self.assertEqual(r.func, author)
-
-    @skip("IDs aren't working yet")
-    def test_get_post_id(self):
-        r = resolve('/posts/1')
-        self.assertEqual(r.func, post)
-
-    @skip("IDs aren't working yet")
-    def test_get_post_id_comments(self):
-        r = resolve('/post/1/comments')
-        self.assertEqual(r.func, post_comment)
-
-    @skip("IDs aren't working yet")
-    def test_get_author_id_friends(self):
-        r = resolve('/author/1/friends')
-        self.assertEqual(r.func, friends)
-
-class BasicActions(TestCase):
-
-    def setUp(self):
-        pass
-
-    def test_edit_post(self):
-        pass
-
-    def test_delete_post(self):
-        pass
-
-    def test_edit_not_my_post(self):
-        pass
-
-    def test_delete_not_my_post(self):
-        pass
-
-    def test_create_plaintext_post(self):
-        pass
-
-    def test_create_markdown_post(self):
-        pass
-
-    def test_cant_comment_on_post(self):
-        pass
-
-    def test_post_with_image(self):
-        pass
-
-    def test_access_image_no_auth(self):
-        pass
-
-    def test_view_public_posts(self):
-        pass
-
-class FriendsTestCases(TestCase):
-    def setUp(self):
-        pass
-
-    def test_render_friend_post(self):
-        pass
-
-    def test_send_friend_request(self):
-        pass
-
-    def test_receive_friend_request(self):
-        pass
-
-    def test_post_from_not_friend(self):
-        pass
-
-    def test_create_unlisted_post(self):
-        pass
-
-    def test_create_private_post(self):
-        pass
-
-    def test_create_private_to_friends_post(self):
-        pass
-
-    def test_creat_foaf_post(self):
-        # post is only visible to friend of a friend
-        pass
-
-    def test_create_public_post(self):
-        pass
-
-    def test_unfriend_local(self):
-        pass
-
-    def test_unfriend_remote(self):
-        pass
-
-class ServerTests(TestCase):
-    def setUp(self):
-        pass
-
-    def test_host_images(self):
-        pass
-
-    def test_add_author(self):
-        pass
-
-    def test_modify_author(self):
-        pass
-
-    def test_remove_author(self):
-        pass
-
-    def test_allow_new_user(self):
-        pass
-
-    def test_setup_not_approved(self):
-        # As a user who signed up but hasn't been approved by the server,
-        # I shouldn't be able to do anything
-        pass
-
-    def test_add_remote_server_with_auth(self):
-        pass
-
-    def test_add_remote_server_no_auth(self):
-        # This shouldn't work
-        pass
-
-    def test_disable_remote_server_conn(self):
-        pass
-
-    def test_share_posts_across_server(self):
-        pass
-
-    def test_no_share_posts_across_server(self):
-        pass
+    def test_get_edit_account(self):
+        r = resolve('/edit_account')
+        self.assertEqual(r.func, edit_account)
