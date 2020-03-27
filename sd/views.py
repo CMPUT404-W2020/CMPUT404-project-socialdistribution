@@ -40,12 +40,13 @@ def feed(request):
             following = Follow.objects.filter(Q(follower_id=user.uuid)).values('following') #### NOTE: following is a set of uuid's
             f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
             f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
-            if(f1 and f2):
-                friends = f1|f2      
-            elif f1:
-                friends = f1
-            elif f2:
-                friends = f2               #### NOTE:Friends is a subset of following and is a set of uuid's
+            friend_ids = []]
+            for i in f1:
+                friend_ids.append(i['friend'])
+            for j in f2:
+                friend_ids.append(j['author']) 
+            #### NOTE:Friends is a subset of following and are author objects
+
             for f in following: 
                 f_user = Author.objects.get(uuid=f['following'])
                 their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=1) & (Q(unlisted=1) | Q(unlisted='False')))
