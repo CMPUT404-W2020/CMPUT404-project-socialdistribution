@@ -20,7 +20,8 @@ def explore(request):
         print_state(request)
         posts = Post.objects.filter(Q(visibility='PUBLIC') & (
             Q(unlisted=1) | Q(unlisted='False')))
-        results = paginated_result(request, posts, GetPostSerializer, "feed", query="feed")
+        results = paginated_result(
+            request, posts, GetPostSerializer, "feed", query="feed")
         is_authenticated = authenticated(request)
         user = get_current_user(request) if is_authenticated else None
         return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results})
@@ -34,9 +35,11 @@ def feed(request):
         if authenticated(request) and user:
             load_github_feed(get_current_user(request))
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
-            pub_posts = Post.objects.filter(Q(visibility='PUBLIC') & (Q(unlisted=0)|Q(unlisted=False)))
+            pub_posts = Post.objects.filter(
+                Q(visibility='PUBLIC') & (Q(unlisted=0) | Q(unlisted=False)))
             all_posts = own_posts | pub_posts
-            results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
+            results = paginated_result(
+                request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
             print("CONSOLE: Redirecting from Feed because no one is logged in")
@@ -70,7 +73,8 @@ def search(request):
 
     # Get all authors
     all_authors = Author.objects.exclude(username=user)
-    context = paginated_result(request, all_authors, AuthorSerializer, "authors", query="authors")
+    context = paginated_result(
+        request, all_authors, AuthorSerializer, "authors", query="authors")
     context['authors'] = [author['username'] for author in context['authors']]
 
     # Get all follows
@@ -133,7 +137,8 @@ def post_comment(request, post_id):
     if valid_method(request):
         print_state(request)
         comments = Comment.objects.filter(post=post_id)
-        result = paginated_result(request, comments, CommentSerializer, "comments", query="comments")
+        result = paginated_result(
+            request, comments, CommentSerializer, "comments", query="comments")
         return HttpResponse("Post Comments Page")
     else:
         return HttpResponse(status_code=405)

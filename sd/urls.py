@@ -21,9 +21,9 @@ urlpatterns = [
     # Get post (uuid of post)
     path('posts/<uuid:pk>', GetPostAPIView.as_view(), name='get_post'),
 
-    # Get post comments
+    # Get post comments / Post post comment
     path('posts/<uuid:pk>/comments',
-         GetPostCommentsAPIView.as_view(), name='get_post_comments'),
+         CommentsAPIView.as_view(), name='get_post_comments'),
 
     # Create post
     path('author/<uuid:pk>/post', CreatePostAPIView.as_view(), name='create_post'),
@@ -52,12 +52,8 @@ urlpatterns = [
     # Get author object
     path('author/<uuid:pk>', GetAuthorAPIView.as_view(), name='get_author'),
 
-    # Create comment
-    path('posts/<uuid:pk>/comment/',
-         CreateCommentAPIView.as_view(), name='create_comment'),
-
     # Get all author's friends
-    path('author/<uuid:pk>/friends/',
+    path('author/<uuid:pk>/friends',
          GetAllAuthorFriendsAPIView.as_view(), name='all_author_friends'),
 
     # Get all author's foaf (includes friends)

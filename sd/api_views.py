@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
+from .paginations import *
 from .models import *
 from .serializers import *
 from .helper_functions import *
@@ -23,6 +24,41 @@ import os
 import json
 import uuid
 from uuid import uuid4
+
+
+def serializePost(post):
+    postDict = {}
+    postDict['author'] = serializeAuthor(post.author)
+    postDict['title'] = post.title
+    postDict['source'] = post.source
+    postDict['origin'] = post.origin
+    postDict['description'] = post.description
+    postDict['contentType'] = post.contentType
+    postDict['content'] = post.content
+    postDict['categories'] = post.categories
+    # postDict['count'] = 'COUNT'
+    # postDict['size'] = 'SIZE'
+    # postDict['next'] = 'NEXT'
+    comments = Comment.objects.filter(post=post)
+    postDict['comments'] = []
+    for comment in comments:
+        postDict['comments'].append(serializeComment(comment))
+    postDict['published'] = post.published
+    postDict['id'] = post.uuid
+    postDict['visibility'] = post.visibility
+    postDict['visibleTo'] = []
+    postDict['unlisted'] = post.unlisted
+    return postDict
+
+
+def serializeComment(comment):
+    commentDict = {}
+    commentDict['author'] = serializeAuthor(comment.author)
+    commentDict['comment'] = comment.comment
+    commentDict['contentType'] = comment.contentType
+    commentDict['published'] = comment.published
+    commentDict['id'] = comment.uuid
+    return commentDict
 
 
 def serializeAuthor(author):
@@ -146,9 +182,9 @@ class GetPostAPIView(APIView):
     # Returns Post by sending UUID of Post
     def get(self, request, pk, format=None):
         post = Post.objects.get(uuid=pk)
-        serializer = GetPostSerializer(post)
+        postDict = serializePost(post)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(postDict, status=status.HTTP_200_OK)
 
 
 class GetAllAuthorPostAPIView(APIView):
@@ -178,13 +214,31 @@ class GetAllAuthorFriendsAPIView(APIView):
 
         return Response(friendList, status=status.HTTP_200_OK)
 
+    def post(self, request, pk, format=None):
+        requestedAuthor = Author.objects.get(uuid=pk)
+        data = request.data
+        authors = data['authors']
+        friendsList = []
+        for author in authors:
+            friends = Friend.objects.filter(author=author).filter(friend=requestedAuthor).union(
+                Friend.objects.filter(author=requestedAuthor).filter(friend=author))
+            if len(friends) == 1:
+                friendsList.append(author)
+
+        return Response({
+            "query": "friends",
+            "author": requestedAuthor.uuid,
+            "authors": friendsList
+        })
+
 
 class GetAllPublicPostsAPIView(APIView):
     serializer_class = GetPostSerializer
 
     def get(self, request, format=None):
         posts = Post.objects.filter(visibility='PUBLIC')
-        data = paginated_result(request, posts, GetPostSerializer, 'posts', query='posts')
+        data = paginated_result(
+            request, posts, GetPostSerializer, 'posts', query='posts')
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -194,7 +248,6 @@ class GetAllVisiblePostsAPIView(APIView):
 
     def get(self, request, format=None):
         user = request.user
-        print(user)
         if str(user) == "AnonymousUser":
             print("Anonymous user")
             posts = Post.objects.filter(visibility='PUBLIC')
@@ -262,22 +315,19 @@ class GetAllVisiblePostsAPIView(APIView):
             serverAuthors = Author.objects.filter(host=author.host)
             print(serverAuthors)
 
-            serverPostUUIDs = []
             for author in serverAuthors:
-                temp = Post.objects.filter(author=author.uuid, visibility='SERVERONLY')
+                temp = Post.objects.filter(
+                    author=author.uuid, visibility='SERVERONLY')
                 # print('temp ok')
                 filteredPosts = filteredPosts.union(temp)
-                # print('post ok')
 
-            # filteredPosts.union(serverPosts)
+            postList = []
+            for post in filteredPosts:
+                postList.append(serializePost(post))
 
-            # print("serverposts done")
+            return PostPagination().get_paginated_response(postList, author.host)
 
-            # print(filteredPosts)
-            serializer = GetPostSerializer(filteredPosts, many=True)
-            return Response(
-                serializer.data, status=status.HTTP_200_OK
-            )
+            # serializer = GetPostSerializer(filteredPosts, many=True)
 
 
 class DeletePostAPIView(APIView):
@@ -319,15 +369,43 @@ class CreateCommentAPIView(CreateAPIView):
         )
 
 
-class GetPostCommentsAPIView(APIView):
+class CommentsAPIView(APIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
     # permission_classes = [IsAuthenticated]
     serializer_class = CommentSerializer
 
     def get(self, request, pk):
+        postHost = Post.objects.get(uuid=pk).host.hostname
         comments = Comment.objects.filter(post=pk)
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        commentList = []
+        for comment in comments:
+            commentList.append(serializeComment(comment))
+
+        return CommentPagination().get_paginated_response(commentList, postHost)
+
+    def post(self, request, pk, format=None):
+        if str(request.user) == "AnonymousUser":
+            return Response({"query": "addComment",
+                             "success": False,
+                             "message": "Comment not allowed"},
+                            status=status.HTTP_403_FORBIDDEN)
+
+        post = Post.objects.get(uuid=pk)
+
+        data = request.data
+
+        for item in data:
+            print(item)
+
+        newComment = Comment(author=request.user, comment=data['comment']['comment'], contentType=data['comment']
+                             ['contentType'], published=data['comment']['published'], post=post)
+        newComment.save()
+
+        return Response({
+            "query": "addComment",
+            "success": True,
+            "message": "Comment Added"},
+            status=status.HTTP_200_OK)
 
 
 class CreateFriendRequestAPIView(CreateAPIView):
