@@ -358,9 +358,13 @@ class GetPostCommentsAPIView(APIView):
     serializer_class = CommentSerializer
 
     def get(self, request, pk):
+        postHost = Post.objects.get(uuid=pk).host.hostname
         comments = Comment.objects.filter(post=pk)
-        serializer = CommentSerializer(comments, many=True)
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        commentList = []
+        for comment in comments:
+            commentList.append(serializeComment(comment))
+
+        return CommentPagination().get_paginated_response(commentList, postHost)
 
 
 class CreateFriendRequestAPIView(CreateAPIView):

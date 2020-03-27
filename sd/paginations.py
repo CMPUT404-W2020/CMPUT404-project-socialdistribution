@@ -25,18 +25,18 @@ class PostPagination(PageNumberPagination):
 class CommentPagination(PageNumberPagination):
     page_size = 50
 
-    def get_paginated_response(self, postList, host):
-        if len(postList) > self.page_size:
+    def get_paginated_response(self, commentList, host):
+        if len(commentList) > self.page_size:
             next_page = host + str(self.page_size)
         else:
             next_page = None
             previous_page = None
 
         return Response({
-            "query": "posts",
-            "count": len(postList),
+            "query": "comments",
+            "count": len(commentList),
             "size": self.page_size,
             "next": next_page,
             "previous": previous_page,
-            "posts": postList}
+            "comments": commentList}
         )

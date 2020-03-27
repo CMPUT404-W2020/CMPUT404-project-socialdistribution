@@ -192,3 +192,33 @@ posts/<uuid>
   "unlisted": false
 }
 
+posts/<uuid>/comments
+- GET
+- returns comments from post with specified uuid
+- example:
+{
+  "query": "comments",
+  "count": 1,
+  "size": 50,
+  "next": null,
+  "previous": null,
+  "comments": [
+    {
+      "author": {
+        "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+        "host": "https://cmput-404.herokuapp.com/",
+        "displayName": "admin",
+        "github": "",
+        "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+        "bio": "",
+        "firstName": "",
+        "lastName": "",
+        "email": ""
+      },
+      "comment": "HELLOOOOOO",
+      "contentType": "text/markdown",
+      "published": "2020-03-27T20:19:55.496559Z",
+      "id": "3a10eccb-0f2b-40e6-b45c-ea994670e0d0"
+    }
+  ]
+}
