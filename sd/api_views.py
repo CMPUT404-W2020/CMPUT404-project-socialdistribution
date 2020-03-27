@@ -214,6 +214,23 @@ class GetAllAuthorFriendsAPIView(APIView):
 
         return Response(friendList, status=status.HTTP_200_OK)
 
+    def post(self, request, pk, format=None):
+        requestedAuthor = Author.objects.get(uuid=pk)
+        data = request.data
+        authors = data['authors']
+        friendsList = []
+        for author in authors:
+            friends = Friend.objects.filter(author=author).filter(friend=requestedAuthor).union(
+                Friend.objects.filter(author=requestedAuthor).filter(friend=author))
+            if len(friends) == 1:
+                friendsList.append(author)
+
+        return Response({
+            "query": "friends",
+            "author": requestedAuthor.uuid,
+            "authors": friendsList
+        })
+
 
 class GetAllPublicPostsAPIView(APIView):
     serializer_class = GetPostSerializer

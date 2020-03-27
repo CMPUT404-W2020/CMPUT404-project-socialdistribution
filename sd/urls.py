@@ -53,7 +53,7 @@ urlpatterns = [
     path('author/<uuid:pk>', GetAuthorAPIView.as_view(), name='get_author'),
 
     # Get all author's friends
-    path('author/<uuid:pk>/friends/',
+    path('author/<uuid:pk>/friends',
          GetAllAuthorFriendsAPIView.as_view(), name='all_author_friends'),
 
     # Get all author's foaf (includes friends)
