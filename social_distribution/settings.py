@@ -154,10 +154,7 @@ LOGIN_REDIRECT_URL = 'explore'
 
 django_heroku.settings(locals())
 
-try:
-    HOSTNAME = socket.gethostbyname(socket.gethostname())
-except:
-    HOSTNAME = 'localhost'
+HOSTNAME = 'https://cmput-404.herokuapp.com/'
 
 
 # Set for photo upload

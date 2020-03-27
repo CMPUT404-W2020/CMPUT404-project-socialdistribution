@@ -4,9 +4,7 @@ from django.db.models import Q
 
 
 def valid_method(request):
-    if request.method in ("GET", "POST"):
-        return True
-    return False
+    return request.method in ("GET", "POST")
 
 
 def authenticated(request):

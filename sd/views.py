@@ -19,23 +19,19 @@ import requests
 class foreignData():
 
     def authorObjects(self):
-        for node in Node.objects.all():
-            if node.hostname != settings.HOSTNAME:
-                # delete existing cache
-                for author in Author.objects.filter(host=node):
-                    author.delete()
+        for node in Node.objects.exclude(hostname=settings.HOSTNAME):
+            # delete existing cache
+            Author.objects.filter(host=node).delete()
 
-                # return all authors
-                response = requests.get(node.hostname + 'author')
-                response = response.json()
-                print(json.dumps(response, indent=4))
+            # return all authors
+            response = requests.get(node.hostname + 'author')
+            response = response.json()
 
-                for item in response:
-                    print(item)
-                    node = Node.objects.get(hostname=item['host'])
-                    author = Author(
-                        username=item['displayName'], password='1234567890', github=item['github'], host=node)
-                    author.save()
+            for item in response:
+                node = Node.objects.get(hostname=item['host'])
+                author = Author(
+                    username=item['displayName'], password='1234567890', github=item['github'], host=node)
+                author.save()
 
 
 def explore(request):
