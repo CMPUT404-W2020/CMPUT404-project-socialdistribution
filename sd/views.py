@@ -28,6 +28,8 @@ class foreignData():
             response = response.json()
 
             for item in response:
+                if item['host'] != node.hostname:
+                    continue
                 node = Node.objects.get(hostname=item['host'])
                 author = Author(
                     username=item['displayName'], password='1234567890', github=item['github'], host=node)
