@@ -56,7 +56,7 @@ Squawk is a distributed social network that gives control back to the user. With
 
 ## User Access
 
-The website is hosted by Heroku at https://cmput-404.herokuapp.com/
+The website is hosted by Heroku at: https://cmput-404.herokuapp.com/
 
 On first use, you will not be logged in but are granted access to the explore page. This allows users to explore public posts before deciding to sign up with Squawk. After signing in or making an account (click on the account button), you will be granted access to the full functionality.
 
@@ -73,23 +73,39 @@ For testing, we have created a number of sample user credentials:
 
 ## Admin Access
 
-You can access the admin page through https://cmput-404.herokuapp.com/admin and using the credentials username: warren password: cmput404
+You can access the admin page through https://cmput-404.herokuapp.com/admin and using the credentials: 
+
+    username: warren 
+    password: cmput404
 
 When running locally, you can run this command to create a superuser and access the admin interface:
-python3 manage.py createsuperuser
+
+    python3 manage.py createsuperuser
 
 ## API Information:
 
-API Endpoint URL = https://cmput-404.herokuapp.com/
-credentials = warren:cmput404
-example HTTPIE = http GET https://cmput-404.herokuapp.com/posts
-Web Service Endpoint URL = https://cmput-404.herokuapp.com/
+API Endpoint URL:
+    
+    https://cmput-404.herokuapp.com/
+
+Credentials:
+    
+    warren:cmput404
+
+Example HTTPIE:
+    
+    http GET https://cmput-404.herokuapp.com/posts
+
+Web Service Endpoint URL:
+    
+    https://cmput-404.herokuapp.com/
 
 Current Connections:
 | Remote API Endpoint                                  | Username   | Password        |
 | ---------------------------------------------------- | ---------- | --------------  |
 | https://cmput404-socialdistribution.herokuapp.com/   | admindemo  |  ualberta01!    |
 | https://glacial-earth-37816.herokuapp.com/api/       | group8     |  group8password |
+
 
 ### API Call Formats:
 
@@ -98,7 +114,7 @@ The format of requests are found in the example_requests folder (https://github.
 The system allows GET, PUT, POST, and DELETE requests; all other requests will be responded to with an HTTP 405 response
 (will be updated to match social_distribution/sd/urls.py found on the api branch)
 
-/author/
+**/author/**
 
 - GET
 - Returns all users
@@ -127,7 +143,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   }
   ]
 
-/author/<uuid>
+**/author/<uuid>**
 
 - GET
 - Returns user details
@@ -157,7 +173,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-/author/<uuid>/friends
+**/author/<uuid>/friends**
 
 - GET
 - Returns all friends of user
@@ -172,7 +188,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   }
   ]
 
-/author/<uuid:pk1>/friends/<uuid:pk2>
+**/author/<uuid:pk1>/friends/<uuid:pk2>**
 
 - GET
 - returns bool to indicate whether or not two users are friends
@@ -185,7 +201,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   "friends": 1
   }
 
-/author/posts
+**/author/posts**
 
 - GET
 - returns all posts visible to user
@@ -244,7 +260,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-posts/<uuid>
+**posts/<uuid>**
 
 - GET
 - Returns values for post specified by uuid
@@ -294,7 +310,7 @@ posts/<uuid>
   "unlisted": false
   }
 
-posts/<uuid>/comments
+**posts/<uuid>/comments**
 
 - GET
 - returns comments from post with specified uuid
@@ -326,7 +342,7 @@ posts/<uuid>/comments
   ]
   }
 
-posts/<uuid>/comments
+**posts/<uuid>/comments**
 
 - post
 - creates comment on post specified with uuid
@@ -355,7 +371,7 @@ posts/<uuid>/comments
   "message": "Comment Added"
   }
 
-/author/<uuid>/friends/<uuid>/
+**/author/<uuid>/friends/<uuid>/**
 
 - GET
 - Check if two authors are friends
@@ -401,18 +417,23 @@ posts/<uuid>/comments
 
 ## Web-Browser Page Paths:
 
-**(will be updated to match social_distribution/sd/urls.py found on the api branch)**
-
-    /                    (displays the default explore page with all public posts in servers connected to yours)
+### Post Interaction:
+    /                    (displays the default explore page with all public and listed posts in servers connected to yours)
     /feed                (displays all posts created by the logged in user, and all posts by users that the logged in user follows, if they have permission to view those posts.
-    /login               (provides a form for the user to login to the system)
-    /logout              (logs the currently authenticated user out)
-    /search              (allows the user to search for other users. From the search results, they can follow/unfollow users and see their current relationship to them)
-    /account             (displays the currently authenticated user's information and allows them to edit that information)
     /editpost/<post_id>  (allows the user to edit the specified post if it is their post)
     /newpost             (provides a form for the user to create a new post)
+    
+### Account Interaction
+    /login               (provides a form for user to login to the system with existing credentials)
     /register            (provides a form for the user to register as an Author)
-    /notifications       (displays a concept UI for the user's notification of requests)
+    /logout              (logs the currently authenticated user out)
+    /account             (displays the currently authenticated user's information and allows them to edit that information)
+    /edit_account        (allows the user to edit their profile information)
+    
+### User interaction
+    /search              (allows the user to search for other users. From the search results, they can follow/unfollow users and see their current relationship to them)
+    /notifications       (displays the user's notification of requests and a list of other users that they follow or are friends with)
+
 
 ## Testing
 
