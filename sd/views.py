@@ -54,8 +54,10 @@ def feed(request):
         user = get_current_user(request)
         if authenticated(request) and user:
             load_github_feed(get_current_user(request)) 
+            all_posts = Post.objects.none()
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
-            all_posts = own_posts
+            if own_posts:
+                all_posts  = (all_posts | own_posts).distinct()
             following = Follow.objects.filter(Q(follower_id=user.uuid))
             f1 = Friend.objects.filter(Q(author_id=user.uuid)).values('friend_id')
             f2 = Friend.objects.filter(Q(friend_id=user.uuid)).values('author_id')
@@ -67,11 +69,13 @@ def feed(request):
                 friends = f2               #### NOTE:Friends is a subset of following and is a set of uuid's
             for f in following: 
                 their_pub_posts = Post.objects.filter(Q(author_id=f.uuid) & Q(visibility=1) & (Q(unlisted=1) | Q(unlisted=False)))
-                all_posts = (all_posts | their_pub_posts).distinct()
+                if their_pub_posts:
+                    all_posts = (all_posts | their_pub_posts).distinct()
 
                 if f.host == user.host:
                     server_spec_posts = Post.objects.filter(Q(author_id=f.uuid) & Q(visibility=5) & (Q(unlisted=1) | Q(unlisted=False)))
-                    all_posts = (all_posts | server_spec_posts).distinct()
+                    if server_spec_posts:
+                        all_posts = (all_posts | server_spec_posts).distinct()
                 
                 spec_posts= Post.objects.filter(Q(author_id=f.uuid) & Q(visibility=4) & (Q(unlisted=1) | Q(unlisted=False)))
                 for post in spec_posts:
@@ -80,7 +84,8 @@ def feed(request):
                 
                 if f.uuid in friends:
                     friend_posts = Post.objects.filter(Q(author_id=f.uuid) & Q(visibility=3) & (Q(unlisted=1) | Q(unlisted=False)))
-                    all_post = (all_post | friend_posts).distinct()
+                    if friend_posts:
+                        all_post = (all_post | friend_posts).distinct()
                 
                 for friend in friends:
                     tf1 = Friend.objects.filter(Q(author_id=friend)).values('friend_id')
@@ -88,7 +93,8 @@ def feed(request):
                     their_friends = tf1 | tf2                    #### NOTE:their_friends is a set of uuid's
                     for foaf in their_friends:
                         posts = Post.objects.filter(Q(author_id=foaf) & Q(visibility=2)& (Q(unlisted=1) | Q(unlisted=False)))
-                        all_posts = (all_posts | posts).distinct()
+                        if posts:
+                            all_post = (all_posts | posts).distinct()
 
             results = paginated_result(
                 all_posts, request, "feed", query="feed")
