@@ -78,6 +78,8 @@ def feed(request):
                         posts = Post.objects.filter(Q(author=foaf) & Q(visibility='FOAF')& (Q(unlisted=1) | Q(unlisted='False')))
                         if posts:
                             all_post = (all_posts | posts).distinct()
+
+                temp = Author.objects.get(fs)
                 
             results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
