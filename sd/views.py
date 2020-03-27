@@ -47,7 +47,7 @@ def feed(request):
             elif f2:
                 friends = f2               #### NOTE:Friends is a subset of following and is a set of uuid's
             for f in following: 
-                f_user = Author.objects.get(uuid=f)
+                f_user = Author.objects.get(uuid=f['following'])
                 their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=1) & (Q(unlisted=1) | Q(unlisted='False')))
                 if their_pub_posts:
                     all_posts = (all_posts | their_pub_posts).distinct()
