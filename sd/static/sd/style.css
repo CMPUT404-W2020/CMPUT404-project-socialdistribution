@@ -217,9 +217,8 @@ button:hover {
 
 .navigate-feed{
   background-color: white;
+  margin-top: 2em;
   margin-bottom: 2em;
-  top: 1; /* start after header */
-  padding: 2em 3em 2em 3em ;
 }
 
 
