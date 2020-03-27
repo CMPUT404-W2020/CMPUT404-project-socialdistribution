@@ -61,7 +61,7 @@ def get_relationship(user, target):
     friends = f1.union(f2)
     if friends:
         # if the two users are friends, delete any friend requests between the two of them, if any. working with the logic that an existing Friend objects trumps any friendrequest data
-        if(fr1.union(fr2):
+        if(fr1.union(fr2)):
             (fr1.union(fr2)).delete()
         return 1, None  # friends
     if fr1:
