@@ -455,9 +455,9 @@ form>.row {
   background-color: white;
   margin: 0.2em;
   border: 1.5px solid;
-  border-color: lightgrey;
   width: auto;
   font-size: medium;
+  border: 1.5px solid #f0f0f0;
 }
 
 #login-button {
@@ -752,16 +752,16 @@ input {
 input[type=submit]{
   text-align: center;
   width: auto;
-  height: 150%;
   float: center;
   width: 20%;
   background: white;
   color: #ed9a00;
   border-radius: 10px;
   border: 1.5px solid #f0f0f0;
-  padding: 0.4em;
-  margin: 0.3em;
+  padding: 0.3em;
+  margin: 0.2em;
 }
+
 
 input[type=submit]:hover{
     cursor: pointer;
