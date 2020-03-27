@@ -1,7 +1,6 @@
 {% load static %}
 <!DOCTYPE html>
 <html>
-
 <head>
     <title>Squawk | Edit Account</title>
     <meta charset="UTF-8">
@@ -10,6 +9,8 @@
 
     <!-- stylesheets / css -->
 	<link rel="stylesheet" href="{% static 'sd/style.css' %}">
+    <script type="text/javascript" src="../../static/sd/helperfunctions.js"></script>
+    <script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
 
 <script type="text/javascript">
@@ -38,7 +39,7 @@ function loadBar() {
             {{ form.as_p }}
             <input type="submit" value="SAVE" id="save-button" style="float: right;">
             <a href="../account">
-                <button id="save-button"> CANCEL </button>
+                <button id="cancel-button"> CANCEL </button>
             </a>
 
         </form>

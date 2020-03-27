@@ -446,10 +446,24 @@ form>.row {
   font-size: medium;
 }
 
+#cancel-button{
+  width: auto;
+  float: right;
+  color: #ed9a00;
+  padding: 0.3em;
+  border-radius: 10px;
+  background-color: white;
+  margin: 0.2em;
+  border: 1.5px solid;
+  border-color: lightgrey;
+  width: auto;
+  font-size: medium;
+}
+
 #login-button {
   width: auto;
   font-size: medium;
-  margin-top: 0em;
+  margin-top: 1em;
 }
 
 #login-button:hover {
@@ -747,6 +761,10 @@ input[type=submit]{
   border: 1.5px solid #f0f0f0;
   padding: 0.4em;
   margin: 0.3em;
+}
+
+input[type=submit]:hover{
+    cursor: pointer;
 }
 
 select {
