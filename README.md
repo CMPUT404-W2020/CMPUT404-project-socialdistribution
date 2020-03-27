@@ -100,86 +100,306 @@ The format of requests are found in the example_requests folder (https://github.
 The system allows GET, PUT, POST, and DELETE requests; all other requests will be responded to with an HTTP 405 response
 (will be updated to match social_distribution/sd/urls.py found on the api branch)
 
-    auth/register
-    - POST
-        - create user
-        {
-            first_name : fname,
-            last_name: lname,
-            username: uname,
-            password: password,
-            email : email
-        }
+/author/
 
-    author/<uuid>
-    - GET
-        - returns author information
-        - uuid = author UUID
+- GET
+- Returns all users
+- Example,
+  [
+  {
+  "id": "192.168.0.143author/ac29def6-dde8-44f7-af24-781a36fb891f",
+  "host": "192.168.0.143",
+  "displayName": "admin",
+  "github": "",
+  "url": "192.168.0.143author/ac29def6-dde8-44f7-af24-781a36fb891f"
+  },
+  {
+  "id": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+  "host": "192.168.0.143",
+  "displayName": "1211pmUser",
+  "github": "",
+  "url": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174"
+  },
+  {
+  "id": "192.168.0.143author/44df6b5a-7f11-4f87-8a35-16daa2a7eab4",
+  "host": "192.168.0.143",
+  "displayName": "1258pmUser",
+  "github": "",
+  "url": "192.168.0.143author/44df6b5a-7f11-4f87-8a35-16daa2a7eab4"
+  }
+  ]
 
-    auth/edituser/<uuid>
-    - PUT
-        - edit user
-        {
-            first_name : fname,
-            last_name: lname,
-            username: uname,
-            password: password,
-            email : email
-        }
+/author/<uuid>
 
-    deletepost/<uuid>
-    - DELETE
-        - requires auth
+- GET
+- Returns user details
+- Example:
+  {
+  "id": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+  "host": "192.168.0.143",
+  "displayName": "1211pmUser",
+  "github": "",
+  "url": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+  "bio": "",
+  "firstName": "testing",
+  "lastName": "testing2",
+  "email": "test@test.com",
+  "friends": [
+  {
+  "id": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+  "host": "192.168.0.143",
+  "displayName": "1211pmUser",
+  "github": "",
+  "url": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+  "bio": "",
+  "firstName": "testing",
+  "lastName": "testing2",
+  "email": "test@test.com"
+  }
+  ]
+  }
 
-    posts/<uuid>
-    - GET
-        - gets post
-        - uuid = post UUID
+/author/<uuid>/friends
 
-    posts/<uuid>/comment
-    - POST
-        - create comment
-        - requires auth
-        - uuid = post UUID
-        {
-            author : uuid,
-            comment : comments,
-            post : uuid
-        }
+- GET
+- Returns all friends of user
+- Example:
+  [
+  {
+  "id": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+  "host": "192.168.0.143",
+  "displayName": "1211pmUser",
+  "github": "",
+  "url": "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174"
+  }
+  ]
 
-    posts/<uuid>/comments
-    - GET
-        - get post comments
-        - uuid = post UUID
+/author/<uuid:pk1>/friends/<uuid:pk2>
 
+- GET
+- returns bool to indicate whether or not two users are friends
+  {
+  "query": "friends",
+  "authors": [
+  "192.168.0.143author/8484179c-0b95-4a42-8a0f-216f1266b174",
+  "192.168.0.143author/ac29def6-dde8-44f7-af24-781a36fb891f"
+  ],
+  "friends": 1
+  }
 
-    author/<uuid>/post
-    - POST
-        - create post
-        - uuid = Author UUID
-        {
-            title : title,
-            source : source,
-            description : description,
-            contentType : text/markdown,
-            content : content,
-            author : uuid,
-            categories : categories,
-            visibility : 1,2,3,4, or 5,
-            unlisted : 1 or 0,
-            link_to_image : url,
-            image : image
-        }
+/author/posts
 
-    author/<uuid>/posts
-    - GET
-        - get all of author's posts
-        - uuid = Author UUID
+- GET
+- returns all posts visible to user
+- uses Auth to determine what posts are visible
+- Accepts pagination ie. /author/posts?page=4&size=50
+- Example:
+  {
+  "query": "posts",
+  "count": 1,
+  "size": 50,
+  "next": null,
+  "previous": null,
+  "posts": [
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/9496fd85-6b0d-4f6b-b359-3697d18d0c50",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "856pm",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/9496fd85-6b0d-4f6b-b359-3697d18d0c50",
+  "bio": "",
+  "firstName": "adsfadsf",
+  "lastName": "fadfdaf",
+  "email": "test@tes.com"
+  },
+  "title": "902pm",
+  "description": "",
+  "contentType": "1",
+  "content": "",
+  "categories": "",
+  "comments": [
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/a40b2d9c-aaec-4703-a119-1f617ada86ad",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "admin",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/a40b2d9c-aaec-4703-a119-1f617ada86ad",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": ""
+  },
+  "comment": "HELLOOOOOOO",
+  "contentType": "1",
+  "published": "2020-03-27T05:32:39.587831Z",
+  "id": "73b72d79-ce8e-4b4e-b07a-ae7a78cb9971"
+  }
+  ],
+  "published": "2020-03-27T03:02:54.830082Z",
+  "id": "b174b292-2d32-47c5-bbe9-dd8fc92582a5",
+  "visibility": "1",
+  "visibleTo": [],
+  "unlisted": "1"
+  }
+  ]
+  }
 
+posts/<uuid>
 
-    author/posts
-    - GET
-        - gets all visible posts to user
+- GET
+- Returns values for post specified by uuid
+- Example:
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "207pm",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "bio": "",
+  "firstName": "asdfasdf",
+  "lastName": "sdafadfa",
+  "email": "test@test.com"
+  },
+  "title": "asdfadf",
+  "source": "https://cmput-404.herokuapp.com/",
+  "origin": "https://cmput-404.herokuapp.com/",
+  "description": "asdfasdf",
+  "contentType": "text/markdown",
+  "content": "asdfsa",
+  "categories": "",
+  "comments": [
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "admin",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": ""
+  },
+  "comment": "HELLOOOOOO",
+  "contentType": "text/markdown",
+  "published": "2020-03-27T20:19:55.496559Z",
+  "id": "3a10eccb-0f2b-40e6-b45c-ea994670e0d0"
+  }
+  ],
+  "published": "2020-03-27T20:08:11.468804Z",
+  "id": "d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "visibility": "PUBLIC",
+  "visibleTo": [],
+  "unlisted": false
+  }
+
+posts/<uuid>/comments
+
+- GET
+- returns comments from post with specified uuid
+- example:
+  {
+  "query": "comments",
+  "count": 1,
+  "size": 50,
+  "next": null,
+  "previous": null,
+  "comments": [
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "admin",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": ""
+  },
+  "comment": "HELLOOOOOO",
+  "contentType": "text/markdown",
+  "published": "2020-03-27T20:19:55.496559Z",
+  "id": "3a10eccb-0f2b-40e6-b45c-ea994670e0d0"
+  }
+  ]
+  }
+
+posts/<uuid>/comments
+
+- post
+- creates comment on post specified with uuid
+- Example POST:
+  {
+  "query" : "addComment",
+  "post" : "https://cmput-404.herokuapp.com/928fe363-766d-4633-a35b-80ece3015c40",
+  "comment" : {
+  "author": {
+  "id" : "https://cmput-404.herokuapp.com/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "host" : "https://cmput-404.herokuapp.com/",
+  "displayName" : "207pm",
+  "url" : "https://cmput-404.herokuapp.com/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "github" : ""
+  },
+  "comment" : "TEST COMMENT",
+  "contentType" : "text/markdown",
+  "published" : "2015-03-09T13:07:04+00:00",
+  "id" : "928fe363-766d-4633-a35b-80ece3015c40"
+  }
+  }
+- Example return:
+  {
+  "query": "addComment",
+  "success": true,
+  "message": "Comment Added"
+  }
+
+/author/<uuid>/friends/<uuid>/
+
+- GET
+- Check if two authors are friends
+- Example False:
+  {
+  "query": "friends",
+  "authors": [
+  "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28"
+  ],
+  "friends": false
+  }
+- Example True:
+  {
+  "query": "friends",
+  "authors": [
+  "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28"
+  ],
+  "friends": true
+  }
+  author/<uuid>/friends
+- POST
+- Returns authors that are friends with specified author
+- Example POST
+  {
+  "query":"friends",
+  "author": <authorid>,
+  "authors": [
+  "2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "65787662-c1e1-451d-a7b3-4386f0bdd9d0",
+  "..."
+  ]
+  }
+- Example response:
+  {
+  "query": "friends",
+  "author": <authorid>,
+  "authors": [
+  "2a7b68b3-9d64-4365-8f4b-ae290fa31a28"
+  ]
+  }
 
 ## Web-Browser Page Paths:
 
@@ -197,7 +417,5 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
     /notifications       (displays a concept UI for the user's notification of requests)
 
 ## Testing
-
-From the root directory of the project, run `python3 manage.py test`. There is one test for each model and one test for each front-end url as represented in the files models.py and urls.py.
 
 **TODO**: Update to explain the tests briefly, where they can be found and how to run them.
