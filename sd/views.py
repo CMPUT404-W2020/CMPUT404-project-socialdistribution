@@ -59,7 +59,12 @@ def feed(request):
             following = Follow.objects.filter(Q(follower_id=user.uuid))
             f1 = Friend.objects.filter(Q(author_id=user.uuid)).values('friend_id')
             f2 = Friend.objects.filter(Q(friend_id=user.uuid)).values('author_id')
-            friends = f1|f2                     #### NOTE:Friends is a subset of following and is a set of uuid's
+            if(f1 and f2)
+                friends = f1|f2      
+            elif f1:
+                friends = f1
+            elif f2:
+                friends = f2               #### NOTE:Friends is a subset of following and is a set of uuid's
             for f in following: 
                 their_pub_posts = Post.objects.filter(Q(author_id=f.uuid) & Q(visibility=1) & (Q(unlisted=1) | Q(unlisted=False)))
                 all_posts = (all_posts | their_pub_posts).distinct()
