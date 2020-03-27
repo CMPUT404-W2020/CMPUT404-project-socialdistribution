@@ -57,7 +57,7 @@ def feed(request):
             all_posts = own_posts | pub_posts
             following = Follow.objects.filter(Q(follower_id=user.uuid))
             for item in following:
-                all_posts = all_posts | (Post.objects.filter(Q(visibility =Q(author_id=item.following_id)))
+                all_posts = all_posts | Post.objects.filter(Q(visibility = 1 & Q(author_id=item.following_id)))
 
             results = paginated_result(
                 all_posts, request, "feed", query="feed")
