@@ -36,7 +36,7 @@ def paginated_result(objects, request, keyword, **result):
     result["count"] = count
     result["size"] = size
     result["previous"] = page_num - 1 if page_num >= 1 else None
-    result["next"] = page_num + 1 if objects.count() > last_result else None
+    result["next"] = page_num + 1 if objects.count() >= last_result else None
     result[keyword] = list(objects[first_result:last_result])
     print(result)
     return result
