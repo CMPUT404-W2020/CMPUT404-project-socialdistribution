@@ -8,16 +8,14 @@ from django.contrib.auth import views as auth_views
 urlpatterns = [
 
     url(r'^auth/register/$', CreateAuthorAPIView.as_view(), name='auth_user_create'),
-    url(r'^auth/logout/$', AuthorLogoutAPIView.as_view(), name='auth_user_logout'),
+    url(r'^auth/logout/$', LogoutView.as_view(), name='auth_user_logout'),
     url(r'^auth/getuser/$', GetAuthorAPIView.as_view(), name='auth_user_get'),
     path('auth/edituser/<uuid:pk>',
-         AuthorUpdateAPIView.as_view(), name='auth_user_update'),
+         EditUserView.as_view(), name='auth_user_update'),
     url(r'^auth/createpost/$', CreatePostAPIView.as_view(), name='auth_post_create'),
     url(r'^auth/getpost/$', GetPostAPIView.as_view(), name='auth_post_get'),
     path('deletepost/<uuid:pk>',
          DeletePostAPIView.as_view(), name='post_delete'),
-    url(r'^auth/getallpost/$', GetAllAuthorPostAPIView.as_view(),
-        name='auth_post_getall'),
 
 
     # Get post (uuid of post)
