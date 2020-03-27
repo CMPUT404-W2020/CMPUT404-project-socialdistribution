@@ -38,7 +38,9 @@ function loadBar() {
 		<form method="POST" enctype="multipart/form-data">
 			{% csrf_token %}
 			{{ form.as_p }}
-			<input type="submit" value="POST" id="bluebackground-button" style="float: right;"> <br>
+			<button>
+				<input type="submit" value="POST" id="bluebackground-button" style="float: right;"> <br>
+			</button>
 		</form>
 			{% endblock content %}
 		<br>
