@@ -58,11 +58,11 @@ def get_relationship(user, target):
         Q(to_author=user.uuid) & Q(from_author=target.uuid))
     fr2 = FriendRequest.objects.filter(
         Q(to_author=target.uuid) & Q(from_author=user.uuid))
-    friends = f1 | f2
+    friends = f1.union(f2)
     if friends:
         # if the two users are friends, delete any friend requests between the two of them, if any. working with the logic that an existing Friend objects trumps any friendrequest data
-        if(fr1 | fr2):
-            (fr1 | fr2).delete()
+        if(fr1.union(fr2):
+            (fr1.union(fr2)).delete()
         return 1, None  # friends
     if fr1:
         return 2, fr1  # target follows user

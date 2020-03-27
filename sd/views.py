@@ -36,7 +36,7 @@ def feed(request):
             all_posts = Post.objects.none()
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
             if own_posts:
-                all_posts  = (all_posts | own_posts).distinct()
+                all_posts  = all_posts.union(own_posts)
             following_temp = Follow.objects.filter(Q(follower_id=user.uuid)).values('following') #### NOTE: following is a set of uuid's
             following = []
             for i in following_temp:
@@ -75,7 +75,7 @@ def feed(request):
                 for friend in friend_ids:
                     tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
                     tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
-                    their_friends = tf1 | tf2                    #### NOTE:their_friends is a set of uuid's
+                    their_friends = tf1.union(tf2)                    #### NOTE:their_friends is a set of uuid's
                     for foaf in their_friends:
                         posts = Post.objects.filter(Q(author=foaf) & Q(visibility='FOAF')& (Q(unlisted=1) | Q(unlisted='False')))
                         if posts:
@@ -125,7 +125,7 @@ def search(request):
     # Get all follows
     my_follows = Follow.objects.filter(Q(follower=user))
     follows_me = Follow.objects.filter(Q(following=user))
-    all_follows = my_follows | follows_me
+    all_follows = my_follows.union(follows_me)
 
     # The follow object doesn't return names, it returns more objects
     # So I need to put it in a form that JS will understand
