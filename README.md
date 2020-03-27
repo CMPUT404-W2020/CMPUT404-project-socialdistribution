@@ -58,19 +58,6 @@ Squawk is a distributed social network that gives control back to the user. With
 
 The website is hosted by Heroku at https://cmput-404.herokuapp.com/
 
-Alternatively, one can run the app locally by running the following command from the root directory:
-virtualenv venv --python=python3
-source venv/bin/activate
-pip3 install -r requirements.txt
-python3 social_distribution/manage.py runserver
-
-If you make local changes that result in database errors, try:
-python3 manage.py makemigrations
-python3 manage.py migrate --run-syncdb
-python3 manage.py migrate
-
-Once the app is running, use your web browser to access: http://127.0.0.1:8000/
-
 On first use, you will not be logged in but are granted access to the explore page. This allows users to explore public posts before deciding to sign up with Squawk. After signing in or making an account (click on the account button), you will be granted access to the full functionality.
 
 For testing, we have created a number of sample user credentials:
@@ -86,7 +73,7 @@ For testing, we have created a number of sample user credentials:
 
 ## Admin Access
 
-**TODO**: add superuser information for heroku. \*not sure if django superuser is the same. Can we provide them with superuser login in that will work for them?
+You can access the admin page through https://cmput-404.herokuapp.com/admin and using the credentials username: warren password: cmput404
 
 When running locally, you can run this command to create a superuser and access the admin interface:
 python3 manage.py createsuperuser
