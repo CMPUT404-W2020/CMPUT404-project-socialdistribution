@@ -161,6 +161,7 @@ button:hover {
   margin-top: 7em;
   margin-left: 25em; /* Same as the width of the sidebar */
   margin-right: 6em;
+  margin-bottom: 6em;
 }
 
 .feed#nosidebar {
@@ -214,6 +215,13 @@ button:hover {
   margin-left: auto;
   margin-right: auto;
 }
+
+.navigate-feed{
+  background-color: white;
+  margin-top: 2em;
+  margin-bottom: 2em;
+}
+
 
 /* comments */
 
@@ -436,12 +444,27 @@ form>.row {
 #save-button {
   width: auto;
   font-size: medium;
+  padding: 0.3em;
+  margin: 0.2em;
+}
+
+#cancel-button{
+  width: auto;
+  float: right;
+  color: #ed9a00;
+  padding: 0.3em;
+  border-radius: 10px;
+  background-color: white;
+  margin: 0.2em;
+  width: auto;
+  font-size: medium;
+  border: 1.5px solid #f0f0f0;
 }
 
 #login-button {
   width: auto;
   font-size: medium;
-  margin-top: 0em;
+  margin-top: 1em;
 }
 
 #login-button:hover {
@@ -739,6 +762,11 @@ input[type=submit]{
   border: 1.5px solid #f0f0f0;
   padding: 0.4em;
   margin: 0.3em;
+}
+
+
+input[type=submit]:hover{
+    cursor: pointer;
 }
 
 select {
