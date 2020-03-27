@@ -9,6 +9,7 @@ from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
 from django.contrib.auth.hashers import check_password
+from .paginations import *
 from .models import *
 from .serializers import *
 from django.utils import timezone
@@ -23,6 +24,41 @@ import pdb
 import json
 import uuid
 from uuid import uuid4
+
+
+def serializePost(post):
+    postDict = {}
+    postDict['author'] = serializeAuthor(post.author)
+    postDict['title'] = post.title
+    # postDict['source'] = post.source
+    # postDict['origin'] = post.origin
+    postDict['description'] = post.description
+    postDict['contentType'] = post.contentType
+    postDict['content'] = post.content
+    postDict['categories'] = post.categories
+    # postDict['count'] = 'COUNT'
+    # postDict['size'] = 'SIZE'
+    # postDict['next'] = 'NEXT'
+    comments = Comment.objects.filter(post=post)
+    postDict['comments'] = []
+    for comment in comments:
+        postDict['comments'].append(serializeComment(comment))
+    postDict['published'] = post.published
+    postDict['id'] = post.uuid
+    postDict['visibility'] = post.visibility
+    postDict['visibleTo'] = []
+    postDict['unlisted'] = post.unlisted
+    return postDict
+
+
+def serializeComment(comment):
+    commentDict = {}
+    commentDict['author'] = serializeAuthor(comment.author)
+    commentDict['comment'] = comment.comment
+    commentDict['contentType'] = comment.contentType
+    commentDict['published'] = comment.published
+    commentDict['id'] = comment.uuid
+    return commentDict
 
 
 def serializeAuthor(author):
@@ -282,7 +318,6 @@ class GetAllVisiblePostsAPIView(APIView):
 
     def get(self, request, format=None):
         user = request.user
-        print(user)
         if str(user) == "AnonymousUser":
             print("Anonymous user")
             posts = Post.objects.filter(visibility='1')
@@ -350,22 +385,18 @@ class GetAllVisiblePostsAPIView(APIView):
             serverAuthors = Author.objects.filter(host=author.host)
             print(serverAuthors)
 
-            serverPostUUIDs = []
             for author in serverAuthors:
                 temp = Post.objects.filter(author=author.uuid, visibility='5')
                 # print('temp ok')
                 filteredPosts = filteredPosts.union(temp)
-                # print('post ok')
 
-            # filteredPosts.union(serverPosts)
+            postList = []
+            for post in filteredPosts:
+                postList.append(serializePost(post))
 
-            # print("serverposts done")
+            return PostPagination().get_paginated_response(postList, author.host)
 
-            # print(filteredPosts)
-            serializer = GetPostSerializer(filteredPosts, many=True)
-            return Response(
-                serializer.data, status=status.HTTP_200_OK
-            )
+            # serializer = GetPostSerializer(filteredPosts, many=True)
 
 
 class DeletePostAPIView(APIView):

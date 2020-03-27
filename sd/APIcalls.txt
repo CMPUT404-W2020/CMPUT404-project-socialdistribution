@@ -26,6 +26,7 @@
   }
 ]
 
+
 /author/<uuid>
 - GET
 - Returns user details
@@ -55,6 +56,7 @@
   ]
 }
 
+
 /author/<uuid>/friends
 - GET
 - Returns all friends of user
@@ -82,3 +84,61 @@
   "friends": 1
 }
 
+
+/author/posts
+- GET
+- returns all posts visible to user
+- uses Auth to determine what posts are visible
+- Accepts pagination ie. /author/posts?page=4&size=50
+- Example:
+{
+  "query": "posts",
+  "count": 1,
+  "size": 50,
+  "next": null,
+  "previous": null,
+  "posts": [
+    {
+      "author": {
+        "id": "https://cmput-404.herokuapp.com/author/9496fd85-6b0d-4f6b-b359-3697d18d0c50",
+        "host": "https://cmput-404.herokuapp.com/",
+        "displayName": "856pm",
+        "github": "",
+        "url": "https://cmput-404.herokuapp.com/author/9496fd85-6b0d-4f6b-b359-3697d18d0c50",
+        "bio": "",
+        "firstName": "adsfadsf",
+        "lastName": "fadfdaf",
+        "email": "test@tes.com"
+      },
+      "title": "902pm",
+      "description": "",
+      "contentType": "1",
+      "content": "",
+      "categories": "",
+      "comments": [
+        {
+          "author": {
+            "id": "https://cmput-404.herokuapp.com/author/a40b2d9c-aaec-4703-a119-1f617ada86ad",
+            "host": "https://cmput-404.herokuapp.com/",
+            "displayName": "admin",
+            "github": "",
+            "url": "https://cmput-404.herokuapp.com/author/a40b2d9c-aaec-4703-a119-1f617ada86ad",
+            "bio": "",
+            "firstName": "",
+            "lastName": "",
+            "email": ""
+          },
+          "comment": "HELLOOOOOOO",
+          "contentType": "1",
+          "published": "2020-03-27T05:32:39.587831Z",
+          "id": "73b72d79-ce8e-4b4e-b07a-ae7a78cb9971"
+        }
+      ],
+      "published": "2020-03-27T03:02:54.830082Z",
+      "id": "b174b292-2d32-47c5-bbe9-dd8fc92582a5",
+      "visibility": "1",
+      "visibleTo": [],
+      "unlisted": "1"
+    }
+  ]
+}
