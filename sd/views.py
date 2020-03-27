@@ -52,21 +52,21 @@ def feed(request):
 
             for f in following: 
                 f_user = Author.objects.get(uuid=f)
-                their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=1) & (Q(unlisted=1) | Q(unlisted='False')))
+                their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PUBLIC') & (Q(unlisted=1) | Q(unlisted='False')))
                 if their_pub_posts:
                     all_posts = (all_posts | their_pub_posts).distinct()
                 if f_user.host == user.host:
-                    server_spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=5) & (Q(unlisted=1) | Q(unlisted='False')))
+                    server_spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & (Q(unlisted=1) | Q(unlisted='False')))
                     if server_spec_posts:
                         all_posts = (all_posts | server_spec_posts).distinct()
                 
-                spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=4) & (Q(unlisted=1) | Q(unlisted='False')))
+                spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PRIVATE') & (Q(unlisted=1) | Q(unlisted='False')))
                 for post in spec_posts:
                     if user.username in post.visibleTo:
                         all_post = (all_post | post).distinct()
                 
                 if f_user.uuid in friend_ids:
-                    friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=3) & (Q(unlisted=1) | Q(unlisted='False')))
+                    friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='FRIENDS') & (Q(unlisted=1) | Q(unlisted='False')))
                     if friend_posts:
                         all_post = (all_post | friend_posts).distinct()
                 
@@ -75,12 +75,10 @@ def feed(request):
                     tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
                     their_friends = tf1 | tf2                    #### NOTE:their_friends is a set of uuid's
                     for foaf in their_friends:
-                        posts = Post.objects.filter(Q(author=foaf) & Q(visibility=2)& (Q(unlisted=1) | Q(unlisted='False')))
+                        posts = Post.objects.filter(Q(author=foaf) & Q(visibility='FOAF')& (Q(unlisted=1) | Q(unlisted='False')))
                         if posts:
                             all_post = (all_posts | posts).distinct()
                 
-                temp = Author.objects.get(fs)
-
             results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
@@ -293,7 +291,8 @@ def friendrequest(request):
             print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
             return redirect('login')
         data = json.loads(request.body)
-        target = Author.objects.filter(username=data['target_author'])[0]
+        
+        target = Author.objects.get(username=data['target_author'])
         relationship, obj = get_relationship(user, target)
         """
         relationship values:
