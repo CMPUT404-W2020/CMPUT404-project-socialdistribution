@@ -53,9 +53,9 @@
                 <div id = "{{post}}" style = "display: none;">
                 	{% for post_comment in feed %}
                 		<div class = "commentitem">
-	                		<div id = "commentauthor"> {{post_comment.author}} </div>
-	                		<div id = "commentdate"> {{post_comment.published}} <br> <br> </div>
-	                		<div id = "commentbody"> {{ post_comment.comment }} <br> </div>
+	                		<div id = "commentauthor"> Author {{post_comment.author}} </div>
+	                		<div id = "commentdate"> March 27, 2020{{post_comment.published}} <br> <br> </div>
+	                		<div id = "commentbody"> This is a hardcoded comment{{ post_comment.comment }} <br> </div>
 	                	</div>
 					{% endfor %}
 
@@ -100,6 +100,18 @@
 			</div>
 			{% endif %}
 			<div id="feed-items">
+			</div>
+			<div class="navigate-feed">
+				{% if results.next %}
+				<a href="?page={{results.next}}">
+					<span class="button" id="blue-button"> NEXT </span>
+				</a>
+				{% endif %}
+				{% if results.previous %}
+				<a href="?page={{results.previous}}">
+				<span class="button" id="blue-button"> PREVIOUS </span>
+				</a>
+				{% endif %}
 			</div>
 
 		</div>
