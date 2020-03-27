@@ -60,17 +60,17 @@ def feed(request):
                 if f_user.host == user.host:
                     server_spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & (Q(unlisted=1) | Q(unlisted='False')))
                     if server_spec_posts:
-                        all_posts = (all_posts | server_spec_posts).distinct()
+                        all_posts = all_posts.union(server_spec_posts)
                 
                 spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PRIVATE') & (Q(unlisted=1) | Q(unlisted='False')))
                 for post in spec_posts:
                     if user.username in post.visibleTo:
-                        all_post = (all_post | post).distinct()
+                        all_posts = all_post.union(post)
                 
                 if f_user.uuid in friend_ids:
                     friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='FRIENDS') & (Q(unlisted=1) | Q(unlisted='False')))
                     if friend_posts:
-                        all_post = (all_post | friend_posts).distinct()
+                        all_posts = all_post.union(friend_posts)
                 
                 for friend in friend_ids:
                     tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
@@ -79,10 +79,11 @@ def feed(request):
                     for foaf in their_friends:
                         posts = Post.objects.filter(Q(author=foaf) & Q(visibility='FOAF')& (Q(unlisted=1) | Q(unlisted='False')))
                         if posts:
-                            all_post = (all_posts | posts).distinct()
+                            all_posts = all_posts.union(posts)
 
-                temp = Author.objects.get(fs)
+                # temp = Author.objects.get(fs)
                 
+            all_posts = all_posts.distinct()
             results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
