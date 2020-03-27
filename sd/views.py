@@ -59,8 +59,8 @@ def feed(request):
             if own_posts:
                 all_posts  = (all_posts | own_posts).distinct()
             following = Follow.objects.filter(Q(follower_id=user.uuid))
-            f1 = Friend.objects.filter(Q(author_id=user.uuid)).values('friend_id')
-            f2 = Friend.objects.filter(Q(friend_id=user.uuid)).values('author_id')
+            f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend_id')
+            f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author_id')
             if(f1 and f2):
                 friends = f1|f2      
             elif f1:
@@ -68,31 +68,31 @@ def feed(request):
             elif f2:
                 friends = f2               #### NOTE:Friends is a subset of following and is a set of uuid's
             for f in following: 
-                their_pub_posts = Post.objects.filter(Q(author_id=f.uuid) & Q(visibility=1) & (Q(unlisted=1) | Q(unlisted=False)))
+                their_pub_posts = Post.objects.filter(Q(author=f.uuid) & Q(visibility=1) & (Q(unlisted=1) | Q(unlisted=False)))
                 if their_pub_posts:
                     all_posts = (all_posts | their_pub_posts).distinct()
 
                 if f.host == user.host:
-                    server_spec_posts = Post.objects.filter(Q(author_id=f.uuid) & Q(visibility=5) & (Q(unlisted=1) | Q(unlisted=False)))
+                    server_spec_posts = Post.objects.filter(Q(author=f.uuid) & Q(visibility=5) & (Q(unlisted=1) | Q(unlisted=False)))
                     if server_spec_posts:
                         all_posts = (all_posts | server_spec_posts).distinct()
                 
-                spec_posts= Post.objects.filter(Q(author_id=f.uuid) & Q(visibility=4) & (Q(unlisted=1) | Q(unlisted=False)))
+                spec_posts= Post.objects.filter(Q(author=f.uuid) & Q(visibility=4) & (Q(unlisted=1) | Q(unlisted=False)))
                 for post in spec_posts:
                     if user.username in post.visibleTo:
                         all_post = (all_post | post).distinct()
                 
                 if f.uuid in friends:
-                    friend_posts = Post.objects.filter(Q(author_id=f.uuid) & Q(visibility=3) & (Q(unlisted=1) | Q(unlisted=False)))
+                    friend_posts = Post.objects.filter(Q(author=f.uuid) & Q(visibility=3) & (Q(unlisted=1) | Q(unlisted=False)))
                     if friend_posts:
                         all_post = (all_post | friend_posts).distinct()
                 
                 for friend in friends:
-                    tf1 = Friend.objects.filter(Q(author_id=friend)).values('friend_id')
-                    tf2 = Friend.objects.filter(Q(friend_id=friend)).values('author_id')
+                    tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
+                    tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
                     their_friends = tf1 | tf2                    #### NOTE:their_friends is a set of uuid's
                     for foaf in their_friends:
-                        posts = Post.objects.filter(Q(author_id=foaf) & Q(visibility=2)& (Q(unlisted=1) | Q(unlisted=False)))
+                        posts = Post.objects.filter(Q(author=foaf) & Q(visibility=2)& (Q(unlisted=1) | Q(unlisted=False)))
                         if posts:
                             all_post = (all_posts | posts).distinct()
 
