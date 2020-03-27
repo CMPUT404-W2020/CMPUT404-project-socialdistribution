@@ -21,13 +21,15 @@ class foreignData():
     def authorObjects(self):
         for node in Node.objects.exclude(hostname=settings.HOSTNAME):
             # delete existing cache
-            Author.objects.filter(host=node).delete()
+            Author.objects.filter(host=node.hostname).delete()
 
             # return all authors
             response = requests.get(node.hostname + 'author')
             response = response.json()
 
             for item in response:
+                if item['host'] != node.hostname:
+                    continue
                 node = Node.objects.get(hostname=item['host'])
                 author = Author(
                     username=item['displayName'], password='1234567890', github=item['github'], host=node)
