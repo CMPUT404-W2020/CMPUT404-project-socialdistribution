@@ -23,7 +23,7 @@ def get_current_user(request):
         return None
 
 
-def paginated_result(objects, request, keyword, **result):
+def paginated_result(request, objects, serializer, keyword, **result):
     page_num = int(request.GET.get('page', 0))
     size = int(request.GET.get('size', 10))
     first_result = size*page_num
@@ -35,10 +35,11 @@ def paginated_result(objects, request, keyword, **result):
 
     result["count"] = count
     result["size"] = size
-    result["previous"] = page_num - 1 if page_num >= 1 else None
-    result["next"] = page_num + 1 if objects.count() >= last_result else None
-    result[keyword] = list(objects[first_result:last_result])
-    print(result)
+    if page_num >= 1:
+        result["previous"] = page_num - 1
+    if objects.count() >= last_result:
+        result["next"] = page_num + 1
+    result[keyword] = list(serializer(objects[first_result:last_result], many=True).data)
     return result
 
 
@@ -91,7 +92,7 @@ def load_github_feed(user):
                         exists = Post.objects.filter(source=com['sha'])
                         if not exists:
                             try:
-                                post = Post.objects.create(title = "Commit to "+r, source=com['sha'], description='Commit', contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility=4, unlisted=False, link_to_image=com['committer']['avatar_url'])
+                                post = Post.objects.create(title = "Commit to "+r, source=com['sha'], description='Commit', contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='SERVERONLY', unlisted=False, link_to_image=com['committer']['avatar_url'])
                                 print("CONSOLE: Created a Github post: "+com['commit']['message'])
                                 post.save()
                             except Exception as e:
@@ -100,4 +101,72 @@ def load_github_feed(user):
                             pass
         except (ConnectionError, IndexError, KeyError) as e:
             print("CONSOLE: ",e)
-    return
+
+def load_foreign_databases():
+    for node in Node.objects.exclude(hostname=settings.HOSTNAME):
+        # delete existing contents
+        Author.objects.filter(host=node.hostname).delete()
+
+        try:
+            authors = requests.get(node.hostname + 'author').json()
+            for author in authors:
+                if author['host'] != node.hostname:
+                    continue
+                Author(uuid=author['id'],
+                       username=author['displayName'],
+                       password='password',
+                       github=author['github'],
+                       host=node).save()
+        except:
+            pass
+
+        try:
+            posts = requests.get(node.hostname + 'posts').json()
+        except:
+            try:
+                posts = requests.get(node.hostname + 'posts/').json()
+            except Exception as e:
+                posts = {}
+        while True:
+            for post in posts.get('posts',[]):
+                try:
+                    author = Author.objects.get(uuid=post['author']['id'])
+                except:
+                    author = Author(uuid=post['author']['id'],
+                                    username=post['author']['displayName'],
+                                    password='password',
+                                    github=post['author']['github'],
+                                    host=node)
+                    author.save()
+                comments = post.get('comments',[])
+                post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
+                     title=post.get('title', 'NOTITLEFOUND'),
+                     source=post.get('source', node),
+                     origin=post.get('source', node),
+                     content=post.get('content', 'NOCONTENTFOUND'),
+                     description=post.get('description', 'NODESCRIPTIONFOUND'),
+                     contentType=post.get('contentType', 'text/plain'),
+                     author=author,
+                     #categories
+                     published=post.get('published', 'NOPUBLISHDATEFOUND'),
+                     unlisted=post.get('unlisted', False),
+                     visibility=post.get('visibility','PUBLIC'),
+                     #visibleTo
+                     )
+                post.save()
+                for comment in comments:
+                     try:
+                         author = Author.objects.get(uuid=comment['author']['id'])
+                     except:
+                         continue
+                     Comment(uuid=comment.get('id', 'NOUUIDFOUND'),
+                             comment=comment.get('comment', 'NOTITLEFOUND'),
+                             published=comment.get('published', 'NOPUBLISHDATEFOUND'),
+                             contentType=comment.get('contentType', 'text/plain'),
+                             author=author,
+                             post=post
+                             ).save()
+            try:
+                posts = requests.get('{}posts?page={}'.format(node.hostname, int(posts['next']))).json()
+            except:
+                break
