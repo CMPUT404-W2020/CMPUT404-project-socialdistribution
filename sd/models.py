@@ -6,42 +6,36 @@ import socket
 
 from uuid import uuid4
 
-# Create your models here.
-
 
 class Node(models.Model):
-    hostname = models.URLField(
-        primary_key=True, default=settings.HOSTNAME)
+    hostname = models.URLField(primary_key=True, default=settings.HOSTNAME)
     server_name = models.CharField(max_length=100)
     server_password = models.CharField(max_length=100)
 
 
-def get_host_node():
-    # Node.objects.get(hostname=settings.HOSTNAME)
-    return None
-
-
 class Author(AbstractUser):
     # Using username, password, first_name, last_name, email from AbstractUser
-    host = models.ForeignKey(
-        Node, on_delete=models.CASCADE, blank=True, null=True, db_column='host')
-    uuid = models.UUIDField(
-        primary_key=True, default=uuid4, editable=False, unique=True)
+    host = models.ForeignKey(Node,
+                             on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
+    uuid = models.CharField(max_length=200,
+                            primary_key=True, default=uuid4, editable=False, unique=True)
     displayName = AbstractUser.username
     github = models.CharField(max_length=100, blank=True)
     bio = models.CharField(max_length=500, blank=True)
 
-# for text fields use blank=true rather than null=true so that you don't accept None and "" as valid entries
-
 
 class Post(models.Model):
     title = models.CharField(max_length=100)
-    source = models.CharField(default="", max_length=100, blank=True)
+    source = models.CharField(default=settings.HOSTNAME, max_length=100)
+    origin = models.CharField(default=settings.HOSTNAME, max_length=100)
     description = models.CharField(default="", max_length=100, blank=True)
 
     # TODO: should not give users the choice of type
-    contentTypeChoices = [("1", 'text/markdown'), ("2", 'text/plain'), ("3",
-                                                                        'application/base64'), ("4", 'image/png;base64'), ("5", 'image/jpeg;base64')]
+    contentTypeChoices = [("text/markdown",     'text/markdown'),
+                          ("text/plain",        'text/plain'),
+                          ("application/base64", 'application/base64'),
+                          ("image/png;base64",  'image/png;base64'),
+                          ("image/jpeg;base64", 'image/jpeg;base64')]
     contentType = models.CharField(max_length=30, choices=contentTypeChoices)
     # TODO: TEMPORARY, how to do multiple content types?
     content = models.CharField(default="", max_length=5000, blank=True)
@@ -51,18 +45,21 @@ class Post(models.Model):
     published = models.DateTimeField(auto_now_add=True)
     uuid = models.UUIDField(
         primary_key=True, default=uuid4, editable=False, unique=True)
-    visibilityChoices = [("1", "PUBLIC"), ("2", "FOAF"),
-                         ("3", "FRIENDS"), ("4", "PRIVATE"), ("5", "SERVERONLY")]
-    visibility = models.CharField(max_length=3, choices=visibilityChoices)
+    visibilityChoices = [("PUBLIC",     "Public"),
+                         ("FOAF",       "Friends of friends"),
+                         ("FRIENDS",    "Friends"),
+                         ("PRIVATE",    "Private"),
+                         ("SERVERONLY", "Server Only")]
+    visibility = models.CharField(max_length=30, choices=visibilityChoices)
     visibleTo = models.CharField(max_length=100, blank=True)
-    unlistedChoices = [("1", "LISTED"), ("2", "UNLISTED")]
-    unlisted = models.CharField(max_length=30, choices=unlistedChoices)
+    unlistedChoices = [(False, "LISTED"), (True, "UNLISTED")]
+    unlisted = models.BooleanField(max_length=30, choices=unlistedChoices)
 
     # TODO: update url with the post id and correct path based on api
     image = models.ImageField(blank=True)
     link_to_image = models.CharField(max_length=100, blank=True)
-    host = models.ForeignKey(
-        Node, on_delete=models.CASCADE, blank=True, null=True, db_column='host')
+    host = models.ForeignKey(Node,
+                             on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
 
 
 class Comment(models.Model):
@@ -70,17 +67,16 @@ class Comment(models.Model):
         primary_key=True, default=uuid4, editable=False, unique=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)
     comment = models.CharField(max_length=500)
-    contentTypeChoices = [("1", 'text/markdown'), ("2", 'text/plain')]
+    contentTypeChoices = [("text/markdown",     'text/markdown'),
+                          ("text/plain",        'text/plain')]
     contentType = models.CharField(max_length=30, choices=contentTypeChoices)
     published = models.DateTimeField(auto_now_add=True)
-    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE, db_column='post')
 
 
 class FriendRequest(models.Model):
     class Meta:
         unique_together = (('to_author', 'from_author'),)
-    uuid = models.UUIDField(
-        primary_key=True, default=uuid4, editable=False, unique=True)
     to_author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="to_author")
     from_author = models.ForeignKey(

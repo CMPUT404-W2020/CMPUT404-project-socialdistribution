@@ -65,8 +65,7 @@ class GetPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = ['title', 'source', 'description', 'contentType', 'content', 'author',
-                  'categories', 'published', 'uuid', 'visibility', 'visibleTo', 'unlisted', 'link_to_image']
+        fields = '__all__'
 
 
 class DeletePostSerializer(serializers.ModelSerializer):
@@ -98,7 +97,7 @@ class FriendRequestSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = FriendRequest
-        fields = ['to_author', 'from_author', 'uuid']
+        fields = ['to_author', 'from_author']
 
     def create(self, validated_data):
         return FriendRequest.objects.create(**validated_data)
@@ -118,7 +117,7 @@ class FriendSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Friend
-        fields = ['friend', 'author', 'uuid']
+        fields = ['friend', 'author']
 
     def create(self, validated_data):
         friend = super(FriendSerializer, self).create(validated_data)

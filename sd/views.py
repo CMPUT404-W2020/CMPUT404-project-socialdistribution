@@ -1,5 +1,4 @@
 import os
-import pdb
 import json
 import uuid
 from .models import *
@@ -16,32 +15,13 @@ import social_distribution.settings
 import requests
 
 
-class foreignData():
-
-    def authorObjects(self):
-        for node in Node.objects.exclude(hostname=settings.HOSTNAME):
-            # delete existing cache
-            Author.objects.filter(host=node.hostname).delete()
-
-            # return all authors
-            response = requests.get(node.hostname + 'author')
-            response = response.json()
-
-            for item in response:
-                if item['host'] != node.hostname:
-                    continue
-                node = Node.objects.get(hostname=item['host'])
-                author = Author(
-                    username=item['displayName'], password='1234567890', github=item['github'], host=node)
-                author.save()
-
-
 def explore(request):
     if valid_method(request):
         print_state(request)
-        posts = Post.objects.filter(Q(visibility=1) & (
+        posts = Post.objects.filter(Q(visibility='PUBLIC') & (
             Q(unlisted=1) | Q(unlisted='False')))
-        results = paginated_result(posts, request, "feed", query="feed")
+        results = paginated_result(
+            request, posts, GetPostSerializer, "feed", query="feed")
         is_authenticated = authenticated(request)
         user = get_current_user(request) if is_authenticated else None
         return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results})
@@ -56,10 +36,10 @@ def feed(request):
             load_github_feed(get_current_user(request))
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
             pub_posts = Post.objects.filter(
-                Q(visibility=1) & (Q(unlisted=0) | Q(unlisted=False)))
+                Q(visibility='PUBLIC') & (Q(unlisted=0) | Q(unlisted=False)))
             all_posts = own_posts | pub_posts
             results = paginated_result(
-                all_posts, request, "feed", query="feed")
+                request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
             print("CONSOLE: Redirecting from Feed because no one is logged in")
@@ -83,57 +63,55 @@ def account(request):
 
 
 def search(request):
-    if valid_method(request):
-        print_state(request)
-        user = get_current_user(request)
-        if authenticated(request) and user:
-
-            foreignData().authorObjects()
-
-            # Get all authors
-            all_authors = Author.objects.exclude(username=user)
-            print("all_authors")
-            print(all_authors)
-            authors = paginated_result(
-                all_authors, request, "feed", query="feed")
-
-            # Get all follows
-            my_follows = Follow.objects.filter(Q(follower=user))
-            follows_me = Follow.objects.filter(Q(following=user))
-            all_follows = my_follows | follows_me
-
-            # The follow object doesn't return names, it returns more objects
-            # So I need to put it in a form that JS will understand
-            ret_follows = []
-            for f in all_follows:
-                entry = {}
-                entry["follower"] = f.follower.username
-                entry["following"] = f.following.username
-                entry["follower_uuid"] = f.follower.uuid
-                entry["following_uuid"] = f.following.uuid
-
-                ret_follows.append(entry)
-
-            # Get all friends
-            all_friends = Friend.objects.filter(
-                Q(author=user)) | Friend.objects.filter(Q(friend=user))
-            ret_friends = []
-            for f in all_friends:
-                entry = {}
-                if f.friend == user:
-                    entry["uuid"] = f.author.uuid
-                    entry["name"] = f.author.username
-                else:
-                    entry["uuid"] = f.friend.uuid
-                    entry["name"] = f.friend.username
-                ret_friends.append(entry)
-
-            return render(request, 'sd/search.html', {"authors": authors, "current_user": user, "follows": ret_follows, "friends": ret_friends})
-        else:
-            print("CONSOLE: Redirecting from Search because no one is logged in")
-            return redirect('login')
-    else:
+    if not valid_method(request):
         return HttpResponse(status_code=405)
+    print_state(request)
+    user = get_current_user(request)
+    if not (authenticated(request) and user):
+        print("CONSOLE: Redirecting from Search because no one is logged in")
+        return redirect('login')
+
+    # Get all authors
+    all_authors = Author.objects.exclude(username=user)
+    context = paginated_result(
+        request, all_authors, AuthorSerializer, "authors", query="authors")
+    context['authors'] = [author['username'] for author in context['authors']]
+
+    # Get all follows
+    my_follows = Follow.objects.filter(Q(follower=user))
+    follows_me = Follow.objects.filter(Q(following=user))
+    all_follows = my_follows | follows_me
+
+    # The follow object doesn't return names, it returns more objects
+    # So I need to put it in a form that JS will understand
+    ret_follows = []
+    for f in all_follows:
+        entry = {}
+        entry["follower"] = f.follower.username
+        entry["following"] = f.following.username
+        entry["follower_uuid"] = f.follower.uuid
+        entry["following_uuid"] = f.following.uuid
+
+        ret_follows.append(entry)
+
+    # Get all friends
+    all_friends = Friend.objects.filter(
+        Q(author=user)) | Friend.objects.filter(Q(friend=user))
+    ret_friends = []
+    for f in all_friends:
+        entry = {}
+        if f.friend == user:
+            entry["uuid"] = f.author.uuid
+            entry["name"] = f.author.username
+        else:
+            entry["uuid"] = f.friend.uuid
+            entry["name"] = f.friend.username
+        ret_friends.append(entry)
+
+    context["current_user"] = user
+    context["follows"] = ret_follows
+    context["friends"] = ret_friends
+    return render(request, 'sd/search.html', context)
 
 
 def notifications(request):
@@ -160,7 +138,7 @@ def post_comment(request, post_id):
         print_state(request)
         comments = Comment.objects.filter(post=post_id)
         result = paginated_result(
-            comments, request, "comments", query="comments")
+            request, comments, CommentSerializer, "comments", query="comments")
         return HttpResponse("Post Comments Page")
     else:
         return HttpResponse(status_code=405)
@@ -203,6 +181,7 @@ def login(request):
         request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
         print("CONSOLE: "+user.username +
               " successfully logged in, redirecting to feed")
+        load_foreign_databases()
         return redirect('my_feed')
     else:
         return HttpResponse(status_code=405)
