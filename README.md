@@ -418,4 +418,4 @@ posts/<uuid>/comments
 
 ## Testing
 
-**TODO**: Update to explain the tests briefly, where they can be found and how to run them.
+From the root directory of the project, run `python3 manage.py test`. There is one test for each model and one test for each front-end url as represented in the files models.py and urls.py.
