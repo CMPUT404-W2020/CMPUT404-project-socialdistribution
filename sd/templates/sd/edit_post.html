@@ -26,24 +26,30 @@ function loadBar() {
 	<div class="header" id="header">
 	</div>
 
-	<div class="navbar" id="navbar">
-    </div>
+	<div class="row">
 
-	<div class="newpost">
-		<button id="blue-button" onclick="markupText()">MARKUP</button>
-		<button id="orange-button" onclick="simpleText()">SIMPLE</button>
-		<h4> Edit Post </h4>
-			{% block content %}
+        {% if authenticated %}
+		<div class="navbar" id="navbar">
 
-		<form method="POST" enctype="multipart/form-data">
-			{% csrf_token %}
-			{{ form.as_p }}
-			<button>
-				<input type="submit" value="POST" id="bluebackground-button" style="float: right;"> <br>
-			</button>
-		</form>
-			{% endblock content %}
-		<br>
+		</div>
+		{% endif %}
+
+		<div class="newpost">
+			<button id="blue-button" onclick="markupText()">MARKUP</button>
+			<button id="orange-button" onclick="simpleText()">SIMPLE</button>
+			<h4> Edit Post </h4>
+				{% block content %}
+
+			<form method="POST" enctype="multipart/form-data">
+				{% csrf_token %}
+				{{ form.as_p }}
+				<button>
+					<input type="submit" value="POST" id="bluebackground-button" style="float: right;"> <br>
+				</button>
+			</form>
+				{% endblock content %}
+			<br>
+		</div>
 	</div>
 </body>
 </html>
