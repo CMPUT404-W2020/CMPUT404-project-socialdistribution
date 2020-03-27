@@ -357,6 +357,50 @@ posts/<uuid>/comments
   "message": "Comment Added"
   }
 
+/author/<uuid>/friends/<uuid>/
+
+- GET
+- Check if two authors are friends
+- Example False:
+  {
+  "query": "friends",
+  "authors": [
+  "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28"
+  ],
+  "friends": false
+  }
+- Example True:
+  {
+  "query": "friends",
+  "authors": [
+  "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28"
+  ],
+  "friends": true
+  }
+  author/<uuid>/friends
+- POST
+- Returns authors that are friends with specified author
+- Example POST
+  {
+  "query":"friends",
+  "author": <authorid>,
+  "authors": [
+  "2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "65787662-c1e1-451d-a7b3-4386f0bdd9d0",
+  "..."
+  ]
+  }
+- Example response:
+  {
+  "query": "friends",
+  "author": <authorid>,
+  "authors": [
+  "2a7b68b3-9d64-4365-8f4b-ae290fa31a28"
+  ]
+  }
+
 ## Web-Browser Page Paths:
 
 **(will be updated to match social_distribution/sd/urls.py found on the api branch)**
