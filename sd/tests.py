@@ -14,7 +14,7 @@ class ModelTests(TestCase):
             bio = "I am a test author"
         )
 
-    def create_post(self, author=None, title="test post", content="this is a test", visibility=1, link_to_image=""):
+    def create_post(self, author=None, title="test post", content="this is a test", visibility='PUBLIC', link_to_image=""):
         a = author if author != None else self.create_author()
 
         return Post(
