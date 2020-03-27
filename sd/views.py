@@ -54,7 +54,7 @@ def feed(request):
                 f_user = Author.objects.get(uuid=f)
                 their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PUBLIC') & (Q(unlisted=1) | Q(unlisted='False')))
                 if their_pub_posts:
-                    all_posts.union(their_pub_posts)
+                    all_posts = all_posts.union(their_pub_posts)
 
 
                 if f_user.host == user.host:
