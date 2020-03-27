@@ -37,7 +37,7 @@ function loadBar() {
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
-            <input type="submit" value="SAVE" id="cancel-button" style="float: right;">
+            <input type="submit" value="SAVE" id="save-button" style="float: right;">
             <a href="../account">
                 <button id="cancel-button"> CANCEL </button>
             </a>
