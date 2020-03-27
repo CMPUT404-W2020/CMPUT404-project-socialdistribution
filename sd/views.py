@@ -55,7 +55,6 @@ def feed(request):
                 their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=1) & (Q(unlisted=1) | Q(unlisted='False')))
                 if their_pub_posts:
                     all_posts = (all_posts | their_pub_posts).distinct()
-
                 if f_user.host == user.host:
                     server_spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=5) & (Q(unlisted=1) | Q(unlisted='False')))
                     if server_spec_posts:
@@ -79,6 +78,7 @@ def feed(request):
                         posts = Post.objects.filter(Q(author=foaf) & Q(visibility=2)& (Q(unlisted=1) | Q(unlisted='False')))
                         if posts:
                             all_post = (all_posts | posts).distinct()
+                print("breakig"
 
             results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
