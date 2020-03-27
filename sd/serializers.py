@@ -1,7 +1,8 @@
 
 from django.contrib.auth import get_user_model
 from rest_framework import serializers
-from .models import Author, Post, Comment, FriendRequest, Follow, Friend
+from .models import Author, Post, Comment, FriendRequest, Follow, Friend, Node
+from social_distribution import settings
 
 
 class CreateAuthorSerializer(serializers.ModelSerializer):
@@ -19,6 +20,7 @@ class CreateAuthorSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         author = super(CreateAuthorSerializer, self).create(validated_data)
         author.set_password(validated_data['password'])
+        author.host = Node.objects.get(hostname=(settings.HOSTNAME))
         author.save()
         return author
 
@@ -53,7 +55,10 @@ class CreatePostSerializer(serializers.ModelSerializer):
                   'published', 'uuid', 'visibility', 'visibleTo', 'unlisted', 'link_to_image', 'image']
 
     def create(self, validated_data):
-        return Post.objects.create(**validated_data)
+        post = super(CreatePostSerializer, self).create(validated_data)
+        post.host = Node.objects.get(hostname=(settings.HOSTNAME))
+        post.save()
+        return post
 
 
 class GetPostSerializer(serializers.ModelSerializer):

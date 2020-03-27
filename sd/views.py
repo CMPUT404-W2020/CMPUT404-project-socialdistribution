@@ -28,10 +28,13 @@ class foreignData():
             response = response.json()
 
             for item in response:
-                node = Node.objects.get(hostname=item['host'])
-                author = Author(
-                    username=item['displayName'], password='1234567890', github=item['github'], host=node)
-                author.save()
+                try:
+                    node = Node.objects.get(hostname=item['host'])
+                    author = Author(
+                        username=item['displayName'], password='1234567890', github=item['github'], host=node)
+                    author.save()
+                except:
+                    print("Foreign author excluded!")
 
 
 def explore(request):
@@ -53,7 +56,8 @@ def feed(request):
         if authenticated(request) and user:
             load_github_feed(get_current_user(request))
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
-            pub_posts = Post.objects.filter(Q(visibility=1) & (Q(unlisted=0)|Q(unlisted=False)))
+            pub_posts = Post.objects.filter(
+                Q(visibility=1) & (Q(unlisted=0) | Q(unlisted=False)))
             all_posts = own_posts | pub_posts
             results = paginated_result(
                 all_posts, request, "feed", query="feed")
