@@ -23,11 +23,15 @@
     }
 
     function loadRequests() {
+        var friends = "{{friends}}";
+        friends = makeItAList(friends);
+
         var results = makeItAList("{{requests}}");
-        displayResults(results);
+        displayResults(results, friends);
     }
 
-    function displayResults(results) {
+
+    function displayResults(results, friends) {
         console.log(results);
 
         var display = document.getElementById("friend-requests");
@@ -44,6 +48,23 @@
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
             <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${a}')"">+</button>
+        </div>`;
+        }
+
+        var displayFriends = document.getElementById("friends");
+        displayFriends.innerHTML = "";
+
+        for (let f of friends) {
+            var btn_id = createButtonId(f);
+            display.innerHTML += `<div>
+            Friends
+            <hr class="greyline">
+            <span class="searchauthor">${f}</span>
+            <span class="orangedot"></span>
+            <span class="searchrelation"> Friends </span>
+            <span class="bluedot"></span>
+            <span class="searchrelation"> Local </span>
+            <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${f}')"">-</button>
         </div>`;
         }
 
@@ -66,8 +87,8 @@
         <div style="margin-top: 7em;"></div>
         <div class="search-results" id="friend-requests">
         </div>
-
-
+        <div class="search-results" id="friends">
+        </div>
     </div>
 </body>
 
