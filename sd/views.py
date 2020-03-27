@@ -51,13 +51,13 @@ def feed(request):
     if valid_method(request):
         user = get_current_user(request)
         if authenticated(request) and user:
-            load_github_feed(get_current_user(request))
+            load_github_feed(get_current_user(request)) 
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
             pub_posts = Post.objects.filter(Q(visibility=1) & (Q(unlisted=0)|Q(unlisted=False)))
             all_posts = own_posts | pub_posts
             following = Follow.objects.filter(Q(follower_id=user.uuid))
             for item in following:
-                all_posts = all_posts | (Post.objects.filter(Q(author_id=item.following_id)))
+                all_posts = all_posts | (Post.objects.filter(Q(visibility =Q(author_id=item.following_id)))
 
             results = paginated_result(
                 all_posts, request, "feed", query="feed")
