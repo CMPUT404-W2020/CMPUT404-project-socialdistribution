@@ -182,9 +182,9 @@ class GetPostAPIView(APIView):
     # Returns Post by sending UUID of Post
     def get(self, request, pk, format=None):
         post = Post.objects.get(uuid=pk)
-        serializer = GetPostSerializer(post)
+        postDict = serializePost(post)
 
-        return Response(serializer.data, status=status.HTTP_200_OK)
+        return Response(postDict, status=status.HTTP_200_OK)
 
 
 class GetAllAuthorPostAPIView(APIView):

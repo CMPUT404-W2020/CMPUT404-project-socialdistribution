@@ -142,3 +142,53 @@
     }
   ]
 }
+
+posts/<uuid>
+- GET
+- Returns values for post specified by uuid
+- Example:
+{
+  "author": {
+    "id": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+    "host": "https://cmput-404.herokuapp.com/",
+    "displayName": "207pm",
+    "github": "",
+    "url": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+    "bio": "",
+    "firstName": "asdfasdf",
+    "lastName": "sdafadfa",
+    "email": "test@test.com"
+  },
+  "title": "asdfadf",
+  "source": "https://cmput-404.herokuapp.com/",
+  "origin": "https://cmput-404.herokuapp.com/",
+  "description": "asdfasdf",
+  "contentType": "text/markdown",
+  "content": "asdfsa",
+  "categories": "",
+  "comments": [
+    {
+      "author": {
+        "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+        "host": "https://cmput-404.herokuapp.com/",
+        "displayName": "admin",
+        "github": "",
+        "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+        "bio": "",
+        "firstName": "",
+        "lastName": "",
+        "email": ""
+      },
+      "comment": "HELLOOOOOO",
+      "contentType": "text/markdown",
+      "published": "2020-03-27T20:19:55.496559Z",
+      "id": "3a10eccb-0f2b-40e6-b45c-ea994670e0d0"
+    }
+  ],
+  "published": "2020-03-27T20:08:11.468804Z",
+  "id": "d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "visibility": "PUBLIC",
+  "visibleTo": [],
+  "unlisted": false
+}
+
