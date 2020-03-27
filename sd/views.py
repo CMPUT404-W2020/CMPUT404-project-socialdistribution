@@ -346,9 +346,9 @@ def friendrequest(request):
 
         elif relationship == 2:
             info = {'author': user.uuid, 'friend': target.uuid}
-            friend_serializer = FriendSerializer(data=info)
-            if friend_serializer.is_valid():
-                friend_serializer.save()
+            friend = Friend.objects.create(author=user.uuid, friend=target.uuid)
+            if friend.is_valid():
+                friend.save()
                 obj.delete()
                 print("CONSOLE: "+user.username+" and " +
                       target.username+" are now friends!")
