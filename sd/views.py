@@ -21,7 +21,7 @@ class foreignData():
     def authorObjects(self):
         for node in Node.objects.exclude(hostname=settings.HOSTNAME):
             # delete existing cache
-            Author.objects.filter(host=node).delete()
+            Author.objects.filter(host=node.hostname).delete()
 
             # return all authors
             response = requests.get(node.hostname + 'author')
