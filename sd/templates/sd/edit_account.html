@@ -12,15 +12,22 @@
 	<link rel="stylesheet" href="{% static 'sd/style.css' %}">
 </head>
 
-<body>
+<script type="text/javascript">
 
-    <div class="header">
-        <a href="{% url 'login' %}">
-	  	<img class="logo" src="{% static 'sd\icons\logo.png' %}" alt="Logo" height = "50em">
-            <h2>SQUAWK</h2>
-        </a>
+function loadBar() {
+    $("#header").load("../static/sd/header.html");
+    $("#navbar").load("../static/sd/navbar.html");
+}
+</script>
 
+<body onload="loadBar()">
+    <div class="header" id="header">
     </div>
+
+    <div class="row" id="search">
+        <div class="navbar" id="navbar">
+        </div>
+
 
     <div class="edit-form">
         {% block content %}
@@ -30,6 +37,10 @@
             {% csrf_token %}
             {{ form.as_p }}
             <input type="submit" value="SAVE" id="save-button" style="float: right;">
+            <a href="../account">
+                <button id="save-button"> CANCEL </button>
+            </a>
+
         </form>
         {% endblock content %}
     </div>

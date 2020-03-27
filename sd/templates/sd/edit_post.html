@@ -16,23 +16,18 @@
 <script type="text/javascript">
 
 function loadBar() {
-	$("#header").load("../static/sd/header.html");
-	$("#navbar").load("../static/sd/navbar.html");
+    $("#header").load("../static/sd/header.html");
+    $("#navbar").load("../static/sd/navbar.html");
 }
 </script>
 
-
 <body onload="loadBar()">
-	<div class="header" id="header">
-	</div>
+    <div class="header" id="header">
+    </div>
 
-	<div class="row">
-
-        {% if authenticated %}
-		<div class="navbar" id="navbar">
-
-		</div>
-		{% endif %}
+    <div class="row" id="search">
+        <div class="navbar" id="navbar">
+        </div>
 
 		<div class="newpost">
 			<button id="blue-button" onclick="markupText()">MARKUP</button>
