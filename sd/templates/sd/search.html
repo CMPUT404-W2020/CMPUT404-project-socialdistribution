@@ -20,27 +20,16 @@
         $("#navbar").load("static/sd/navbar.html");
         $("#header").load("static/sd/header.html");
     }
-    
+
     function search(form) {
         // Get the search value
         var search_val = document.getElementById("search-val");
         var val = search_val.value;
 
-        // Get the authors
-        var authors = "{{authors.feed}}";
-        authors = makeItAList(authors);
+        var authors = {{authors|safe}};
+        var follows = {{follows|safe}};
+        var friends = {{friends|safe}};
 
-
-        // Format follow entries
-        var follows = "{{follows}}";
-        follows = makeItADict(follows);
-
-        // Format friend entries
-        var friends = "{{friends}}";
-        friends = makeItADict(friends);
-        console.log("Friends: ", friends);
-
-        
         // filter authors for matching results
         var results = [];
         authors = authors.sort(function(a, b) {
@@ -81,7 +70,7 @@
                 if (entry['icon'].valueOf() === '+') {
                     entry['action'] = `"sendRequest('${a}')"`;
                 }
-                
+
                 results.push(entry);
             }
         }
