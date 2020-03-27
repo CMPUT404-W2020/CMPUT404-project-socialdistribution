@@ -63,12 +63,12 @@ def feed(request):
                     if user.username in post.visibleTo:
                         all_post = (all_post | post).distinct()
                 
-                if f_user.uuid in friends:
+                if f_user.uuid in friend_ids:
                     friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=3) & (Q(unlisted=1) | Q(unlisted='False')))
                     if friend_posts:
                         all_post = (all_post | friend_posts).distinct()
                 
-                for friend in friends:
+                for friend in friend_ids:
                     tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
                     tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
                     their_friends = tf1 | tf2                    #### NOTE:their_friends is a set of uuid's
