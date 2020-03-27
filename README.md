@@ -246,6 +246,117 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
+posts/<uuid>
+
+- GET
+- Returns values for post specified by uuid
+- Example:
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "207pm",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "bio": "",
+  "firstName": "asdfasdf",
+  "lastName": "sdafadfa",
+  "email": "test@test.com"
+  },
+  "title": "asdfadf",
+  "source": "https://cmput-404.herokuapp.com/",
+  "origin": "https://cmput-404.herokuapp.com/",
+  "description": "asdfasdf",
+  "contentType": "text/markdown",
+  "content": "asdfsa",
+  "categories": "",
+  "comments": [
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "admin",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": ""
+  },
+  "comment": "HELLOOOOOO",
+  "contentType": "text/markdown",
+  "published": "2020-03-27T20:19:55.496559Z",
+  "id": "3a10eccb-0f2b-40e6-b45c-ea994670e0d0"
+  }
+  ],
+  "published": "2020-03-27T20:08:11.468804Z",
+  "id": "d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "visibility": "PUBLIC",
+  "visibleTo": [],
+  "unlisted": false
+  }
+
+posts/<uuid>/comments
+
+- GET
+- returns comments from post with specified uuid
+- example:
+  {
+  "query": "comments",
+  "count": 1,
+  "size": 50,
+  "next": null,
+  "previous": null,
+  "comments": [
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "admin",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": ""
+  },
+  "comment": "HELLOOOOOO",
+  "contentType": "text/markdown",
+  "published": "2020-03-27T20:19:55.496559Z",
+  "id": "3a10eccb-0f2b-40e6-b45c-ea994670e0d0"
+  }
+  ]
+  }
+
+posts/<uuid>/comments
+
+- post
+- creates comment on post specified with uuid
+- Example POST:
+  {
+  "query" : "addComment",
+  "post" : "https://cmput-404.herokuapp.com/928fe363-766d-4633-a35b-80ece3015c40",
+  "comment" : {
+  "author": {
+  "id" : "https://cmput-404.herokuapp.com/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "host" : "https://cmput-404.herokuapp.com/",
+  "displayName" : "207pm",
+  "url" : "https://cmput-404.herokuapp.com/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "github" : ""
+  },
+  "comment" : "TEST COMMENT",
+  "contentType" : "text/markdown",
+  "published" : "2015-03-09T13:07:04+00:00",
+  "id" : "928fe363-766d-4633-a35b-80ece3015c40"
+  }
+  }
+- Example return:
+  {
+  "query": "addComment",
+  "success": true,
+  "message": "Comment Added"
+  }
+
 ## Web-Browser Page Paths:
 
 **(will be updated to match social_distribution/sd/urls.py found on the api branch)**

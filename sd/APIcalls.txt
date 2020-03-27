@@ -222,3 +222,31 @@ posts/<uuid>/comments
     }
   ]
 }
+
+posts/<uuid>/comments
+- post
+- creates comment on post specified with uuid
+- Example POST:
+{
+	"query" : "addComment",
+	"post" : "https://cmput-404.herokuapp.com/928fe363-766d-4633-a35b-80ece3015c40",
+	"comment" : {
+		"author": {
+			"id" : "https://cmput-404.herokuapp.com/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+			"host" : "https://cmput-404.herokuapp.com/",
+			"displayName" : "207pm",
+			"url" : "https://cmput-404.herokuapp.com/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+			"github" : ""
+		},
+		"comment" : "TEST COMMENT",
+		"contentType" : "text/markdown",
+		"published" : "2015-03-09T13:07:04+00:00",
+		"id" : "928fe363-766d-4633-a35b-80ece3015c40"
+	}
+}
+- Example return:
+{
+  "query": "addComment",
+  "success": true,
+  "message": "Comment Added"
+}
