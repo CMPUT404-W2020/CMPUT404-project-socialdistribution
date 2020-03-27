@@ -40,7 +40,7 @@ def feed(request):
             following = Follow.objects.filter(Q(follower_id=user.uuid)).values('following') #### NOTE: following is a set of uuid's
             f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
             f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
-            friend_ids = []]
+            friend_ids = []
             for i in f1:
                 friend_ids.append(i['friend'])
             for j in f2:
