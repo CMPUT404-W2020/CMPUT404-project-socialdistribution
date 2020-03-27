@@ -118,7 +118,8 @@ def search(request):
 
     # Get all authors
     all_authors = Author.objects.exclude(username=user)
-    context = paginated_result(request, all_authors, AuthorSerializer, "authors", query="authors")
+    context = paginated_result(
+        request, all_authors, AuthorSerializer, "authors", query="authors")
     context['authors'] = [author['username'] for author in context['authors']]
 
     # Get all follows
@@ -181,7 +182,8 @@ def post_comment(request, post_id):
     if valid_method(request):
         print_state(request)
         comments = Comment.objects.filter(post=post_id)
-        result = paginated_result(request, comments, CommentSerializer, "comments", query="comments")
+        result = paginated_result(
+            request, comments, CommentSerializer, "comments", query="comments")
         return HttpResponse("Post Comments Page")
     else:
         return HttpResponse(status_code=405)

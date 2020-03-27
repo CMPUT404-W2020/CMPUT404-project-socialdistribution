@@ -16,9 +16,9 @@ class Node(models.Model):
 class Author(AbstractUser):
     # Using username, password, first_name, last_name, email from AbstractUser
     host = models.ForeignKey(Node,
-        on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
+                             on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
     uuid = models.CharField(max_length=200,
-        primary_key=True, default=uuid4, editable=False, unique=True)
+                            primary_key=True, default=uuid4, editable=False, unique=True)
     displayName = AbstractUser.username
     github = models.CharField(max_length=100, blank=True)
     bio = models.CharField(max_length=500, blank=True)
@@ -33,7 +33,7 @@ class Post(models.Model):
     # TODO: should not give users the choice of type
     contentTypeChoices = [("text/markdown",     'text/markdown'),
                           ("text/plain",        'text/plain'),
-                          ("application/base64",'application/base64'),
+                          ("application/base64", 'application/base64'),
                           ("image/png;base64",  'image/png;base64'),
                           ("image/jpeg;base64", 'image/jpeg;base64')]
     contentType = models.CharField(max_length=30, choices=contentTypeChoices)
@@ -59,7 +59,7 @@ class Post(models.Model):
     image = models.ImageField(blank=True)
     link_to_image = models.CharField(max_length=100, blank=True)
     host = models.ForeignKey(Node,
-        on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
+                             on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
 
 
 class Comment(models.Model):

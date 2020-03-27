@@ -107,29 +107,42 @@ def load_foreign_databases():
         # delete existing contents
         Author.objects.filter(host=node.hostname).delete()
 
-        # return all authors
-        authors = requests.get(node.hostname + 'author').json()
-        for author in authors:
-            if author['host'] != node.hostname:
-                continue
-            Author(uuid=author['id'],
-                   username=author['displayName'],
-                   password='password',
-                   github=author['github'],
-                   host=node).save()
+        try:
+            authors = requests.get(node.hostname + 'author').json()
+            for author in authors:
+                if author['host'] != node.hostname:
+                    continue
+                Author(uuid=author['id'],
+                       username=author['displayName'],
+                       password='password',
+                       github=author['github'],
+                       host=node).save()
+        except:
+            pass
 
-        posts = requests.get(node.hostname + 'posts').json()
+        try:
+            posts = requests.get(node.hostname + 'posts').json()
+        except:
+            try:
+                posts = requests.get(node.hostname + 'posts/').json()
+            except Exception as e:
+                posts = {}
         while True:
-            for post in posts['posts']:
+            for post in posts.get('posts',[]):
                 try:
                     author = Author.objects.get(uuid=post['author']['id'])
                 except:
-                    continue
+                    author = Author(uuid=post['author']['id'],
+                                    username=post['author']['displayName'],
+                                    password='password',
+                                    github=post['author']['github'],
+                                    host=node)
+                    author.save()
                 comments = post.get('comments',[])
                 post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
                      title=post.get('title', 'NOTITLEFOUND'),
-                     source=post.get('source', node.hostname),
-                     origin=post.get('source', node.hostname),
+                     source=post.get('source', node),
+                     origin=post.get('source', node),
                      content=post.get('content', 'NOCONTENTFOUND'),
                      description=post.get('description', 'NODESCRIPTIONFOUND'),
                      contentType=post.get('contentType', 'text/plain'),
