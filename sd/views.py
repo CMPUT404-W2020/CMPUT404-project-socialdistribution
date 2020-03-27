@@ -37,7 +37,10 @@ def feed(request):
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
             if own_posts:
                 all_posts  = (all_posts | own_posts).distinct()
-            following = Follow.objects.filter(Q(follower_id=user.uuid)).values('following') #### NOTE: following is a set of uuid's
+            following_temp = Follow.objects.filter(Q(follower_id=user.uuid)).values('following') #### NOTE: following is a set of uuid's
+            following = []
+            for i in following_temp:
+                following.append(i['following'])
             f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
             f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
             friend_ids = []
@@ -48,7 +51,7 @@ def feed(request):
             #### NOTE:Friends is a subset of following and are author objects
 
             for f in following: 
-                f_user = Author.objects.get(uuid=f['following'])
+                f_user = Author.objects.get(uuid=f)
                 their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility=1) & (Q(unlisted=1) | Q(unlisted='False')))
                 if their_pub_posts:
                     all_posts = (all_posts | their_pub_posts).distinct()
