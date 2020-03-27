@@ -16,7 +16,7 @@ class Node(models.Model):
 class Author(AbstractUser):
     # Using username, password, first_name, last_name, email from AbstractUser
     host = models.ForeignKey(Node,
-                             on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host', blank=True, null=True)
+                             on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
     uuid = models.CharField(max_length=200,
                             primary_key=True, default=uuid4, editable=False, unique=True)
     displayName = AbstractUser.username
@@ -59,7 +59,7 @@ class Post(models.Model):
     image = models.ImageField(blank=True)
     link_to_image = models.CharField(max_length=100, blank=True)
     host = models.ForeignKey(Node,
-                             on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host', blank=True, null=True)
+                             on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
 
 
 class Comment(models.Model):
