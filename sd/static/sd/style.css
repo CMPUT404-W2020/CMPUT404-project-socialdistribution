@@ -161,6 +161,7 @@ button:hover {
   margin-top: 7em;
   margin-left: 25em; /* Same as the width of the sidebar */
   margin-right: 6em;
+  margin-bottom: 6em;
 }
 
 .feed#nosidebar {
