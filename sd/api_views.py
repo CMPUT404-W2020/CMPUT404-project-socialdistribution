@@ -30,8 +30,8 @@ def serializePost(post):
     postDict = {}
     postDict['author'] = serializeAuthor(post.author)
     postDict['title'] = post.title
-    # postDict['source'] = post.source
-    # postDict['origin'] = post.origin
+    postDict['source'] = post.source
+    postDict['origin'] = post.origin
     postDict['description'] = post.description
     postDict['contentType'] = post.contentType
     postDict['content'] = post.content
@@ -220,7 +220,8 @@ class GetAllPublicPostsAPIView(APIView):
 
     def get(self, request, format=None):
         posts = Post.objects.filter(visibility='PUBLIC')
-        data = paginated_result(request, posts, GetPostSerializer, 'posts', query='posts')
+        data = paginated_result(
+            request, posts, GetPostSerializer, 'posts', query='posts')
         return Response(data, status=status.HTTP_200_OK)
 
 
@@ -298,7 +299,8 @@ class GetAllVisiblePostsAPIView(APIView):
             print(serverAuthors)
 
             for author in serverAuthors:
-                temp = Post.objects.filter(author=author.uuid, visibility='SERVERONLY')
+                temp = Post.objects.filter(
+                    author=author.uuid, visibility='SERVERONLY')
                 # print('temp ok')
                 filteredPosts = filteredPosts.union(temp)
 
