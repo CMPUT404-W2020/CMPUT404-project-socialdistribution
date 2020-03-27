@@ -10,10 +10,8 @@ from uuid import uuid4
 
 
 class Node(models.Model):
-    uuid = models.UUIDField(
-        primary_key=True, default=uuid4, editable=False, unique=True)
     hostname = models.URLField(
-        default=settings.HOSTNAME)
+        primary_key=True, default=settings.HOSTNAME)
     server_name = models.CharField(max_length=100)
     server_password = models.CharField(max_length=100)
 

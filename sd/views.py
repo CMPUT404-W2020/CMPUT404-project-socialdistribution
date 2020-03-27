@@ -21,27 +21,26 @@ class foreignData():
     def authorObjects(self):
         for node in Node.objects.exclude(hostname=settings.HOSTNAME):
             # delete existing cache
-            Author.objects.filter(host=node).delete()
+            Author.objects.filter(host=node.hostname).delete()
 
             # return all authors
             response = requests.get(node.hostname + 'author')
             response = response.json()
 
             for item in response:
-                try:
-                    node = Node.objects.get(hostname=item['host'])
-                    author = Author(
-                        username=item['displayName'], password='1234567890', github=item['github'], host=node)
-                    author.save()
-                except:
-                    print("Foreign author excluded!")
+                if item['host'] != node.hostname:
+                    continue
+                node = Node.objects.get(hostname=item['host'])
+                author = Author(
+                    username=item['displayName'], password='1234567890', github=item['github'], host=node)
+                author.save()
 
 
 def explore(request):
     if valid_method(request):
         print_state(request)
         posts = Post.objects.filter(Q(visibility=1) & (
-            Q(unlisted=0) | Q(unlisted=False)))
+            Q(unlisted=1) | Q(unlisted='False')))
         results = paginated_result(posts, request, "feed", query="feed")
         is_authenticated = authenticated(request)
         user = get_current_user(request) if is_authenticated else None
