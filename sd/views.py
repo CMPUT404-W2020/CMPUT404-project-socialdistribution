@@ -312,7 +312,7 @@ def friendrequest(request):
             print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
             return redirect('login')
         data = json.loads(request.body)
-        target = Author.objects.get(username=data['target_author'])
+        target = Author.objects.filter(username=data['target_author'])[0]
         relationship, obj = get_relationship(user, target)
         """
         relationship values:
