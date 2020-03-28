@@ -51,23 +51,23 @@ def feed(request):
 
             for f in following: 
                 f_user = Author.objects.get(uuid=f)
-                their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PUBLIC') & (Q(unlisted=1) | Q(unlisted='False')))
+                their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PUBLIC') & Q(unlisted=False))
                 if their_pub_posts:
                     all_posts = all_posts.union(their_pub_posts)
 
 
                 if f_user.host == user.host:
-                    server_spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & (Q(unlisted=1) | Q(unlisted='False')))
+                    server_spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
                     if server_spec_posts:
                         all_posts = all_posts.union(server_spec_posts)
                 
-                spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PRIVATE') & (Q(unlisted=1) | Q(unlisted='False')))
+                spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PRIVATE') & Q(unlisted=False))
                 for post in spec_posts:
                     if user.username in post.visibleTo:
                         all_posts = all_post.union(post)
                 
                 if f_user.uuid in friend_ids:
-                    friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='FRIENDS') & (Q(unlisted=1) | Q(unlisted='False')))
+                    friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='FRIENDS') & Q(unlisted=False))
                     if friend_posts:
                         all_posts = all_post.union(friend_posts)
                 
@@ -76,7 +76,7 @@ def feed(request):
                     tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
                     their_friends = tf1.union(tf2)                    #### NOTE:their_friends is a set of uuid's
                     for foaf in their_friends:
-                        posts = Post.objects.filter(Q(author=foaf) & Q(visibility='FOAF')& (Q(unlisted=1) | Q(unlisted='False')))
+                        posts = Post.objects.filter(Q(author=foaf) & Q(visibility='FOAF') & Q(unlisted=False))
                         if posts:
                             all_posts = all_posts.union(posts)
 
