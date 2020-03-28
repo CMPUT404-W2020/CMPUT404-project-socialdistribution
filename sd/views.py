@@ -18,10 +18,8 @@ import requests
 def explore(request):
     if valid_method(request):
         print_state(request)
-        posts = Post.objects.filter(Q(visibility='PUBLIC') & (
-            Q(unlisted=1) | Q(unlisted='False')))
-        results = paginated_result(
-            request, posts, GetPostSerializer, "feed", query="feed")
+        posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False))
+        results = paginated_result(request, posts, GetPostSerializer, "feed", query="feed")
         is_authenticated = authenticated(request)
         user = get_current_user(request) if is_authenticated else None
         return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results})
@@ -33,13 +31,59 @@ def feed(request):
     if valid_method(request):
         user = get_current_user(request)
         if authenticated(request) and user:
-            load_github_feed(get_current_user(request))
+            load_github_feed(get_current_user(request)) 
+            all_posts = Post.objects.none()
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
-            pub_posts = Post.objects.filter(
-                Q(visibility='PUBLIC') & (Q(unlisted=0) | Q(unlisted=False)))
-            all_posts = own_posts | pub_posts
-            results = paginated_result(
-                request, all_posts, GetPostSerializer, "feed", query="feed")
+            if own_posts:
+                all_posts  = all_posts.union(own_posts)
+            following_temp = Follow.objects.filter(Q(follower_id=user.uuid)).values('following') #### NOTE: following is a set of uuid's
+            following = []
+            for i in following_temp:
+                following.append(i['following'])
+            f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
+            f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
+            friend_ids = []
+            for i in f1:
+                friend_ids.append(i['friend'])
+            for j in f2:
+                friend_ids.append(j['author']) 
+            #### NOTE:Friends is a subset of following and are author objects
+
+            for f in following: 
+                f_user = Author.objects.get(uuid=f)
+                their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PUBLIC') & Q(unlisted=False))
+                if their_pub_posts:
+                    all_posts = all_posts.union(their_pub_posts)
+
+
+                if f_user.host == user.host:
+                    server_spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
+                    if server_spec_posts:
+                        all_posts = all_posts.union(server_spec_posts)
+                
+                spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PRIVATE') & Q(unlisted=False))
+                for post in spec_posts:
+                    if user.username in post.visibleTo:
+                        all_posts = all_post.union(post)
+                
+                if f_user.uuid in friend_ids:
+                    friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='FRIENDS') & Q(unlisted=False))
+                    if friend_posts:
+                        all_posts = all_post.union(friend_posts)
+                
+                for friend in friend_ids:
+                    tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
+                    tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
+                    their_friends = tf1.union(tf2)                    #### NOTE:their_friends is a set of uuid's
+                    for foaf in their_friends:
+                        posts = Post.objects.filter(Q(author=foaf) & Q(visibility='FOAF') & Q(unlisted=False))
+                        if posts:
+                            all_posts = all_posts.union(posts)
+
+                # temp = Author.objects.get(fs)
+                
+            all_posts = all_posts.distinct()
+            results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
             print("CONSOLE: Redirecting from Feed because no one is logged in")
@@ -80,7 +124,7 @@ def search(request):
     # Get all follows
     my_follows = Follow.objects.filter(Q(follower=user))
     follows_me = Follow.objects.filter(Q(following=user))
-    all_follows = my_follows | follows_me
+    all_follows = my_follows.union(follows_me)
 
     # The follow object doesn't return names, it returns more objects
     # So I need to put it in a form that JS will understand
@@ -253,6 +297,7 @@ def friendrequest(request):
             print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
             return redirect('login')
         data = json.loads(request.body)
+        
         target = Author.objects.get(username=data['target_author'])
         relationship, obj = get_relationship(user, target)
         """
@@ -263,6 +308,7 @@ def friendrequest(request):
         4 --> no relationship exists yet; create one
         obj is returned in case 2 friend request to be deleted
         """
+
         if relationship == 1:
             print("CONSOLE: "+user.username+" and " +
                   target.username+" are already friends!")
@@ -287,9 +333,9 @@ def friendrequest(request):
 
         elif relationship == 2:
             info = {'author': user.uuid, 'friend': target.uuid}
-            friend_serializer = FriendSerializer(data=info)
-            if friend_serializer.is_valid():
-                friend_serializer.save()
+            friend = Friend.objects.create(author=user.uuid, friend=target.uuid)
+            if friend.is_valid():
+                friend.save()
                 obj.delete()
                 print("CONSOLE: "+user.username+" and " +
                       target.username+" are now friends!")

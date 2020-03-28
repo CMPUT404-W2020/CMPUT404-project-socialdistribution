@@ -120,6 +120,4 @@ class FriendSerializer(serializers.ModelSerializer):
         fields = ['friend', 'author']
 
     def create(self, validated_data):
-        friend = super(FriendSerializer, self).create(validated_data)
-        friend.save()
-        return friend
+        return Friend.objects.create(**validated_data)
