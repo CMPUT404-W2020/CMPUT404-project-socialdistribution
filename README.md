@@ -80,23 +80,23 @@ There is no more need to have accounts on countless social media sites; Squawk l
 
 ### Curate your Content
 
-On ***Your Feed*** you see content from the authors that you follow. All of your posts, regardless of their privacy settings, will also be visiblie to you on your feed. 
+On ***Your Feed*** you see content from the authors that you follow. All of your posts, regardless of their privacy settings, will also be visible to you on your feed. 
 
-With our ***Github Compatibility*** your github activity feed can show on your Squawk feed. Enable this option by adding your Github id to your profile.
+With our ***Github compatibility*** see your github activity feed on your Squawk feed. Enable this option by adding your Github ID to your Squawk profile.
 
 ### Find New Content
 
-Check out the ***Explore*** page to see all public posts on local and remote servers. This is a great way to find new authors to follow and to gain popularity with your public posts. 
+Check out the ***Explore*** page to see all public posts from local and remote servers. This is a great way to find new authors to follow and to gain popularity through your public posts. 
 
-When you'd like to follow or unfollow an author, look them up on the ***Search*** page to change your current relationship.
+When you'd like to follow or unfollow an author, look them up on the ***Search*** page to change your current relationship. 
 
-You will be notified on the ***Notifications*** page when another author follows you. You can choose to follow them back and become friends, or dismiss the notification. Here you can also see a list of users you are following or are friends with.
+You will be notified on the ***Notifications*** page when another author follows you. You can choose to follow them back and become friends, or dismiss the notification. Here you can also see a list of users you are following or are ***friends*** with.
 
 ### Own your Content
 
-Choose how you display yourself to others by editing information in on the ***Your Account*** page. 
+Choose how you display yourself to others by editing the information on your ***Account*** page. 
 
-Every post you create has several ***privacy*** options to choose from. If you set your post to ***public***, then it will show on the explore page of all other users directly or indirectly connected to the Squawk server. Alternatively, you can restrict your post to the personal feeds of your ***friends***, ***friends of friends***, ***server only***, or a select group of users with ***private***. For added privacy, select ***unlisted*** and your post will only be visible to the aforementioned audience if you provide them with the direct link. 
+Every post you create has several ***privacy*** options to choose from. If you set your post to ***public***, then it will show on the explore page of all other users directly or indirectly connected to the Squawk server. Alternatively, you can restrict your post to the personal feeds of your ***friends***, ***friends of friends***, ***server only***, or a spectific group of users with ***private*** posts. For added privacy, select ***unlisted*** and your post will only be visible to the aforementioned audience if you provide them with the direct link. If you change your mind later, you can easily edit your own posts and change the privacy setting. 
 
 
 ## Admin Access
