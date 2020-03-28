@@ -56,7 +56,7 @@ Squawk is a distributed social network that gives control back to the user. With
 
 ## User Access
 
-The website is hosted by Heroku at: https://cmput-404.herokuapp.com/
+#### The website is hosted by Heroku at: https://cmput-404.herokuapp.com/
 
 On first use, you will not be logged in but are granted access to the explore page. This allows users to explore public posts before deciding to sign up with Squawk. After signing in or making an account (click on the account button), you will be granted access to the full functionality.
 
