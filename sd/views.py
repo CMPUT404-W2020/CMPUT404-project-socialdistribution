@@ -18,8 +18,7 @@ import requests
 def explore(request):
     if valid_method(request):
         print_state(request)
-        posts = Post.objects.filter(Q(visibility='PUBLIC') & (
-            Q(unlisted=1) | Q(unlisted=False)))
+        posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False))
         results = paginated_result(request, posts, GetPostSerializer, "feed", query="feed")
         is_authenticated = authenticated(request)
         user = get_current_user(request) if is_authenticated else None
