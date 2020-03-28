@@ -310,9 +310,6 @@ def friendrequest(request):
         obj is returned in case 2 friend request to be deleted
         """
 
-        temp = Author.objects.get(fs)
-
-
         if relationship == 1:
             print("CONSOLE: "+user.username+" and " +
                   target.username+" are already friends!")
