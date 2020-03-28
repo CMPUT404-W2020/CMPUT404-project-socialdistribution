@@ -107,7 +107,7 @@
 					<span class="button" id="blue-button"> NEXT </span>
 				</a>
 				{% endif %}
-				{% if results.previous %}
+				{% if results.previous >= 0 %}
 				<a href="?page={{results.previous}}">
 				<span class="button" id="blue-button"> PREVIOUS </span>
 				</a>
