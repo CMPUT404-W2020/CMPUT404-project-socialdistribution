@@ -120,17 +120,18 @@ function sendRequest(author) {
     body: JSON.stringify(data)
   })
   .then(function(response) {
-    return response.text();
+    if (!response.ok){
+      throw Error(response.statusText)
+    }
+    return response
   })
-  .then(function(data) {
-    console.log("Data is ok", data);
+  .then(function(response) {
     alert(
       `Friend request successfully sent to ${author}.\nYou are now following ${author}.`
       );
       location.reload();
     })
-    .catch(function(ex) {
-      console.log("parsing failed", ex);
+    .catch(function(error) {
       alert(
         "Friend request could not be sent at this time.\nPlease try again later."
         );

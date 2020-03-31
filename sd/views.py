@@ -389,7 +389,7 @@ def friendrequest(request):
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
         except Exception as e:
-            return HttpResponse(json.dumps({"Error":e}), content_type='application/json')
+            return HttpResponse(status_code=500)
     else:
         return HttpResponse(status_code=405)
 
