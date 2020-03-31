@@ -119,20 +119,20 @@ function sendRequest(author) {
     body: JSON.stringify(data)
   })
   .then(function(response) {
-    console.log(response.text())
+    console.log(response);
     return response.text();
   })
   .then(function(data) {
     alert(
       `Friend request successfully sent to ${author}.\nYou are now following ${author}.`
       );
-      console.log(data);
       location.reload();
     })
     .catch(function(data) {
       alert(
         "Friend request could not be sent at this time.\nPlease try again later."
-      );
+        );
+        console.log(data);
     });
 }
 
