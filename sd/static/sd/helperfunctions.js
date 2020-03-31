@@ -108,6 +108,9 @@ function createStatusId(name) {
 function sendRequest(author) {
   const origin = window.location.origin;
 
+  const data = {
+    target_author: author
+  };
   fetch(origin + "/friendrequest", {
     method: "POST",
     headers: {
@@ -115,14 +118,15 @@ function sendRequest(author) {
     },
     body: JSON.stringify(data)
   })
-    .then(function(response) {
-      console.log(response.text())
-      return response.text();
-    })
-    .then(function(data) {
-      alert(
-        `Friend request successfully sent to ${author}.\nYou are now following ${author}.`
-        );
+  .then(function(response) {
+    console.log(response.text())
+    return response.text();
+  })
+  .then(function(data) {
+    alert(
+      `Friend request successfully sent to ${author}.\nYou are now following ${author}.`
+      );
+      console.log(data);
       location.reload();
     })
     .catch(function(data) {
