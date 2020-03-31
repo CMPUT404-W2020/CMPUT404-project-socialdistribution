@@ -332,8 +332,8 @@ def friendrequest(request):
                 return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
 
             elif relationship == 2:
-                info = {'author': user.uuid, 'friend': target.uuid}
-                friend = Friend.objects.create(author=user.uuid, friend=target.uuid)
+                info = {'author': user, 'friend': target}
+                friend = Friend.objects.create(author=user, friend=target)
                 if friend.is_valid():
                     friend.save()
                     obj.delete()
@@ -389,10 +389,7 @@ def friendrequest(request):
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
         except Exception as e:
-            results = {"Error": e}
-            for name, value in globals().copy().items():
-                results[name] = value
-            return HttpResponse(json.dumps(results), content_type='application/json')
+            return HttpResponse(json.dumps({"Error":e}), content_type='application/json')
     else:
         return HttpResponse(status_code=405)
 
