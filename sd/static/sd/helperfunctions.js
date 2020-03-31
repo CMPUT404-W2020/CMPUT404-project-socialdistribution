@@ -106,13 +106,8 @@ function createStatusId(name) {
 }
 
 function sendRequest(author) {
-  console.log("Author:", author);
   const origin = window.location.origin;
 
-  const data = {
-    target_author: author
-  };
-  console.log(data);
   fetch(origin + "/friendrequest", {
     method: "POST",
     headers: {
@@ -121,7 +116,7 @@ function sendRequest(author) {
     body: JSON.stringify(data)
   })
     .then(function(response) {
-      console.log(response.text());
+      console.log(response.text())
       return response.text();
     })
     .then(function(data) {
