@@ -49,6 +49,7 @@ Contributions:
     5. https://stackoverflow.com/questions/29321494/show-input-field-only-if-a-specific-option-is-selected/29321711. Author: https://stackoverflow.com/users/4721273/josephus87
     6. https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
     7. https://stackoverflow.com/questions/15950007/centering-floated-images-in-div. author: https://stackoverflow.com/users/2157321/dhaval-marthak*/
+    8. https://www.tjvantoll.com/2015/09/13/fetch-and-errors/ 
 
 # Squawk Documentation
 
