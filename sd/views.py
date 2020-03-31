@@ -390,12 +390,9 @@ def friendrequest(request):
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
         except Exception as e:
             results = {"Error": e}
-            results['time':datetime.datetime.now()]
             for name, value in globals().copy().items():
                 results[name] = value
-            with open('logfile.json', 'w') as outfile:
-                json.dump(results,outfile)
-            return HttpResponse()
+            return HttpResponse(json.dumps(results), content_type='application/json')
     else:
         return HttpResponse(status_code=405)
 

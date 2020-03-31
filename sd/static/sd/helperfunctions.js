@@ -126,6 +126,7 @@ function sendRequest(author) {
     alert(
       `Friend request successfully sent to ${author}.\nYou are now following ${author}.`
       );
+      console.log(data);
       location.reload();
     })
     .catch(function(data) {
