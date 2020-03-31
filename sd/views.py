@@ -292,23 +292,23 @@ def friendrequest(request):
         if request.method == "GET":
             return HttpResponse(status_code=405)
 
-        user = get_current_user(request)
-        if not authenticated(request) or not user:
-            print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
-            return redirect('login')
-        data = json.loads(request.body)
-        
-        target = Author.objects.get(username=data['target_author'])
-        relationship, obj = get_relationship(user, target)
-        """
-        relationship values:
-        1 --> user and target are already friends; no work required
-        2 --> there exists a friend request from target to user; complete friends and delete friend request
-        3 --> there exists a friend request from user to target; don't create another
-        4 --> no relationship exists yet; create one
-        obj is returned in case 2 friend request to be deleted
-        """
         try:
+            user = get_current_user(request)
+            if not authenticated(request) or not user:
+                print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
+                return redirect('login')
+            data = json.loads(request.body)
+            
+            target = Author.objects.get(username=data['target_author'])
+            relationship, obj = get_relationship(user, target)
+            """
+            relationship values:
+            1 --> user and target are already friends; no work required
+            2 --> there exists a friend request from target to user; complete friends and delete friend request
+            3 --> there exists a friend request from user to target; don't create another
+            4 --> no relationship exists yet; create one
+            obj is returned in case 2 friend request to be deleted
+            """
             if relationship == 1:
                 print("CONSOLE: "+user.username+" and " +
                     target.username+" are already friends!")
@@ -392,7 +392,7 @@ def friendrequest(request):
             results = {"Error": e}
             for name, value in globals().copy.items():
                 results[name] = value
-            return HttpResponse(json.dumps({"Error details": results}), content_type='application/json')
+            return HttpResponse(json.dumps(results), content_type='application/json')
     else:
         return HttpResponse(status_code=405)
 
