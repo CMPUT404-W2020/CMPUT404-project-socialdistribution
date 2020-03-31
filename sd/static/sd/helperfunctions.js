@@ -121,6 +121,7 @@ function sendRequest(author) {
     body: JSON.stringify(data)
   })
     .then(function(response) {
+      console.log(response);
       return response.text();
     })
     .then(function(data) {
