@@ -113,27 +113,28 @@ function sendRequest(author) {
   };
   fetch(origin + "/friendrequest", {
     method: "POST",
+    credentials: 'same-origin',
     headers: {
+      "Accept": "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify(data)
   })
   .then(function(response) {
-    console.log(response);
-    return response.text();
+    return response.json();
   })
   .then(function(data) {
+    console.log("Data is ok", data);
     alert(
       `Friend request successfully sent to ${author}.\nYou are now following ${author}.`
       );
-      console.log(data);
       location.reload();
     })
-    .catch(function(data) {
+    .catch(function(ex) {
+      console.log("parsing failed", ex);
       alert(
         "Friend request could not be sent at this time.\nPlease try again later."
         );
-        console.log(data);
     });
 }
 
