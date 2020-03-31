@@ -392,7 +392,7 @@ def friendrequest(request):
             results = {"Error": e}
             for name, value in globals().copy.items():
                 results[name] = value
-            return HttpResponse(json.dumps(results))
+            return HttpResponse(body=json.dumps({"Error details": results}), content_type='application/json')
     else:
         return HttpResponse(status_code=405)
 
