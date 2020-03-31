@@ -113,7 +113,6 @@ function sendRequest(author) {
   };
   fetch(origin + "/friendrequest", {
     method: "POST",
-    credentials: 'same-origin',
     headers: {
       "Accept": "application/json",
       "Content-Type": "application/json"
@@ -121,7 +120,7 @@ function sendRequest(author) {
     body: JSON.stringify(data)
   })
   .then(function(response) {
-    return response.json();
+    return response.text();
   })
   .then(function(data) {
     console.log("Data is ok", data);
