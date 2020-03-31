@@ -121,11 +121,11 @@ function sendRequest(author) {
     body: JSON.stringify(data)
   })
     .then(function(response) {
-      console.log(response);
       return response.text();
     })
     .then(function(data) {
       alert(
+        console.log(data);
         `Friend request successfully sent to ${author}.\nYou are now following ${author}.`
       );
       location.reload();
