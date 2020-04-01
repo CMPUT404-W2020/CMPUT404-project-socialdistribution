@@ -314,17 +314,17 @@ def friendrequest(request):
                     target.username+" are already friends!")
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
-                if not follows1.count():
-                    s = FollowSerializer(
-                        data={'follower': target, 'following': user})
+                if not follows1:
+                    info = {'follower': target, 'following': user}
+                    s = FollowSerializer(info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from target to user")
                         s.save()
                 follows2 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
-                if not follows2.count():
-                    s = FollowSerializer(
-                        data={'follower': user, 'following': target})
+                if not follows2:
+                    info = {'follower': user, 'following': target}
+                    s = FollowSerializer(info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
@@ -341,17 +341,17 @@ def friendrequest(request):
                         target.username+" are now friends!")
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
-                if not follows1.count():
-                    s = FollowSerializer(
-                        data={'follower': target, 'following': user})
+                if not follows1:
+                    info ={'follower': target, 'following': user}
+                    s = FollowSerializer(info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from target to user")
                         s.save()
                 follows2 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
-                if not follows2.count():
-                    s = FollowSerializer(
-                        data={'follower': user, 'following': target})
+                if not follows2:
+                    info = {'follower': user, 'following': target}
+                    s = FollowSerializer(info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
@@ -361,10 +361,10 @@ def friendrequest(request):
                 print("CONSOLE: "+user.username+" is already following " +
                     target.username+". Returning")
                 follows1 = Follow.objects.filter(
-                    Q(follower=target.uuid) & Q(following=user.uuid))
-                if not follows1.count():
-                    s = FollowSerializer(
-                        data={'follower': user, 'following': target})
+                    Q(follower=user.uuid) & Q(following=target.uuid))
+                if not follows1:
+                    info={'follower': user, 'following': target}
+                    s = FollowSerializer(info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
@@ -372,17 +372,17 @@ def friendrequest(request):
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
 
             elif relationship == 4:
-                info = {'to_author': target.uuid, 'from_author': user.uuid}
-                friendreq_serializer = FriendRequestSerializer(data=info)
+                info = {'to_author': target, 'from_author': user}
+                friendreq_serializer = FriendRequestSerializer(info)
                 if friendreq_serializer.is_valid():
                     friendreq_serializer.save()
                     print("CONSOLE: "+user.username +
                         " sent a friend request to "+target.username)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
-                if not follows1.count():
-                    s = FollowSerializer(
-                        data={'follower': user, 'following': target})
+                if not follows1:
+                    info = {'follower': user, 'following': target}
+                    s = FollowSerializer(info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
