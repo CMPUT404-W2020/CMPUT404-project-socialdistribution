@@ -52,11 +52,11 @@ Contributions:
 
 # Squawk Documentation
 
-Squawk is a distributed social network that gives control back to the user. With Squawk, you get all the features you expect from a modern social network without sacrificing privacy or being flooded with promotional content. For every post you create, you can choose exactly who can view it. When viewing content, you can access the Explore page to see all public posts connected to your node, or head to Your Feed to see only the curated content that you choose to follow.
+Squawk is a distributed social network that gives control back to the user. With Squawk, you get all the features you expect from a modern social network without sacrificing privacy or being flooded with promotional content. For every post you create, you decide exactly who can view it. When viewing content, you can access the Explore page to see all public posts connected to your node, or head to Your Feed to see only the curated content that you choose to follow.
 
 ## User Access
 
-The website is hosted by Heroku at https://cmput-404.herokuapp.com/
+#### The website is hosted by Heroku at: https://cmput-404.herokuapp.com/
 
 On first use, you will not be logged in but are granted access to the explore page. This allows users to explore public posts before deciding to sign up with Squawk. After signing in or making an account (click on the account button), you will be granted access to the full functionality.
 
@@ -71,23 +71,77 @@ For testing, we have created a number of sample user credentials:
 | Ava     | Wilson   | Ava Wilson      | cmput404 |
 | Olivia  | Lewis    | Olivia Lewis    | cmput404 |
 
+## Site Features
+
+Now that you're logged into your Squawk account, you can take advantage of all of the exciting features:
+
+### Server to Server Connections
+
+There is no more need to have accounts on countless social media sites; Squawk lets you pull information from different sources into one convenient feed. You can follow other authors within the Squawk server and all connecting servers. Refer to the "Current Connections" section in this document to see the servers available to you through Squawk or contact the Squawk admins to request a new server be added.
+
+### Curate your Content
+
+On **_Your Feed_** you see content from the authors that you follow. All of your posts, regardless of their privacy settings, will also be visible to you on your feed.
+
+With our **_Github compatibility_**, see your github activity feed on your Squawk feed. Enable this option by adding your Github ID to your Squawk profile.
+
+### Find New Content
+
+Check out the **_Explore_** page to see all public posts from local and remote servers. This is a great way to find new authors to follow and to gain popularity through your public posts.
+
+When you'd like to follow or unfollow an author, look them up on the **_Search_** page to change your current relationship.
+
+You will be notified on the **_Notifications_** page when another author follows you. You can choose to follow them back and become friends, or dismiss the notification. Here you can also see a list of users you are following or are **_friends_** with.
+
+### Own your Content
+
+Choose how you display yourself to others by editing the information on your **_Account_** page.
+
+Every post you create has several **_privacy_** options to choose from. If you set your post to **_public_**, then it will show on the explore page of all other users directly or indirectly connected to the Squawk server. Alternatively, you can restrict your post to the personal feeds of your **_friends_**, **_friends of friends_**, **_server only_**, or a spectific group of users with **_private_** posts. For added privacy, select **_unlisted_** and your post will only be visible to the aforementioned audience if you provide them with the direct link. If you change your mind later, you can easily edit your own posts and change their privacy setting.
+
 ## Admin Access
 
-You can access the admin page through https://cmput-404.herokuapp.com/admin and using the credentials username: warren password: cmput404
+You can access the admin page through https://cmput-404.herokuapp.com/admin and using the credentials:
+
+    username: warren
+    password: cmput404
 
 When running locally, you can run this command to create a superuser and access the admin interface:
-python3 manage.py createsuperuser
 
-## API Call Formats:
+    python3 manage.py createsuperuser
+
+## API Information:
+
+API Endpoint URL:
+  
+ https://cmput-404.herokuapp.com/
+
+Credentials:
+  
+ warren:cmput404
+
+Example HTTPIE:
+  
+ http GET https://cmput-404.herokuapp.com/posts
+
+Web Service Endpoint URL:
+  
+ https://cmput-404.herokuapp.com/
+
+Current Connections:
+| Remote API Endpoint | Username | Password |
+| ---------------------------------------------------- | ---------- | -------------- |
+| https://cmput404-socialdistribution.herokuapp.com/ | admindemo | ualberta01! |
+| https://glacial-earth-37816.herokuapp.com/api/ | group8 | group8password |
+
+### API Call Formats:
 
 The format of requests are found in the example_requests folder (https://github.com/CMPUT404-W2020/CMPUT404-project-socialdistribution/tree/master/example_requests).
-
-**TODO**: update this
 
 The system allows GET, PUT, POST, and DELETE requests; all other requests will be responded to with an HTTP 405 response
 (will be updated to match social_distribution/sd/urls.py found on the api branch)
 
-/author/
+**/author/**
 
 - GET
 - Returns all users
@@ -116,7 +170,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   }
   ]
 
-/author/<uuid>
+**/author/<uuid>**
 
 - GET
 - Returns user details
@@ -146,7 +200,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-/author/<uuid>/friends
+**/author/<uuid>/friends**
 
 - GET
 - Returns all friends of user
@@ -161,7 +215,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   }
   ]
 
-/author/<uuid:pk1>/friends/<uuid:pk2>
+**/author/<uuid:pk1>/friends/<uuid:pk2>**
 
 - GET
 - returns bool to indicate whether or not two users are friends
@@ -174,7 +228,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   "friends": 1
   }
 
-/author/posts
+**/author/posts**
 
 - GET
 - returns all posts visible to user
@@ -233,7 +287,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-posts/<uuid>
+**posts/<uuid>**
 
 - GET
 - Returns values for post specified by uuid
@@ -283,7 +337,7 @@ posts/<uuid>
   "unlisted": false
   }
 
-posts/<uuid>/comments
+**posts/<uuid>/comments**
 
 - GET
 - returns comments from post with specified uuid
@@ -315,7 +369,7 @@ posts/<uuid>/comments
   ]
   }
 
-posts/<uuid>/comments
+**posts/<uuid>/comments**
 
 - post
 - creates comment on post specified with uuid
@@ -344,7 +398,7 @@ posts/<uuid>/comments
   "message": "Comment Added"
   }
 
-/author/<uuid>/friends/<uuid>/
+**/author/<uuid>/friends/<uuid>/**
 
 - GET
 - Check if two authors are friends
@@ -390,19 +444,26 @@ posts/<uuid>/comments
 
 ## Web-Browser Page Paths:
 
-**(will be updated to match social_distribution/sd/urls.py found on the api branch)**
+### Post Interaction:
 
-    /                    (displays the default explore page with all public posts in servers connected to yours)
+    /                    (displays the default explore page with all public and listed posts in servers connected to yours)
     /feed                (displays all posts created by the logged in user, and all posts by users that the logged in user follows, if they have permission to view those posts.
-    /login               (provides a form for the user to login to the system)
-    /logout              (logs the currently authenticated user out)
-    /search              (allows the user to search for other users. From the search results, they can follow/unfollow users and see their current relationship to them)
-    /account             (displays the currently authenticated user's information and allows them to edit that information)
     /editpost/<post_id>  (allows the user to edit the specified post if it is their post)
     /newpost             (provides a form for the user to create a new post)
+
+### Account Interaction
+
+    /login               (provides a form for user to login to the system with existing credentials)
     /register            (provides a form for the user to register as an Author)
-    /notifications       (displays a concept UI for the user's notification of requests)
+    /logout              (logs the currently authenticated user out)
+    /account             (displays the currently authenticated user's information and allows them to edit that information)
+    /edit_account        (allows the user to edit their profile information)
+
+### User Interaction
+
+    /search              (allows the user to search for other users. From the search results, they can follow/unfollow users and see their current relationship to them)
+    /notifications       (displays the user's notification of requests and a list of other users that they follow or are friends with)
 
 ## Testing
 
-**TODO**: Update to explain the tests briefly, where they can be found and how to run them.
+From the root directory of the project, run `python3 manage.py test`. There is one test for each model and one test for each front-end url as represented in the files models.py and urls.py.

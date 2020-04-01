@@ -186,6 +186,12 @@ class GetPostAPIView(APIView):
 
         return Response(postDict, status=status.HTTP_200_OK)
 
+    def post(self, request, pk, format=None):
+        post = Post.objects.get(uuid=pk)
+        postDict = serializePost(post)
+
+        return Response(postDict, status=status.HTTP_200_OK)
+
 
 class GetAllAuthorPostAPIView(APIView):
     authentication_classes = [BasicAuthentication, SessionAuthentication]

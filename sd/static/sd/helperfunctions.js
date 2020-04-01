@@ -112,7 +112,7 @@ function sendRequest(author) {
   const data = {
     target_author: author
   };
-
+  console.log(data);
   fetch(origin + "/friendrequest", {
     method: "POST",
     headers: {
