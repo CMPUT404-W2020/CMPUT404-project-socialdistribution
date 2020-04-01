@@ -302,107 +302,14 @@ def friendrequest(request):
         if request.method == "GET":
             return HttpResponse(status_code=405)
 
-<<<<<<< HEAD
-        user = get_current_user(request)
-        if not authenticated(request) or not user:
-            print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
-            return redirect('login')
-        data = json.loads(request.body)
-
-        target = Author.objects.get(username=data['target_author'])
-        relationship, obj = get_relationship(user, target)
-        """
-        relationship values:
-        1 --> user and target are already friends; no work required
-        2 --> there exists a friend request from target to user; complete friends and delete friend request
-        3 --> there exists a friend request from user to target; don't create another
-        4 --> no relationship exists yet; create one
-        obj is returned in case 2 friend request to be deleted
-        """
-
-        if relationship == 1:
-            print("CONSOLE: "+user.username+" and " +
-                  target.username+" are already friends!")
-            follows1 = Follow.objects.filter(
-                Q(follower=target.uuid) & Q(following=user.uuid))
-            if not follows1.count():
-                s = FollowSerializer(
-                    data={'follower': target.uuid, 'following': user.uuid})
-                if s.is_valid():
-                    print("CONSOLE: Created a Follow from target to user")
-                    s.save()
-            follows2 = Follow.objects.filter(
-                Q(follower=user.uuid) & Q(following=target.uuid))
-            if not follows2.count():
-                s = FollowSerializer(
-                    data={'follower': user.uuid, 'following': target.uuid})
-                if s.is_valid():
-                    print("CONSOLE: Created a Follow from user to target")
-                    s.save()
-            # creates Follow objects in case they don't already exist
-            return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
-
-        elif relationship == 2:
-            info = {'author': user.uuid, 'friend': target.uuid}
-            friend = Friend.objects.create(
-                author=user.uuid, friend=target.uuid)
-            if friend.is_valid():
-                friend.save()
-                obj.delete()
-||||||| daf3f71
-        user = get_current_user(request)
-        if not authenticated(request) or not user:
-            print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
-            return redirect('login')
-        data = json.loads(request.body)
-        
-        target = Author.objects.get(username=data['target_author'])
-        relationship, obj = get_relationship(user, target)
-        """
-        relationship values:
-        1 --> user and target are already friends; no work required
-        2 --> there exists a friend request from target to user; complete friends and delete friend request
-        3 --> there exists a friend request from user to target; don't create another
-        4 --> no relationship exists yet; create one
-        obj is returned in case 2 friend request to be deleted
-        """
-
-        if relationship == 1:
-            print("CONSOLE: "+user.username+" and " +
-                  target.username+" are already friends!")
-            follows1 = Follow.objects.filter(
-                Q(follower=target.uuid) & Q(following=user.uuid))
-            if not follows1.count():
-                s = FollowSerializer(
-                    data={'follower': target.uuid, 'following': user.uuid})
-                if s.is_valid():
-                    print("CONSOLE: Created a Follow from target to user")
-                    s.save()
-            follows2 = Follow.objects.filter(
-                Q(follower=user.uuid) & Q(following=target.uuid))
-            if not follows2.count():
-                s = FollowSerializer(
-                    data={'follower': user.uuid, 'following': target.uuid})
-                if s.is_valid():
-                    print("CONSOLE: Created a Follow from user to target")
-                    s.save()
-            # creates Follow objects in case they don't already exist
-            return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
-
-        elif relationship == 2:
-            info = {'author': user.uuid, 'friend': target.uuid}
-            friend = Friend.objects.create(author=user.uuid, friend=target.uuid)
-            if friend.is_valid():
-                friend.save()
-                obj.delete()
-=======
         try:
             user = get_current_user(request)
             if not authenticated(request) or not user:
-                print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
+                print(
+                    "CONSOLE: Redirecting from friendrequest because no one is logged in.")
                 return redirect('login')
             data = json.loads(request.body)
-            
+
             target = Author.objects.get(username=data['target_author'])
             relationship, obj = get_relationship(user, target)
             """
@@ -414,9 +321,8 @@ def friendrequest(request):
             obj is returned in case 2 friend request to be deleted
             """
             if relationship == 1:
->>>>>>> origin/master
                 print("CONSOLE: "+user.username+" and " +
-                    target.username+" are already friends!")
+                      target.username+" are already friends!")
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
@@ -443,11 +349,11 @@ def friendrequest(request):
                     friend.save()
                     obj.delete()
                     print("CONSOLE: "+user.username+" and " +
-                        target.username+" are now friends!")
+                          target.username+" are now friends!")
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
-                    info ={'follower': target, 'following': user}
+                    info = {'follower': target, 'following': user}
                     s = FollowSerializer(info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from target to user")
@@ -464,11 +370,11 @@ def friendrequest(request):
 
             elif relationship == 3:
                 print("CONSOLE: "+user.username+" is already following " +
-                    target.username+". Returning")
+                      target.username+". Returning")
                 follows1 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows1:
-                    info={'follower': user, 'following': target}
+                    info = {'follower': user, 'following': target}
                     s = FollowSerializer(info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
@@ -482,7 +388,7 @@ def friendrequest(request):
                 if friendreq_serializer.is_valid():
                     friendreq_serializer.save()
                     print("CONSOLE: "+user.username +
-                        " sent a friend request to "+target.username)
+                          " sent a friend request to "+target.username)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
