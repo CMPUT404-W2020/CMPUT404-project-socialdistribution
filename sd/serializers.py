@@ -60,15 +60,6 @@ class CreatePostSerializer(serializers.ModelSerializer):
         post.save()
         return post
 
-class PostSerializer(serializers.ModelSerializer):
-
-    class Meta:
-        model = Post
-        fields = ['title', 'source', 'description', 'contentType', 'content', 'author', 'categories',
-                  'published', 'uuid', 'visibility', 'visibleTo', 'unlisted', 'link_to_image', 'image']
-
-    def create(self, validated_data):
-        return Post.objects.create(**validated_data)
 
 
 class GetPostSerializer(serializers.ModelSerializer):
@@ -131,3 +122,13 @@ class FriendSerializer(serializers.ModelSerializer):
 
     def create(self, validated_data):
         return Friend.objects.create(**validated_data)
+
+class PostSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Post
+        fields = ['title', 'source', 'description', 'contentType', 'content', 'author', 'categories',
+                  'published', 'uuid', 'visibility', 'visibleTo', 'unlisted', 'link_to_image', 'image']
+
+    def create(self, validated_data):
+        return Post.objects.create(**validated_data)

@@ -95,7 +95,7 @@ def load_github_feed(user):
                         if not exists:
                             try:
                                 info = {'title' : "Commit to "+r, 'source':com['sha'], 'description':'Commit', 'contentType' : 2, 'content' : com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], 'author' : user, 'categories' : 'github', 'visibility' : 'SERVERONLY', 'unlisted' : False, 'link_to_image' : com['committer']['avatar_url']}
-                                post = PostSerializer(info)
+                                post = PostSerializer(data=info)
                                 if post.is_valid():
                                     post.save()
                             except Exception as e:
@@ -158,7 +158,7 @@ def load_foreign_databases():
                 #      #visibleTo
                 #      )
                 # post.save()
-                post = PostSerializer(info)
+                post = PostSerializer(data=info)
                 if post.is_valid():
                     post.save()
                 for comment in comments:
