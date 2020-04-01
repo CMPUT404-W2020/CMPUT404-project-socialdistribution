@@ -316,7 +316,7 @@ def friendrequest(request):
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
                     info = {'follower': target, 'following': user}
-                    s = FollowSerializer(info)
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from target to user")
                         s.save()
@@ -324,7 +324,7 @@ def friendrequest(request):
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows2:
                     info = {'follower': user, 'following': target}
-                    s = FollowSerializer(info)
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
@@ -333,7 +333,7 @@ def friendrequest(request):
 
             elif relationship == 2:
                 info = {'author': user, 'friend': target}
-                friend = FriendSerializer(info)
+                friend = FriendSerializer(data=info)
                 if friend.is_valid():
                     friend.save()
                     obj.delete()
@@ -343,7 +343,7 @@ def friendrequest(request):
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
                     info ={'follower': target, 'following': user}
-                    s = FollowSerializer(info)
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from target to user")
                         s.save()
@@ -351,7 +351,7 @@ def friendrequest(request):
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows2:
                     info = {'follower': user, 'following': target}
-                    s = FollowSerializer(info)
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
@@ -364,7 +364,7 @@ def friendrequest(request):
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows1:
                     info={'follower': user, 'following': target}
-                    s = FollowSerializer(info)
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
@@ -373,7 +373,7 @@ def friendrequest(request):
 
             elif relationship == 4:
                 info = {'to_author': target, 'from_author': user}
-                friendreq_serializer = FriendRequestSerializer(info)
+                friendreq_serializer = FriendRequestSerializer(data=info)
                 if friendreq_serializer.is_valid():
                     friendreq_serializer.save()
                     print("CONSOLE: "+user.username +
@@ -382,7 +382,7 @@ def friendrequest(request):
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
                     info = {'follower': user, 'following': target}
-                    s = FollowSerializer(info)
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
