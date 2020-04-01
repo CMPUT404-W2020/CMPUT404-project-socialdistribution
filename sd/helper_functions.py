@@ -94,7 +94,7 @@ def load_github_feed(user):
                         exists = Post.objects.filter(source=com['sha'])
                         if not exists:
                             try:
-                                info = {'title' = "Commit to "+r, source=com['sha'], 'description'='Commit', 'contentType' = 2, 'content' = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], 'author' = user, 'categories' = 'github', 'visibility'='SERVERONLY', 'unlisted'=False, 'link_to_image'=com['committer']['avatar_url']}
+                                info = {'title' : "Commit to "+r, 'source':com['sha'], 'description':'Commit', 'contentType' : 2, 'content' : com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], 'author' : user, 'categories' : 'github', 'visibility' : 'SERVERONLY', 'unlisted' : False, 'link_to_image' : com['committer']['avatar_url']}
                                 post = CreatePostSerializer(info)
                                 if post.is_valid():
                                     post.save()
@@ -142,10 +142,7 @@ def load_foreign_databases():
                                     host=node)
                     author.save()
                 comments = post.get('comments',[])
-                info = {'title' = "Commit to "+r, source=com['sha'], 'description'='Commit', 'contentType' = 2, 'content' = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], 'author' = user, 'categories' = 'github', 'visibility'='SERVERONLY', 'unlisted'=False, 'link_to_image'=com['committer']['avatar_url']}
-                post = CreatePostSerializer(info)
-                if post.is_valid():
-                    post.save()
+                info = {'uuid':post.get('id', 'NOUUIDFOUND'), 'title' : post.get('title', 'NOTITLEFOUND'), 'source':post.get('source', node), 'description':post.get('description', 'NODESCRIPTIONFOUND'), 'contentType' : post.get('contentType', 'text/plain'), 'content' : post.get('content', 'NOCONTENTFOUND'), 'author' : author, 'visibility' : post.get('visibility','PUBLIC'), 'unlisted' : post.get('unlisted', False)}
                 # post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
                 #      title=post.get('title', 'NOTITLEFOUND'),
                 #      source=post.get('source', node),
@@ -161,6 +158,9 @@ def load_foreign_databases():
                 #      #visibleTo
                 #      )
                 # post.save()
+                post = CreatePostSerializer(info)
+                if post.is_valid():
+                    post.save()
                 for comment in comments:
                      try:
                          author = Author.objects.get(uuid=comment['author']['id'])
