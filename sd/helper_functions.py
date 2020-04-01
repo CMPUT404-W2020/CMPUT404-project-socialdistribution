@@ -1,8 +1,6 @@
 import uuid, requests, datetime, json
 from .models import *
-from .serializers import *
 from django.db.models import Q
-
 
 
 def valid_method(request):
@@ -94,10 +92,9 @@ def load_github_feed(user):
                         exists = Post.objects.filter(source=com['sha'])
                         if not exists:
                             try:
-                                info = {'title' : "Commit to "+r, 'source':com['sha'], 'description':'Commit', 'contentType' : 2, 'content' : com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], 'author' : user, 'categories' : 'github', 'visibility' : 'SERVERONLY', 'unlisted' : False, 'link_to_image' : com['committer']['avatar_url']}
-                                p = PostSerializer(data=info)
-                                if p.is_valid():
-                                    p.save()
+                                post = Post.objects.create(title = "Commit to "+r, source=com['sha'], description='Commit', contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='SERVERONLY', unlisted=False, link_to_image=com['committer']['avatar_url'])
+                                print("CONSOLE: Created a Github post: "+com['commit']['message'])
+                                post.save()
                             except Exception as e:
                                 print("CONSOLE: Error creating Github post", e)
                         else:
@@ -142,25 +139,24 @@ def load_foreign_databases():
                                     host=node)
                     author.save()
                 comments = post.get('comments',[])
-                info = {'uuid':post.get('id', 'NOUUIDFOUND'), 'title' : post.get('title', 'NOTITLEFOUND'), 'source':post.get('source', node), 'description':post.get('description', 'NODESCRIPTIONFOUND'), 'contentType' : post.get('contentType', 'text/plain'), 'content' : post.get('content', 'NOCONTENTFOUND'), 'author' : author, 'visibility' : post.get('visibility','PUBLIC'), 'unlisted' : post.get('unlisted', False), 'visibleTo':'', 'link_to_image':''}
-                # post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
-                #      title=post.get('title', 'NOTITLEFOUND'),
-                #      source=post.get('source', node),
-                #      origin=post.get('source', node),
-                #      content=post.get('content', 'NOCONTENTFOUND'),
-                #      description=post.get('description', 'NODESCRIPTIONFOUND'),
-                #      contentType=post.get('contentType', 'text/plain'),
-                #      author=author,
-                #      #categories
-                #      published=post.get('published', 'NOPUBLISHDATEFOUND'),
-                #      unlisted=post.get('unlisted', False),
-                #      visibility=post.get('visibility','PUBLIC'),
-                #      #visibleTo
-                #      )
-                # post.save()
-                p = PostSerializer(info)
-                if p.is_valid():
-                    p.save()
+                temp_content = post.get('content', 'NOCONTENTFOUND')
+                if len(temp_content)>5000:
+                    temp_content = temp_content[:4999]
+                post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
+                     title=post.get('title', 'NOTITLEFOUND'),
+                     source=post.get('source', node),
+                     origin=post.get('source', node),
+                     content=temp_content,
+                     description=post.get('description', 'NODESCRIPTIONFOUND'),
+                     contentType=post.get('contentType', 'text/plain'),
+                     author=author,
+                     #categories
+                     published=post.get('published', 'NOPUBLISHDATEFOUND'),
+                     unlisted=post.get('unlisted', False),
+                     visibility=post.get('visibility','PUBLIC'),
+                     #visibleTo
+                     )
+                post.save()
                 for comment in comments:
                      try:
                          author = Author.objects.get(uuid=comment['author']['id'])
