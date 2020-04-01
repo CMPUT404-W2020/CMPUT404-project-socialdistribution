@@ -340,6 +340,8 @@ def friendrequest(request):
                     obj.delete()
                     print("CONSOLE: "+user.username+" and " +
                         target.username+" are now friends!")
+                else:
+                    print("CONSOLE: friendserializer error:", friend.errors)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
@@ -348,6 +350,8 @@ def friendrequest(request):
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from target to user")
                         s.save()
+                    else:
+                        print("CONSOLE: followserializer error:", s.errors)
                 follows2 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows2:
@@ -356,6 +360,8 @@ def friendrequest(request):
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
+                    else:
+                        print("CONSOLE: followserializer error (2):", s.errors)
                 return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
 
             elif relationship == 3:
