@@ -99,7 +99,7 @@ class FriendRequestSerializer(serializers.ModelSerializer):
         model = FriendRequest
         fields = ['to_author', 'from_author']
 
-    def create(self, data):
+    def create(self, validated_data):
         return FriendRequest.objects.create(**validated_data)
 
 
@@ -109,7 +109,7 @@ class FollowSerializer(serializers.ModelSerializer):
         model = Follow
         fields = ['follower', 'following']
 
-    def create(self, data):
+    def create(self, validated_data):
         return Follow.objects.create(**validated_data)
 
 
@@ -119,5 +119,5 @@ class FriendSerializer(serializers.ModelSerializer):
         model = Friend
         fields = ['friend', 'author']
 
-    def create(self, data):
+    def create(self, validated_data):
         return Friend.objects.create(**validated_data)
