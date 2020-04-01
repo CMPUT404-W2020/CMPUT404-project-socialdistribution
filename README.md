@@ -53,11 +53,11 @@ Contributions:
 
 # Squawk Documentation
 
-Squawk is a distributed social network that gives control back to the user. With Squawk, you get all the features you expect from a modern social network without sacrificing privacy or being flooded with promotional content. For every post you create, you can choose exactly who can view it. When viewing content, you can access the Explore page to see all public posts connected to your node, or head to Your Feed to see only the curated content that you choose to follow.
+Squawk is a distributed social network that gives control back to the user. With Squawk, you get all the features you expect from a modern social network without sacrificing privacy or being flooded with promotional content. For every post you create, you decide exactly who can view it. When viewing content, you can access the Explore page to see all public posts connected to your node, or head to Your Feed to see only the curated content that you choose to follow.
 
 ## User Access
 
-The website is hosted by Heroku at: https://cmput-404.herokuapp.com/
+#### The website is hosted by Heroku at: https://cmput-404.herokuapp.com/
 
 On first use, you will not be logged in but are granted access to the explore page. This allows users to explore public posts before deciding to sign up with Squawk. After signing in or making an account (click on the account button), you will be granted access to the full functionality.
 
@@ -71,6 +71,34 @@ For testing, we have created a number of sample user credentials:
 | Michael | Jones    | Michael Jones   | cmput404 |
 | Ava     | Wilson   | Ava Wilson      | cmput404 |
 | Olivia  | Lewis    | Olivia Lewis    | cmput404 |
+
+## Site Features
+
+Now that you're logged into your Squawk account, you can take advantage of all of the exciting features:
+
+### Server to Server Connections
+There is no more need to have accounts on countless social media sites; Squawk lets you pull information from different sources into one convenient feed. You can follow other authors within the Squawk server and all connecting servers. Refer to the "Current Connections" section in this document to see the servers available to you through Squawk or contact the Squawk admins to request a new server be added. 
+
+### Curate your Content
+
+On ***Your Feed*** you see content from the authors that you follow. All of your posts, regardless of their privacy settings, will also be visible to you on your feed. 
+
+With our ***Github compatibility***, see your github activity feed on your Squawk feed. Enable this option by adding your Github ID to your Squawk profile.
+
+### Find New Content
+
+Check out the ***Explore*** page to see all public posts from local and remote servers. This is a great way to find new authors to follow and to gain popularity through your public posts. 
+
+When you'd like to follow or unfollow an author, look them up on the ***Search*** page to change your current relationship. 
+
+You will be notified on the ***Notifications*** page when another author follows you. You can choose to follow them back and become friends, or dismiss the notification. Here you can also see a list of users you are following or are ***friends*** with.
+
+### Own your Content
+
+Choose how you display yourself to others by editing the information on your ***Account*** page. 
+
+Every post you create has several ***privacy*** options to choose from. If you set your post to ***public***, then it will show on the explore page of all other users directly or indirectly connected to the Squawk server. Alternatively, you can restrict your post to the personal feeds of your ***friends***, ***friends of friends***, ***server only***, or a spectific group of users with ***private*** posts. For added privacy, select ***unlisted*** and your post will only be visible to the aforementioned audience if you provide them with the direct link. If you change your mind later, you can easily edit your own posts and change their privacy setting. 
+
 
 ## Admin Access
 
@@ -431,7 +459,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
     /account             (displays the currently authenticated user's information and allows them to edit that information)
     /edit_account        (allows the user to edit their profile information)
     
-### User interaction
+### User Interaction
     /search              (allows the user to search for other users. From the search results, they can follow/unfollow users and see their current relationship to them)
     /notifications       (displays the user's notification of requests and a list of other users that they follow or are friends with)
 
