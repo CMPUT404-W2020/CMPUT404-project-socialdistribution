@@ -309,6 +309,7 @@ def friendrequest(request):
             4 --> no relationship exists yet; create one
             obj is returned in case 2 friend request to be deleted
             """
+            print("CONSOLE: Relationship: ",relationship)
             if relationship == 1:
                 print("CONSOLE: "+user.username+" and " +
                     target.username+" are already friends!")
@@ -378,6 +379,8 @@ def friendrequest(request):
                     friendreq_serializer.save()
                     print("CONSOLE: "+user.username +
                         " sent a friend request to "+target.username)
+                else:
+                    print("CONSOLE: friendreq_serializer errors:", friendreq_serializer.errors)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
@@ -386,6 +389,8 @@ def friendrequest(request):
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
+                    else:
+                        print("CONSOLE: followserializer error:",s.errors)
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
         except Exception as e:
