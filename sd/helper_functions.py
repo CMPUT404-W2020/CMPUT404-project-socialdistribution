@@ -143,7 +143,7 @@ def load_foreign_databases():
                      title=post.get('title', 'NOTITLEFOUND'),
                      source=post.get('source', node),
                      origin=post.get('source', node),
-                     content=post.get('content', 'NOCONTENTFOUND'),
+                     content=post.get('content', 'NOCONTENTFOUND')[:5000],
                      description=post.get('description', 'NODESCRIPTIONFOUND'),
                      contentType=post.get('contentType', 'text/plain'),
                      author=author,

@@ -106,33 +106,35 @@ function createStatusId(name) {
 }
 
 function sendRequest(author) {
-  console.log("Author:", author);
   const origin = window.location.origin;
 
   const data = {
     target_author: author
   };
-  console.log(data);
   fetch(origin + "/friendrequest", {
     method: "POST",
     headers: {
+      "Accept": "application/json",
       "Content-Type": "application/json"
     },
     body: JSON.stringify(data)
   })
-    .then(function(response) {
-      return response.text();
-    })
-    .then(function(data) {
-      alert(
-        `Friend request successfully sent to ${author}.\nYou are now following ${author}.`
+  .then(function(response) {
+    if (!response.ok){
+      throw Error(response.statusText)
+    }
+    return response
+  })
+  .then(function(response) {
+    alert(
+      `Friend request successfully sent to ${author}.\nYou are now following ${author}.`
       );
       location.reload();
     })
-    .catch(function(data) {
+    .catch(function(error) {
       alert(
         "Friend request could not be sent at this time.\nPlease try again later."
-      );
+        );
     });
 }
 
