@@ -139,14 +139,11 @@ def load_foreign_databases():
                                     host=node)
                     author.save()
                 comments = post.get('comments',[])
-                temp_content = post.get('content', 'NOCONTENTFOUND')
-                if len(temp_content)>5000:
-                    temp_content = temp_content[:4999]
                 post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
                      title=post.get('title', 'NOTITLEFOUND'),
                      source=post.get('source', node),
                      origin=post.get('source', node),
-                     content=temp_content,
+                     content=post.get('content', 'NOCONTENTFOUND'),
                      description=post.get('description', 'NODESCRIPTIONFOUND'),
                      contentType=post.get('contentType', 'text/plain'),
                      author=author,
