@@ -169,7 +169,20 @@ def notifications(request):
                 print(a.from_author)
                 all_requests.append(a.from_author)
 
-            return render(request, 'sd/notifications.html', {"requests": all_requests})
+            # Get all friends
+            all_friends = Friend.objects.filter(Q(author=user)) | Friend.objects.filter(Q(friend=user))
+            ret_friends = []
+            for f in all_friends:
+                entry = {}
+                if f.friend == user:
+                    entry["uuid"] = f.author.uuid
+                    entry["name"] = f.author.username
+                else:
+                    entry["uuid"] = f.friend.uuid
+                    entry["name"] = f.friend.username
+                ret_friends.append(entry)
+
+            return render(request, 'sd/notifications.html', {"requests": all_requests, "friends": ret_friends})
         else:
             print("CONSOLE: Redirecting from Notifications because no one is logged in")
             return redirect('login')

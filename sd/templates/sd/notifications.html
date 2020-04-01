@@ -23,9 +23,7 @@
     }
 
     function loadRequests() {
-        var friends = "{{friends}}";
-        friends = makeItAList(friends);
-
+        var friends = makeItAList("{{friends}}");
         var results = makeItAList("{{requests}}");
         displayResults(results, friends);
     }
@@ -55,16 +53,16 @@
         displayFriends.innerHTML = "";
 
         for (let f of friends) {
-            var btn_id = createButtonId(f);
-            display.innerHTML += `<div>
+            var fbtn_id = createButtonId(f);
+            displayFriends.innerHTML += `<div>
             Friends
             <hr class="greyline">
-            <span class="searchauthor">${f}</span>
+            <span class="searchauthor">${f['name']}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${f}')"">-</button>
+            <button class="addminusbutton" id="${fbtn_id}" onclick="sendRequest('${f}')"">-</button>
         </div>`;
         }
 
