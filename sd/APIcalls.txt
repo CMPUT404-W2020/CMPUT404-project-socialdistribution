@@ -192,6 +192,89 @@ posts/<uuid>
   "unlisted": false
 }
 
+posts/<uuid>
+- POST
+- Returns values for post specified by uuid
+- POST Example:
+{
+	"query":"getPost",
+	"postid":"d2535b27-4ecf-49d0-baca-b24efd6931ce",
+	"url":"http://service/posts/d2535b27-4ecf-49d0-baca-b24efd6931ce",
+ 	"author":{
+		"id":"http://127.0.0.1:5454/author/de305d54-75b4-431b-adb2-eb6b9e546013",
+		"host":"http://127.0.0.1:5454/",
+		"displayName":"Jerry Johnson",
+		"url":"http://127.0.0.1:5454/author/de305d54-75b4-431b-adb2-eb6b9e546013",
+		"github": "http://github.com/jjohnson"
+ 	},
+ 	"friends":[
+		"http://127.0.0.1:5454/author/7deee0684811f22b384ccb5991b2ca7e78abacde",
+		"http://127.0.0.1:5454/author/11c3783f15f7ade03430303573098f0d4d20797b"
+	]
+}
+- Return example:
+{
+  "author": {
+    "id": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+    "host": "https://cmput-404.herokuapp.com/",
+    "displayName": "207pm",
+    "github": "",
+    "url": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+    "bio": "",
+    "firstName": "asdfasdf",
+    "lastName": "sdafadfa",
+    "email": "test@test.com"
+  },
+  "title": "asdfadf",
+  "source": "https://cmput-404.herokuapp.com/",
+  "origin": "https://cmput-404.herokuapp.com/",
+  "description": "asdfasdf",
+  "contentType": "text/markdown",
+  "content": "asdfsa",
+  "categories": "",
+  "comments": [
+    {
+      "author": {
+        "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+        "host": "https://cmput-404.herokuapp.com/",
+        "displayName": "admin",
+        "github": "",
+        "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+        "bio": "",
+        "firstName": "",
+        "lastName": "",
+        "email": ""
+      },
+      "comment": "HELLOOOOOO",
+      "contentType": "text/markdown",
+      "published": "2020-03-27T20:19:55.496559Z",
+      "id": "3a10eccb-0f2b-40e6-b45c-ea994670e0d0"
+    },
+    {
+      "author": {
+        "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+        "host": "https://cmput-404.herokuapp.com/",
+        "displayName": "admin",
+        "github": "",
+        "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+        "bio": "",
+        "firstName": "",
+        "lastName": "",
+        "email": ""
+      },
+      "comment": "TEST COMMENT",
+      "contentType": "text/markdown",
+      "published": "2020-03-27T21:18:04.889486Z",
+      "id": "2faf405a-63bc-4922-959d-84534f8b4bf6"
+    }
+  ],
+  "published": "2020-03-27T20:08:11.468804Z",
+  "id": "d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "visibility": "PUBLIC",
+  "visibleTo": [],
+  "unlisted": false
+}
+
 posts/<uuid>/comments
 - GET
 - returns comments from post with specified uuid

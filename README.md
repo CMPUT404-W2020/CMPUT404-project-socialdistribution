@@ -49,7 +49,7 @@ Contributions:
     5. https://stackoverflow.com/questions/29321494/show-input-field-only-if-a-specific-option-is-selected/29321711. Author: https://stackoverflow.com/users/4721273/josephus87
     6. https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
     7. https://stackoverflow.com/questions/15950007/centering-floated-images-in-div. author: https://stackoverflow.com/users/2157321/dhaval-marthak*/
-    8. https://www.tjvantoll.com/2015/09/13/fetch-and-errors/ 
+    8. https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
 
 # Squawk Documentation
 
@@ -114,20 +114,20 @@ When running locally, you can run this command to create a superuser and access 
 ## API Information:
 
 API Endpoint URL:
-  
- https://cmput-404.herokuapp.com/
+
+https://cmput-404.herokuapp.com/
 
 Credentials:
-  
- warren:cmput404
+
+warren:cmput404
 
 Example HTTPIE:
-  
- http GET https://cmput-404.herokuapp.com/posts
+
+http GET https://cmput-404.herokuapp.com/posts
 
 Web Service Endpoint URL:
-  
- https://cmput-404.herokuapp.com/
+
+https://cmput-404.herokuapp.com/
 
 Current Connections:
 | Remote API Endpoint | Username | Password |
@@ -143,6 +143,8 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
 (will be updated to match social_distribution/sd/urls.py found on the api branch)
 
 **/author/**
+
+/author/
 
 - GET
 - Returns all users
@@ -171,7 +173,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   }
   ]
 
-**/author/<uuid>**
+/author/<uuid>
 
 - GET
 - Returns user details
@@ -201,7 +203,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-**/author/<uuid>/friends**
+/author/<uuid>/friends
 
 - GET
 - Returns all friends of user
@@ -216,7 +218,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   }
   ]
 
-**/author/<uuid:pk1>/friends/<uuid:pk2>**
+/author/<uuid:pk1>/friends/<uuid:pk2>
 
 - GET
 - returns bool to indicate whether or not two users are friends
@@ -229,7 +231,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   "friends": 1
   }
 
-**/author/posts**
+/author/posts
 
 - GET
 - returns all posts visible to user
@@ -288,7 +290,9 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-**posts/<uuid>**
+**/posts/**
+
+posts/<uuid>
 
 - GET
 - Returns values for post specified by uuid
@@ -338,7 +342,91 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   "unlisted": false
   }
 
-**posts/<uuid>/comments**
+posts/<uuid>
+
+- POST
+- Returns values for post specified by uuid
+- POST Example:
+  {
+  "query":"getPost",
+  "postid":"d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "url":"http://service/posts/d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "author":{
+  "id":"http://127.0.0.1:5454/author/de305d54-75b4-431b-adb2-eb6b9e546013",
+  "host":"http://127.0.0.1:5454/",
+  "displayName":"Jerry Johnson",
+  "url":"http://127.0.0.1:5454/author/de305d54-75b4-431b-adb2-eb6b9e546013",
+  "github": "http://github.com/jjohnson"
+  },
+  "friends":[
+  "http://127.0.0.1:5454/author/7deee0684811f22b384ccb5991b2ca7e78abacde",
+  "http://127.0.0.1:5454/author/11c3783f15f7ade03430303573098f0d4d20797b"
+  ]
+  }
+- Return example:
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "207pm",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "bio": "",
+  "firstName": "asdfasdf",
+  "lastName": "sdafadfa",
+  "email": "test@test.com"
+  },
+  "title": "asdfadf",
+  "source": "https://cmput-404.herokuapp.com/",
+  "origin": "https://cmput-404.herokuapp.com/",
+  "description": "asdfasdf",
+  "contentType": "text/markdown",
+  "content": "asdfsa",
+  "categories": "",
+  "comments": [
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "admin",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": ""
+  },
+  "comment": "HELLOOOOOO",
+  "contentType": "text/markdown",
+  "published": "2020-03-27T20:19:55.496559Z",
+  "id": "3a10eccb-0f2b-40e6-b45c-ea994670e0d0"
+  },
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "admin",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": ""
+  },
+  "comment": "TEST COMMENT",
+  "contentType": "text/markdown",
+  "published": "2020-03-27T21:18:04.889486Z",
+  "id": "2faf405a-63bc-4922-959d-84534f8b4bf6"
+  }
+  ],
+  "published": "2020-03-27T20:08:11.468804Z",
+  "id": "d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "visibility": "PUBLIC",
+  "visibleTo": [],
+  "unlisted": false
+  }
+
+posts/<uuid>/comments
 
 - GET
 - returns comments from post with specified uuid
@@ -370,7 +458,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-**posts/<uuid>/comments**
+posts/<uuid>/comments
 
 - post
 - creates comment on post specified with uuid
@@ -399,7 +487,9 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   "message": "Comment Added"
   }
 
-**/author/<uuid>/friends/<uuid>/**
+**/friends/**
+
+/author/<uuid>/friends/<uuid>/
 
 - GET
 - Check if two authors are friends
