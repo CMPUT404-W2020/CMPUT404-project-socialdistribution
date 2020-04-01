@@ -465,6 +465,7 @@ form>.row {
   width: auto;
   font-size: medium;
   margin-top: 1em;
+  margin-bottom: 1em;
 }
 
 #login-button:hover {
@@ -535,6 +536,7 @@ form>.row {
 
 #orange-button:hover {
   cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 #blue-button {
@@ -552,6 +554,7 @@ form>.row {
 
 #blue-button:hover {
   cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 #orangebackground-button {
