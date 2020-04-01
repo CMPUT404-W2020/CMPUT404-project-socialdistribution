@@ -49,6 +49,7 @@ Contributions:
     5. https://stackoverflow.com/questions/29321494/show-input-field-only-if-a-specific-option-is-selected/29321711. Author: https://stackoverflow.com/users/4721273/josephus87
     6. https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
     7. https://stackoverflow.com/questions/15950007/centering-floated-images-in-div. author: https://stackoverflow.com/users/2157321/dhaval-marthak*/
+    8. https://www.tjvantoll.com/2015/09/13/fetch-and-errors/ 
 
 # Squawk Documentation
 
@@ -97,7 +98,6 @@ You will be notified on the ***Notifications*** page when another author follows
 Choose how you display yourself to others by editing the information on your ***Account*** page. 
 
 Every post you create has several ***privacy*** options to choose from. If you set your post to ***public***, then it will show on the explore page of all other users directly or indirectly connected to the Squawk server. Alternatively, you can restrict your post to the personal feeds of your ***friends***, ***friends of friends***, ***server only***, or a spectific group of users with ***private*** posts. For added privacy, select ***unlisted*** and your post will only be visible to the aforementioned audience if you provide them with the direct link. If you change your mind later, you can easily edit your own posts and change the privacy setting. 
-
 
 ## Admin Access
 
