@@ -373,7 +373,7 @@ def friendrequest(request):
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
 
             elif relationship == 4:
-                info = {'to_author': target, 'from_author': user}
+                info = {'to_author': target.uuid, 'from_author': user.uuid}
                 friendreq_serializer = FriendRequestSerializer(data=info)
                 if friendreq_serializer.is_valid():
                     friendreq_serializer.save()
@@ -384,7 +384,7 @@ def friendrequest(request):
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
-                    info = {'follower': user, 'following': target}
+                    info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
