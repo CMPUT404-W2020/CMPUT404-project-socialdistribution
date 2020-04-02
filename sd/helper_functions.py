@@ -79,7 +79,7 @@ def load_github_feed(user):
             repo_names = []
             current = datetime.datetime.now()
             for repo in repo_data:
-                if 'pushed_at' in repo_data:
+                if 'pushed_at' in repo:
                     d = repo['pushed_at'].split('T')[0].split('-')
                     date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
                     if(current-date).days < 30:
