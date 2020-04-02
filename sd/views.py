@@ -61,10 +61,9 @@ def feed(request):
                     if server_spec_posts:
                         all_posts = all_posts.union(server_spec_posts)
                 
-                spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PRIVATE') & Q(unlisted=False))
-                for post in spec_posts:
-                    if user.username in post.visibleTo:
-                        all_posts = all_posts.union(post)
+                spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
+                if spec_posts:
+                    all_posts = all_posts.union(spec_posts)
                 
                 if f_user.uuid in friend_ids:
                     friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='FRIENDS') & Q(unlisted=False))
