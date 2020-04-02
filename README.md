@@ -295,6 +295,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
 posts/<uuid>
 
 - GET
+- Requires Auth for posts with privacy restrictions
 - Returns values for post specified by uuid
 - Example:
   {

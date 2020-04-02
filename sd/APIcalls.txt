@@ -145,6 +145,7 @@
 
 posts/<uuid>
 - GET
+- Requires Auth for posts with privacy restrictions
 - Returns values for post specified by uuid
 - Example:
 {
@@ -199,17 +200,17 @@ posts/<uuid>
 {
 	"query":"getPost",
 	"postid":"d2535b27-4ecf-49d0-baca-b24efd6931ce",
-	"url":"http://service/posts/d2535b27-4ecf-49d0-baca-b24efd6931ce",
- 	"author":{
-		"id":"http://127.0.0.1:5454/author/de305d54-75b4-431b-adb2-eb6b9e546013",
-		"host":"http://127.0.0.1:5454/",
-		"displayName":"Jerry Johnson",
-		"url":"http://127.0.0.1:5454/author/de305d54-75b4-431b-adb2-eb6b9e546013",
-		"github": "http://github.com/jjohnson"
- 	},
+	"url":"https://cmput-404.herokuapp.com/d2535b27-4ecf-49d0-baca-b24efd6931ce",
+ 	"author":
+	{
+    "id": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+    "host": "https://cmput-404.herokuapp.com/",
+    "displayName": "207pm",
+    "github": "",
+    "url": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28"
+  },
  	"friends":[
-		"http://127.0.0.1:5454/author/7deee0684811f22b384ccb5991b2ca7e78abacde",
-		"http://127.0.0.1:5454/author/11c3783f15f7ade03430303573098f0d4d20797b"
+		"https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9"
 	]
 }
 - Return example:

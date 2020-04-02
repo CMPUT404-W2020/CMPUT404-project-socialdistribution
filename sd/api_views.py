@@ -179,17 +179,84 @@ class GetPostAPIView(APIView):
     # permission_classes = [IsAuthenticated]
     serializer_class = GetPostSerializer
 
-    # Returns Post by sending UUID of Post
     def get(self, request, pk, format=None):
         post = Post.objects.get(uuid=pk)
         postDict = serializePost(post)
 
-        return Response(postDict, status=status.HTTP_200_OK)
+        if post.visibility == 'PUBLIC':
+            return Response(postDict, status=status.HTTP_200_OK)
+
+        elif str(request.user) == 'AnonymousUser':
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        elif post.visibility == 'FRIENDS':
+            friendsUUIDList = []
+            for friend in Friend.objects.filter(author=post.author.uuid):
+                friendsUUIDList.append(friend.friend.uuid)
+            for friend in Friend.objects.filter(friend=post.author.uuid):
+                friendsUUIDList.append(friend.author.uuid)
+            if request.user.uuid in friendsUUIDList:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'FOAF':
+            friendsUUIDList = []
+            for friend in Friend.objects.filter(author=post.author.uuid):
+                friendsUUIDList.append(friend.friend.uuid)
+            for friend in Friend.objects.filter(friend=post.author.uuid):
+                friendsUUIDList.append(friend.author.uuid)
+            foafUUIDList = []
+            for friendUUID in friendsUUIDList:
+                tempAuthor = Author.objects.get(uuid=friendUUID)
+                for innerFriend in Friend.objects.filter(author=tempAuthor):
+                    if innerFriend.friend.uuid not in foafUUIDList:
+                        foafUUIDList.append(innerFriend.friend.uuid)
+                for innerFriend in Friend.objects.filter(friend=tempAuthor):
+                    if innerFriend.friend.uuid not in foafUUIDList:
+                        foafUUIDList.append(innerFriend.author.uuid)
+            foafUUIDList.append(friendsUUIDList)
+            if request.user.uuid in foafUUIDList:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'PRIVATE':
+            if request.user == post.author:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'SERVERONLY':
+            if request.user.host == post.host:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    # Returns Post by sending POST request
 
     def post(self, request, pk, format=None):
+        print(request.data)
         post = Post.objects.get(uuid=pk)
+
         postDict = serializePost(post)
 
+        print(request.data['friends'])
+        canView = False
+        print(request.user)
+        print("post author: ", postDict['author']['id'])
+        print("user: ", (request.user.host.hostname +
+                         "author/" + request.user.uuid))
+
+        # check if user accessing post is the post creator
+        # if user is post creator, they can view the post
+        if postDict['author']['id'] == (request.user.host.hostname +
+                                        "author/" + request.user.uuid):
+            canView = True
+        # check if user accessing post is a friend.
+        else:
+            for friend in request.data['friends']:
+                if friend == (request.user.host.hostname +
+                              "author/" + request.user.uuid):
+                    canView = True
+                    break
+
+        if canView == False:
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
         return Response(postDict, status=status.HTTP_200_OK)
 
 
