@@ -87,7 +87,7 @@ def feed(request):
                 
             all_posts = all_posts.distinct()
             for p in all_posts:
-                if p.content_type == 'text/markdown':
+                if p.contentType == 'text/markdown':
                     p.content = commonmark.commonmark(p.content)
                     print(p)
             results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
