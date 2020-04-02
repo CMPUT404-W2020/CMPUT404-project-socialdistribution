@@ -70,10 +70,15 @@ def feed(request):
                     if friend_posts:
                         all_posts = all_posts.union(friend_posts)
                 
+                print("CONSOLE: username:", user.username)
+                print("CONSOLE: following id:", f)
+                print("CONSOLE: friend_ids:",friend_ids)
+
                 for friend in friend_ids:
                     tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
                     tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
                     their_friends = tf1.union(tf2)                    #### NOTE:their_friends is a set of uuid's
+                    print("CONSOLE: their_friends: ", their_friends)
                     for foaf in their_friends:
                         posts = Post.objects.filter(Q(author=foaf) & Q(visibility='FOAF') & Q(unlisted=False))
                         if posts:
