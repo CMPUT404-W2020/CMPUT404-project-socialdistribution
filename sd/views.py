@@ -85,7 +85,8 @@ def feed(request):
                 # temp = Author.objects.get(fs)
                 
             all_posts = all_posts.distinct()
-            makeCommonMark(all_posts)
+            for p in all_posts:
+                print(p)
             results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
@@ -94,10 +95,6 @@ def feed(request):
     else:
         return HttpResponse(status_code=405)
 
-
-def makeCommonMark(posts):
-    for p in posts:
-        print(p)
 
 def account(request):
     if valid_method(request):
