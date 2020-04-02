@@ -29,7 +29,7 @@
 				<!-- if I am the author, make this div -->
 				{% if post.author == current_user.uuid %}
 				<div class="dropdown">
-					<button class="dropdown-button" onclick="showDropdown(\"dropdown-content-\" + {{post}})">Options...<span class="caret"></span></button>
+					<button class="dropdown-button" onclick="showDropdown(\"dropdown-content-\" + {{post.uuid}}.toString())">Options...<span class="caret"></span></button>
 					<div id="dropdown-content-{{post}}" class="dropdown-content">
 						<a href="edit_post/{{post.uuid}}">Edit</a>
 						<a href="" onclick="confirmDelete('{{post.uuid}}')">Delete</a>
