@@ -31,7 +31,6 @@ def feed(request):
     if valid_method(request):
         user = get_current_user(request)
         if authenticated(request) and user:
-            print("CONSOLE:", 'should be loading github feed')
             load_github_feed(get_current_user(request)) 
             all_posts = Post.objects.none()
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
