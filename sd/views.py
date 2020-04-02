@@ -64,12 +64,12 @@ def feed(request):
                 spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PRIVATE') & Q(unlisted=False))
                 for post in spec_posts:
                     if user.username in post.visibleTo:
-                        all_posts = all_post.union(post)
+                        all_posts = all_posts.union(post)
                 
                 if f_user.uuid in friend_ids:
                     friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='FRIENDS') & Q(unlisted=False))
                     if friend_posts:
-                        all_posts = all_post.union(friend_posts)
+                        all_posts = all_posts.union(friend_posts)
                 
                 for friend in friend_ids:
                     tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
