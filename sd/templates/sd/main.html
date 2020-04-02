@@ -30,6 +30,7 @@
 				{% if post.author == current_user.uuid %}
 				{% with options_id="dropdown-content-{{post.uuid}}" %}
 				<div class="dropdown">
+					{{ options_id }}
 					<button class="dropdown-button" onclick="showDropdown(\"{{ options_id }}\")">Options...<span class="caret"></span></button>
 					<div id={{ options_id }} class="dropdown-content">
 						<a href="edit_post/{{post.uuid}}">Edit</a>
