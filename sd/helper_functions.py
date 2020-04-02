@@ -71,6 +71,8 @@ def get_relationship(user, target):
     return 4,None #no relationship
 
 def load_github_feed(user):
+    print("CONSOLE: load_github_feed function")
+    print("CONSOLE: user:", user, '\n', vars(user))
     if user.github != '':
         try:
             repo_data = json.loads(requests.get('https://api.github.com/users/'+user.github+'/repos').content.decode())
@@ -82,6 +84,7 @@ def load_github_feed(user):
                     date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
                     if(current-date).days < 30:
                         repo_names.append(repo['name'])
+            print("CONSOLE: repo_names", repo_names)
             for r in repo_names:
                 commit_data = json.loads(requests.get('https://api.github.com/repos/'+user.github+'/' + r + '/commits').content.decode())
                 posts = []
