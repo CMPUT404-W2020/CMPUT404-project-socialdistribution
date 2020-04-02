@@ -27,14 +27,16 @@
 		document.getElementById("feed-items").innerHTML = `{% for post in results.feed %}
             <div class="feeditem">
 				<!-- if I am the author, make this div -->
-				{% if post.author == current_user %}
+				{% if post.author == current_user.uuid %}
+				{% with 'dropdown-content-'|add:post.uuid as options_id %}
 				<div class="dropdown">
-					<button class="dropdown-button" onclick="showDropdown('dropdown-content-{{post}}')">Options...<span class="caret"></span></button>
-					<div id="dropdown-content-{{post}}" class="dropdown-content">
+					<button class="dropdown-button" onclick="showDropdown('{{ options_id }}')">Options...<span class="caret"></span></button>
+					<div id='{{ options_id }}' class="dropdown-content">
 						<a href="edit_post/{{post.uuid}}">Edit</a>
 						<a href="" onclick="confirmDelete('{{post.uuid}}')">Delete</a>
 					</div>
 				</div>
+				{% endwith %}
 				{% endif %}
 
 				<div id = "author"> {{post.author}} </div>
