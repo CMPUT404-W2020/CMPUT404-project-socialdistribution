@@ -39,7 +39,8 @@ class NewPostForm(forms.ModelForm):
         widgets = {
             'contentType': forms.Select(),
             'visibility': forms.Select(),
-            'author': forms.HiddenInput()
+            'author': forms.HiddenInput(),
+            'content': forms.Textarea()
         }
         labels = {
             "title" : "*Post Title:",
