@@ -81,7 +81,10 @@ def feed(request):
                     print("CONSOLE: their_friends: ", their_friends)
                     for foaf in their_friends:
                         print("CONSOLE: foaf:", foaf, type(foaf))
-                        posts = Post.objects.filter(Q(author=foaf) & Q(visibility='FOAF') & Q(unlisted=False))
+                        if 'friend_id' in foaf:
+                            posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(visibility='FOAF') & Q(unlisted=False))
+                        elif 'author_id' in foaf:
+                            posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(visibility='FOAF') & Q(unlisted=False))
                         if posts:
                             all_posts = all_posts.union(posts)
 
