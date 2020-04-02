@@ -24,8 +24,7 @@
 	}
 
 	function feed() {
-		console.log("Post author:", "{{post.author}}");
-		console.log("Current user:", "{{current_user}}");
+		console.log("Current user:", "{{current_user.uuid}}");
 		debugger
 		document.getElementById("feed-items").innerHTML = `{% for post in results.feed %}
             <div class="feeditem">
