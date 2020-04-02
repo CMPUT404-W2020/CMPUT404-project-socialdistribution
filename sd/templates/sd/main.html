@@ -28,7 +28,7 @@
             <div class="feeditem">
 				<!-- if I am the author, make this div -->
 				{% if post.author == current_user.uuid %}
-				{% with options_id="dropdown-content-{{post.uuid}}" %}
+				{% with options_id=\`dropdown-content-{{post.uuid}}\` %}
 				<div class="dropdown">
 					{{ options_id }}
 					<button class="dropdown-button" onclick="showDropdown(\"{{ options_id }}\")">Options...<span class="caret"></span></button>
