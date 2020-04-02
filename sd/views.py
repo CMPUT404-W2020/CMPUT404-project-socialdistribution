@@ -65,27 +65,30 @@ def feed(request):
                         all_posts = all_posts.union(server_spec_posts)
 
                 spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
-                    visibility='PRIVATE') & Q(unlisted=False))
-                for post in spec_posts:
-                    if user.username in post.visibleTo:
-                        all_posts = all_post.union(post)
+                    visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
+                if spec_posts:
+                    all_posts = all_posts.union(spec_posts)
 
                 if f_user.uuid in friend_ids:
                     friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
                         visibility='FRIENDS') & Q(unlisted=False))
                     if friend_posts:
-                        all_posts = all_post.union(friend_posts)
+                        all_posts = all_posts.union(friend_posts)
 
                 for friend in friend_ids:
                     tf1 = Friend.objects.filter(
                         Q(author=friend)).values('friend_id')
                     tf2 = Friend.objects.filter(
                         Q(friend=friend)).values('author_id')
-                    # NOTE:their_friends is a set of uuid's
+                    # NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
                     their_friends = tf1.union(tf2)
                     for foaf in their_friends:
-                        posts = Post.objects.filter(Q(author=foaf) & Q(
-                            visibility='FOAF') & Q(unlisted=False))
+                        if 'friend_id' in foaf:
+                            posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(
+                                visibility='FOAF') & Q(unlisted=False))
+                        elif 'author_id' in foaf:
+                            posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(
+                                visibility='FOAF') & Q(unlisted=False))
                         if posts:
                             all_posts = all_posts.union(posts)
 
@@ -320,22 +323,23 @@ def friendrequest(request):
             4 --> no relationship exists yet; create one
             obj is returned in case 2 friend request to be deleted
             """
+            print("CONSOLE: Relationship: ", relationship)
             if relationship == 1:
                 print("CONSOLE: "+user.username+" and " +
                       target.username+" are already friends!")
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
-                    info = {'follower': target, 'following': user}
-                    s = FollowSerializer(info)
+                    info = {'follower': targetuuid, 'following': user.uuid}
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from target to user")
                         s.save()
                 follows2 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows2:
-                    info = {'follower': user, 'following': target}
-                    s = FollowSerializer(info)
+                    info = {'follower': user.uuid, 'following': target.uuid}
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
@@ -343,29 +347,35 @@ def friendrequest(request):
                 return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
 
             elif relationship == 2:
-                info = {'author': user, 'friend': target}
-                friend = FriendSerializer(info)
+                info = {'author': user.uuid, 'friend': target.uuid}
+                friend = FriendSerializer(data=info)
                 if friend.is_valid():
                     friend.save()
                     obj.delete()
                     print("CONSOLE: "+user.username+" and " +
                           target.username+" are now friends!")
+                else:
+                    print("CONSOLE: friendserializer error:", friend.errors)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
-                    info = {'follower': target, 'following': user}
-                    s = FollowSerializer(info)
+                    info = {'follower': target.uuid, 'following': user.uuid}
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from target to user")
                         s.save()
+                    else:
+                        print("CONSOLE: followserializer error:", s.errors)
                 follows2 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows2:
-                    info = {'follower': user, 'following': target}
-                    s = FollowSerializer(info)
+                    info = {'follower': user.uuid, 'following': target.uuid}
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
+                    else:
+                        print("CONSOLE: followserializer error (2):", s.errors)
                 return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
 
             elif relationship == 3:
@@ -374,8 +384,8 @@ def friendrequest(request):
                 follows1 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows1:
-                    info = {'follower': user, 'following': target}
-                    s = FollowSerializer(info)
+                    info = {'follower': user.uuid, 'following': target.uuid}
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
@@ -383,20 +393,25 @@ def friendrequest(request):
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
 
             elif relationship == 4:
-                info = {'to_author': target, 'from_author': user}
-                friendreq_serializer = FriendRequestSerializer(info)
+                info = {'to_author': target.uuid, 'from_author': user.uuid}
+                friendreq_serializer = FriendRequestSerializer(data=info)
                 if friendreq_serializer.is_valid():
                     friendreq_serializer.save()
                     print("CONSOLE: "+user.username +
                           " sent a friend request to "+target.username)
+                else:
+                    print("CONSOLE: friendreq_serializer errors:",
+                          friendreq_serializer.errors)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
-                    info = {'follower': user, 'following': target}
-                    s = FollowSerializer(info)
+                    info = {'follower': user.uuid, 'following': target.uuid}
+                    s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
+                    else:
+                        print("CONSOLE: followserializer error:", s.errors)
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
         except Exception as e:
