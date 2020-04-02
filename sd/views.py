@@ -86,6 +86,7 @@ def feed(request):
                 
             all_posts = all_posts.distinct()
             results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
+            print(results)
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
             print("CONSOLE: Redirecting from Feed because no one is logged in")
