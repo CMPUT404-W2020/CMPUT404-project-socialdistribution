@@ -24,6 +24,7 @@
 	}
 
 	function feed() {
+		debugger
 		document.getElementById("feed-items").innerHTML = `{% for post in results.feed %}
             <div class="feeditem">
 				<!-- if I am the author, make this div -->
