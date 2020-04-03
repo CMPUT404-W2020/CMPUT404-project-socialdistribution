@@ -58,7 +58,7 @@
                 	{% for comment in comments %}
 						<div id = "comment.post"> comment.post {{comment.post}} </div>
 						<div id ="tempcomment">{{comment}}</div>
-						{% if post.uuid == comment.post %}
+						{% if {{post.uuid}} == {{comment.post}} %}
 							<div class = "commentitem">
 								<div id = "commentauthor"> Author: {{comment.author}} </div>
 								<div id = "commentdate"> Published: {{comment.published}} <br> <br> </div>
