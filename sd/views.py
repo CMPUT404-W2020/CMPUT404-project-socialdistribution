@@ -37,9 +37,9 @@ def explore(request):
             is_authenticated = authenticated(request)
             user = get_current_user(request) if is_authenticated else None
             all_comments = Comment.objects.all()
-            comments = {}
+            comments = []
             for c in all_comments:
-                comments[c.uuid] = {
+                comments.append{
                     'post':c.post,
                     'author': c.author,
                     'comment': c.comment,
