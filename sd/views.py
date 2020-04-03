@@ -36,7 +36,15 @@ def explore(request):
                 request, posts, GetPostSerializer, "feed", query="feed")
             is_authenticated = authenticated(request)
             user = get_current_user(request) if is_authenticated else None
-            comments = Comment.objects.all()
+            all_comments = Comment.objects.all()
+            comments = {}
+            for c in all_comments:
+                comments[c['uuid']] = {
+                    'post':c['post'],
+                    'author': c['author'],
+                    'comment': c['comment'],
+                    'published': c['published'],
+                }
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results, 'comments':comments})
         elif request.method=="POST":
             data = request.POST
