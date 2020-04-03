@@ -18,8 +18,14 @@ import commonmark
 
 def explore(request):
     if valid_method(request):
+        user = get_current_user(request)
         print_state(request)
-        posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False))
+        posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False)).exclude(author_id=user.uuid)
+
+        for p in posts:
+                if p.contentType == 'text/markdown':
+                    # make it html
+                    p.content = commonmark.commonmark(p.content)
         results = paginated_result(request, posts, GetPostSerializer, "feed", query="feed")
         is_authenticated = authenticated(request)
         user = get_current_user(request) if is_authenticated else None
