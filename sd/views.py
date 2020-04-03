@@ -40,7 +40,7 @@ def explore(request):
             comments = []
             for c in all_comments:
                 comments.append({
-                    'post':c.post.uuid,
+                    'post':c.post,
                     'author': c.author,
                     'comment': c.comment,
                     'published': c.published
