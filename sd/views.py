@@ -18,7 +18,7 @@ import commonmark
 
 def explore(request):
     if valid_method(request):
-        if request.method == "GET""
+        if request.method == "GET":
             user = get_current_user(request)
             print_state(request)
             if user:
