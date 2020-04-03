@@ -20,7 +20,10 @@ def explore(request):
     if valid_method(request):
         user = get_current_user(request)
         print_state(request)
-        posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False)).exclude(author_id=user.uuid)
+        if user:
+            posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False)).exclude(author_id=user.uuid)
+        else:
+            posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False))
 
         for p in posts:
                 if p.contentType == 'text/markdown':
