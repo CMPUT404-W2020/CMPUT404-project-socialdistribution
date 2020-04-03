@@ -13,12 +13,24 @@ from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpRespons
 from django.core.files.storage import FileSystemStorage
 import social_distribution.settings
 import requests
+import commonmark
 
 
 def explore(request):
     if valid_method(request):
+        user = get_current_user(request)
         print_state(request)
-        posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False))
+        if user:
+            posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(
+                unlisted=False)).exclude(author_id=user.uuid)
+        else:
+            posts = Post.objects.filter(
+                Q(visibility='PUBLIC') & Q(unlisted=False))
+
+        for p in posts:
+            if p.contentType == 'text/markdown':
+                # make it html
+                p.content = commonmark.commonmark(p.content)
         results = paginated_result(
             request, posts, GetPostSerializer, "feed", query="feed")
         is_authenticated = authenticated(request)
@@ -75,26 +87,30 @@ def feed(request):
                     if friend_posts:
                         all_posts = all_posts.union(friend_posts)
 
-                for friend in friend_ids:
-                    tf1 = Friend.objects.filter(
-                        Q(author=friend)).values('friend_id')
-                    tf2 = Friend.objects.filter(
-                        Q(friend=friend)).values('author_id')
-                    # NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
-                    their_friends = tf1.union(tf2)
-                    for foaf in their_friends:
-                        if 'friend_id' in foaf:
-                            posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(
-                                visibility='FOAF') & Q(unlisted=False))
-                        elif 'author_id' in foaf:
-                            posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(
-                                visibility='FOAF') & Q(unlisted=False))
-                        if posts:
-                            all_posts = all_posts.union(posts)
+            for friend in friend_ids:
+                tf1 = Friend.objects.filter(
+                    Q(author=friend)).values('friend_id')
+                tf2 = Friend.objects.filter(
+                    Q(friend=friend)).values('author_id')
+                # NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
+                their_friends = tf1.union(tf2)
 
-                # temp = Author.objects.get(fs)
+                for foaf in their_friends:
+                    posts = []
+                    if 'friend_id' in foaf and foaf['friend_id'] in following:
+                        posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(
+                            visibility='FOAF') & Q(unlisted=False))
+                    elif 'author_id' in foaf and foaf['author_id'] in following:
+                        posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(
+                            visibility='FOAF') & Q(unlisted=False))
+                    if posts:
+                        all_posts = all_posts.union(posts)
 
             all_posts = all_posts.distinct()
+            for p in all_posts:
+                if p.contentType == 'text/markdown':
+                    # make it html
+                    p.content = commonmark.commonmark(p.content)
             results = paginated_result(
                 request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
