@@ -126,7 +126,7 @@ def feed(request):
                 results = paginated_result(
                     request, all_posts, GetPostSerializer, "feed", query="feed")
                 comments = Comment.objects.all()
-                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comment':comments})
+                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comments':comments})
             else:
                 print("CONSOLE: Redirecting from Feed because no one is logged in")
                 return redirect('login')
