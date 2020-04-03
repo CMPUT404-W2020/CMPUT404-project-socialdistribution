@@ -54,10 +54,11 @@
           		</a>
 
                 <div id = "{{post.uuid}}">
+					<div id = "testid"> Post.uuid: {{post.uuid}} </div>
                 	{% for comment in comments %}
 						<!-- if the comment is for this post, make this div -->
-						{% if comment.post == post.uuid %}
 							<div class = "commentitem">
+								<div id = "comment.post"> comment.post {{comment.post}} </div>
 								<div id = "commentauthor"> Author: {{comment.author}} </div>
 								<div id = "commentdate"> Published: {{comment.published}} <br> <br> </div>
 								<div id = "commentbody"> {{ comment.comment }} <br> </div>
