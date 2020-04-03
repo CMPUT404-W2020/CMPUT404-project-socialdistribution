@@ -42,81 +42,85 @@ def explore(request):
 
 def feed(request):
     if valid_method(request):
-        user = get_current_user(request)
-        if authenticated(request) and user:
-            load_github_feed(get_current_user(request))
-            all_posts = Post.objects.none()
-            own_posts = Post.objects.filter(Q(author_id=user.uuid))
-            if own_posts:
-                all_posts = all_posts.union(own_posts)
-            following_temp = Follow.objects.filter(Q(follower_id=user.uuid)).values(
-                'following')  # NOTE: following is a set of uuid's
-            following = []
-            for i in following_temp:
-                following.append(i['following'])
-            f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
-            f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
-            friend_ids = []
-            for i in f1:
-                friend_ids.append(i['friend'])
-            for j in f2:
-                friend_ids.append(j['author'])
-            # NOTE:Friends is a subset of following and are author objects
+        if request.method == 'GET':
+            user = get_current_user(request)
+            if authenticated(request) and user:
+                load_github_feed(get_current_user(request))
+                all_posts = Post.objects.none()
+                own_posts = Post.objects.filter(Q(author_id=user.uuid))
+                if own_posts:
+                    all_posts = all_posts.union(own_posts)
+                following_temp = Follow.objects.filter(Q(follower_id=user.uuid)).values(
+                    'following')  # NOTE: following is a set of uuid's
+                following = []
+                for i in following_temp:
+                    following.append(i['following'])
+                f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
+                f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
+                friend_ids = []
+                for i in f1:
+                    friend_ids.append(i['friend'])
+                for j in f2:
+                    friend_ids.append(j['author'])
+                # NOTE:Friends is a subset of following and are author objects
 
-            for f in following:
-                f_user = Author.objects.get(uuid=f)
-                their_pub_posts = Post.objects.filter(
-                    Q(author=f_user.uuid) & Q(visibility='PUBLIC') & Q(unlisted=False))
-                if their_pub_posts:
-                    all_posts = all_posts.union(their_pub_posts)
+                for f in following:
+                    f_user = Author.objects.get(uuid=f)
+                    their_pub_posts = Post.objects.filter(
+                        Q(author=f_user.uuid) & Q(visibility='PUBLIC') & Q(unlisted=False))
+                    if their_pub_posts:
+                        all_posts = all_posts.union(their_pub_posts)
 
-                if f_user.host == user.host:
-                    server_spec_posts = Post.objects.filter(
-                        Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
-                    if server_spec_posts:
-                        all_posts = all_posts.union(server_spec_posts)
+                    if f_user.host == user.host:
+                        server_spec_posts = Post.objects.filter(
+                            Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
+                        if server_spec_posts:
+                            all_posts = all_posts.union(server_spec_posts)
 
-                spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
-                    visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
-                if spec_posts:
-                    all_posts = all_posts.union(spec_posts)
+                    spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
+                        visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
+                    if spec_posts:
+                        all_posts = all_posts.union(spec_posts)
 
-                if f_user.uuid in friend_ids:
-                    friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
-                        visibility='FRIENDS') & Q(unlisted=False))
-                    if friend_posts:
-                        all_posts = all_posts.union(friend_posts)
+                    if f_user.uuid in friend_ids:
+                        friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
+                            visibility='FRIENDS') & Q(unlisted=False))
+                        if friend_posts:
+                            all_posts = all_posts.union(friend_posts)
 
-            for friend in friend_ids:
-                tf1 = Friend.objects.filter(
-                    Q(author=friend)).values('friend_id')
-                tf2 = Friend.objects.filter(
-                    Q(friend=friend)).values('author_id')
-                # NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
-                their_friends = tf1.union(tf2)
+                for friend in friend_ids:
+                    tf1 = Friend.objects.filter(
+                        Q(author=friend)).values('friend_id')
+                    tf2 = Friend.objects.filter(
+                        Q(friend=friend)).values('author_id')
+                    # NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
+                    their_friends = tf1.union(tf2)
 
-                for foaf in their_friends:
-                    posts = []
-                    if 'friend_id' in foaf and foaf['friend_id'] in following:
-                        posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(
-                            visibility='FOAF') & Q(unlisted=False))
-                    elif 'author_id' in foaf and foaf['author_id'] in following:
-                        posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(
-                            visibility='FOAF') & Q(unlisted=False))
-                    if posts:
-                        all_posts = all_posts.union(posts)
+                    for foaf in their_friends:
+                        posts = []
+                        if 'friend_id' in foaf and foaf['friend_id'] in following:
+                            posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(
+                                visibility='FOAF') & Q(unlisted=False))
+                        elif 'author_id' in foaf and foaf['author_id'] in following:
+                            posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(
+                                visibility='FOAF') & Q(unlisted=False))
+                        if posts:
+                            all_posts = all_posts.union(posts)
 
-            all_posts = all_posts.distinct()
-            for p in all_posts:
-                if p.contentType == 'text/markdown':
-                    # make it html
-                    p.content = commonmark.commonmark(p.content)
-            results = paginated_result(
-                request, all_posts, GetPostSerializer, "feed", query="feed")
-            return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
-        else:
-            print("CONSOLE: Redirecting from Feed because no one is logged in")
-            return redirect('login')
+                all_posts = all_posts.distinct()
+                for p in all_posts:
+                    if p.contentType == 'text/markdown':
+                        # make it html
+                        p.content = commonmark.commonmark(p.content)
+                results = paginated_result(
+                    request, all_posts, GetPostSerializer, "feed", query="feed")
+                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
+            else:
+                print("CONSOLE: Redirecting from Feed because no one is logged in")
+                return redirect('login')
+        elif request.method=="POST":
+            print("CONSOLE: request.POST:", request.POST)
+
     else:
         return HttpResponse(status_code=405)
 
