@@ -480,30 +480,6 @@ class CommentsAPIView(APIView):
 
         return CommentPagination().get_paginated_response(commentList, postHost)
 
-    # def post(self, request, pk, format=None):
-        # if str(request.user) == "AnonymousUser":
-        #     return Response({"query": "addComment",
-        #                      "success": False,
-        #                      "message": "Comment not allowed"},
-        #                     status=status.HTTP_403_FORBIDDEN)
-
-        # post = Post.objects.get(uuid=pk)
-
-        # data = request.data
-
-        # for item in data:
-        #     print(item)
-
-        # newComment = Comment(author=request.user, comment=data['comment']['comment'], contentType=data['comment']
-        #                      ['contentType'], published=data['comment']['published'], post=post)
-        # newComment.save()
-
-        # return Response({
-        #     "query": "addComment",
-        #     "success": True,
-        #     "message": "Comment Added"},
-        #     status=status.HTTP_200_OK)
-
     def post(self, request, pk, format=None):
         try:
             post = Post.objects.get(
