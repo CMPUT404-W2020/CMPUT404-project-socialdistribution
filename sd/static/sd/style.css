@@ -60,11 +60,15 @@ ul {
 
 /* links */
  a {
+  text-decoration: none;
+}
+
+a#signup{
   text-decoration: underline;
   color: black;
-
-
 }
+
+
 
 hr {
   display: block;
