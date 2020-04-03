@@ -71,17 +71,20 @@ def get_relationship(user, target):
     return 4,None #no relationship
 
 def load_github_feed(user):
+    print("CONSOLE: load_github_feed function")
+    print("CONSOLE: user:", user, '\n', vars(user))
     if user.github != '':
         try:
             repo_data = json.loads(requests.get('https://api.github.com/users/'+user.github+'/repos').content.decode())
             repo_names = []
             current = datetime.datetime.now()
             for repo in repo_data:
-                if 'pushed_at' in repo_data:
-                    d = repo_data['pushed_at'].split('T')[0].split('-')
+                if 'pushed_at' in repo:
+                    d = repo['pushed_at'].split('T')[0].split('-')
                     date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
                     if(current-date).days < 30:
                         repo_names.append(repo['name'])
+            print("CONSOLE: repo_names", repo_names)
             for r in repo_names:
                 commit_data = json.loads(requests.get('https://api.github.com/repos/'+user.github+'/' + r + '/commits').content.decode())
                 posts = []
@@ -92,7 +95,7 @@ def load_github_feed(user):
                         exists = Post.objects.filter(source=com['sha'])
                         if not exists:
                             try:
-                                post = Post.objects.create(title = "Commit to "+r, source=com['sha'], description='Commit', contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='SERVERONLY', unlisted=False, link_to_image=com['committer']['avatar_url'])
+                                post = Post.objects.create(title = "Commit to "+r, source=user.host, description='Commit to'+com['sha'], contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='PRIVATE', unlisted=False, link_to_image=com['committer']['avatar_url'])
                                 print("CONSOLE: Created a Github post: "+com['commit']['message'])
                                 post.save()
                             except Exception as e:

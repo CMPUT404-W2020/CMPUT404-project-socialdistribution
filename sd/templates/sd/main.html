@@ -11,6 +11,7 @@
 
 	<!-- stylesheets / css -->
 	<link rel="stylesheet" href="{% static '../../static/sd/style.css' %}">
+	<link rel="icon" href="{% static '../../static/sd/icons/favicon.png' %}">
 	<script type="text/javascript" src="{% static '../../static/sd/helperfunctions.js' %}"></script>
 	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
 </head>
@@ -27,18 +28,17 @@
 		document.getElementById("feed-items").innerHTML = `{% for post in results.feed %}
             <div class="feeditem">
 				<!-- if I am the author, make this div -->
-				{% for author in Author %}
-					{% if author.uuid == post.author %}
-						<div class="dropdown">
-							<button class="dropdown-button" onclick="showDropdown('dropdown-content-{{post}}')">Options...<span class="caret"></span></button>
-							<div id="dropdown-content-{{post}}" class="dropdown-content">
-								<a href="edit_post/{{post.uuid}}">Edit</a>
-								<a href="" onclick="confirmDelete('{{post.uuid}}')">Delete</a>
-							</div>
-						</div>
-					{% endif %}
-				{% endfor %}
-
+				{% if post.author == current_user.uuid %}
+				{% with 'dropdown-content-'|add:post.uuid as options_id %}
+				<div class="dropdown">
+					<button class="dropdown-button" onclick="showDropdown('{{ options_id }}')">Options...<span class="caret"></span></button>
+					<div id='{{ options_id }}' class="dropdown-content">
+						<a href="edit_post/{{post.uuid}}">Edit</a>
+						<a href="" onclick="confirmDelete('{{post.uuid}}')">Delete</a>
+					</div>
+				</div>
+				{% endwith %}
+				{% endif %}
 				<div id = "author"> {{post.author}} </div>
                 <div id = "date"> {{post.published}} <br> <br> </div>
                 <div id = "title">{{post.title}} <br> <br> </div>
@@ -46,13 +46,12 @@
                 <a href="{{post.link_to_image}}">
                 	<img class="feedimage" src="{{post.link_to_image}}" alt="Link to Image">
                 </a>
-                {% endif %}
-                <div id = "postBody">{{post.content}} <br> <br> <br> </div>
+				{% endif %}
+                <div id = "postBody">{{post.content | safe}} <br> <br> <br> </div>
                 <a>
-                	<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post}}');"> Comments <br><br> </span>
+                	<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> Comments <br><br> </span>
           		</a>
-
-                <div id = "{{post}}" style = "display: none;">
+                <div id = "{{post.uuid}}" style = "display: none;">
                 	{% for post_comment in feed %}
                 		<div class = "commentitem">
 	                		<div id = "commentauthor"> Author {{post_comment.author}} </div>
@@ -60,7 +59,6 @@
 	                		<div id = "commentbody"> This is a hardcoded comment{{ post_comment.comment }} <br> </div>
 	                	</div>
 					{% endfor %}
-
 					{% if authenticated %}
 						<form>
 							<input name="comment" type="text" id = "addcommentfield" placeholder="Add a comment..."/>
@@ -69,8 +67,6 @@
 						<br>
 					{% endif %}
 				</div>
-
-
             </div>
 			{% endfor %}
 			</div>`
@@ -109,7 +105,7 @@
 					<span class="button" id="blue-button"> NEXT </span>
 				</a>
 				{% endif %}
-				{% if results.previous >= 0 %}
+				{% if results.previous %}
 				<a href="?page={{results.previous}}">
 				<span class="button" id="blue-button"> PREVIOUS </span>
 				</a>
