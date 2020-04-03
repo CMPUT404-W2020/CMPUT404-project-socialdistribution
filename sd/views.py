@@ -122,9 +122,8 @@ def feed(request):
         elif request.method=="POST":
             print("CONSOLE: request.POST:", request.POST)
             data = request.POST
-            info = {'author': data['user'], 'comment':
-            data['comment'], 'contentType': 'text/plain', 'post':data['post']}
-            comment = Comment.objects.create(info)
+            comment = Comment.objects.create(author=data['user'], comment=
+            data['comment'], contentType= 'text/plain', post=data['post'])
             comment.save()
             print("CONSOLE: COMMENT CREATED")
             return HttpResponse()
