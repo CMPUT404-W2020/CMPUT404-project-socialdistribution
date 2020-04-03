@@ -124,8 +124,8 @@ def feed(request):
             data = request.POST
             author = Author.objects.get(uuid=data['user'])
             post = Post.objects.get(uuid=data['post'])
-            comment = Comment.objects.create(author=author.uuid, comment=
-            data['comment'], contentType= 'text/plain', post=post.uuid)
+            comment = Comment.objects.create(author=author, comment=
+            data['comment'], contentType= 'text/plain', post=post)
             comment.save()
             print("CONSOLE: COMMENT CREATED")
             return HttpResponse()
