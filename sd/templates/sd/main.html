@@ -55,12 +55,13 @@
 
                 <div id = "{{post.uuid}}">
                 	{% for comment in comments %}
-					{% if comment.uuid == post.uuid %}
-                		<div class = "commentitem">
-	                		<div id = "commentauthor"> Author: {{comment.author}} </div>
-	                		<div id = "commentdate"> Published: {{comment.published}} <br> <br> </div>
-	                		<div id = "commentbody"> {{ comment.comment }} <br> </div>
-	                	</div>
+						{% if comment.uuid == post.uuid %}
+							<div class = "commentitem">
+								<div id = "commentauthor"> Author: {{comment.author}} </div>
+								<div id = "commentdate"> Published: {{comment.published}} <br> <br> </div>
+								<div id = "commentbody"> {{ comment.comment }} <br> </div>
+							</div>
+						{% endif %}
 					{% endfor %}
 
 					{% if authenticated %}
