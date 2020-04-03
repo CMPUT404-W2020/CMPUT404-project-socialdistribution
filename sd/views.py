@@ -471,9 +471,9 @@ def new_post(request):
 
 
 def get_image(request, url):
-    path = 'media/' + url
+    path = 'media/'+url
     try:
-        with open(path, "rb") as f:	        
+        with open(path, "rb") as f:
             return HttpResponse(f.read(), content_type="image/jpeg")
     except:
         return HttpResponse(open('media/404.jpg', 'rb').read(), content_type="image/jpeg")
