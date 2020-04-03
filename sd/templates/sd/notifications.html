@@ -24,7 +24,7 @@
     }
 
     function loadRequests() {
-        var friends = makeItAList("{{friends}}");
+        var friends = {{friends|safe}};
         var results = makeItAList("{{requests}}");
         displayResults(results, friends);
     }
@@ -57,7 +57,7 @@
             var fbtn_id = createButtonId(f);
             displayFriends.innerHTML += `<div>
             <hr class="greyline">
-            <span class="searchauthor">'${f}'</span>
+            <span class="searchauthor">'${f['name']}'</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
