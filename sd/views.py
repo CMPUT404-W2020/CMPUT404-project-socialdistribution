@@ -435,6 +435,7 @@ def new_post(request):
 
         else:
             if request.FILES:
+                print("CONSOLE: in request.FILES section")
                 myfile = request.FILES['image']
                 info = dict(request._post)
                 for i in info:
@@ -444,7 +445,9 @@ def new_post(request):
                 form = NewPostForm(info, request.FILES)
                 if form.is_valid():
                     post = form.save()
-                    post.link_to_image = 'media/'+post.image.name
+                    image = Image.objects.create(image=myfile, post=post.uuid)
+                    image.save()
+                    post.link_to_image = HOSTNAME+'/image/'+image.uuid
                     post.save()
                     print('CONSOLE: Post successful! Redirecting to your feed.')
                     return redirect('my_feed')
@@ -470,11 +473,10 @@ def new_post(request):
         return HttpResponse(status_code=405)
 
 
-def get_image(request, url):
-    path = 'media/'+url
+def get_image(request, image_id):
     try:
-        with open(path, "rb") as f:
-            return HttpResponse(f.read(), content_type="image/jpeg")
+        image = Image.objects.get(uuid=image_id)
+        return HttpResponse(image.image)
     except:
         return HttpResponse(open('media/404.jpg', 'rb').read(), content_type="image/jpeg")
 

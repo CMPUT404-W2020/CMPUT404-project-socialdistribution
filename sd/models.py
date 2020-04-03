@@ -62,6 +62,13 @@ class Post(models.Model):
                              on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
 
 
+class Image(models.Model):
+    uuid = models.UUIDField(
+        primary_key=True, default=uuid4, editable=False, unique=True)
+    image = models.ImageField(blank=False)
+    post = models.ForeignKey(Post, on_delete=models.CASCADE)
+
+
 class Comment(models.Model):
     uuid = models.UUIDField(
         primary_key=True, default=uuid4, editable=False, unique=True)
