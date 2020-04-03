@@ -24,7 +24,7 @@
     }
 
     function loadRequests() {
-        var friends = makeItAList("{{friends}}");
+        var friends = {{friends|safe}};
         var results = makeItAList("{{requests}}");
         displayResults(results, friends);
     }
