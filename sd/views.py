@@ -18,24 +18,34 @@ import commonmark
 
 def explore(request):
     if valid_method(request):
-        user = get_current_user(request)
-        print_state(request)
-        if user:
-            posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(
-                unlisted=False)).exclude(author_id=user.uuid)
-        else:
-            posts = Post.objects.filter(
-                Q(visibility='PUBLIC') & Q(unlisted=False))
+        if request.method == "GET""
+            user = get_current_user(request)
+            print_state(request)
+            if user:
+                posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(
+                    unlisted=False)).exclude(author_id=user.uuid)
+            else:
+                posts = Post.objects.filter(
+                    Q(visibility='PUBLIC') & Q(unlisted=False))
 
-        for p in posts:
-            if p.contentType == 'text/markdown':
-                # make it html
-                p.content = commonmark.commonmark(p.content)
-        results = paginated_result(
-            request, posts, GetPostSerializer, "feed", query="feed")
-        is_authenticated = authenticated(request)
-        user = get_current_user(request) if is_authenticated else None
-        return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results})
+            for p in posts:
+                if p.contentType == 'text/markdown':
+                    # make it html
+                    p.content = commonmark.commonmark(p.content)
+            results = paginated_result(
+                request, posts, GetPostSerializer, "feed", query="feed")
+            is_authenticated = authenticated(request)
+            user = get_current_user(request) if is_authenticated else None
+            comments = Comment.objects.all()
+            return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results, 'comments':comments})
+        elif request.method=="POST":
+            data = request.POST
+            author = Author.objects.get(uuid=data['user'])
+            post = Post.objects.get(uuid=data['post'])
+            comment = Comment.objects.create(author=author, comment=
+            data['comment'], contentType= 'text/plain', post=post)
+            comment.save()
+            return redirect('explore')
     else:
         return HttpResponse(status_code=405)
 
@@ -115,20 +125,19 @@ def feed(request):
                         p.content = commonmark.commonmark(p.content)
                 results = paginated_result(
                     request, all_posts, GetPostSerializer, "feed", query="feed")
-                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
+                comments = Comment.objects.all()
+                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comment':comment})
             else:
                 print("CONSOLE: Redirecting from Feed because no one is logged in")
                 return redirect('login')
         elif request.method=="POST":
-            print("CONSOLE: request.POST:", request.POST)
             data = request.POST
             author = Author.objects.get(uuid=data['user'])
             post = Post.objects.get(uuid=data['post'])
             comment = Comment.objects.create(author=author, comment=
             data['comment'], contentType= 'text/plain', post=post)
             comment.save()
-            print("CONSOLE: COMMENT CREATED")
-            return HttpResponse()
+            return redirect('my_feed')
 
     else:
         return HttpResponse(status_code=405)
