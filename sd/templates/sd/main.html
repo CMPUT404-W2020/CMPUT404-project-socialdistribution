@@ -63,7 +63,10 @@
 					{% endfor %}
 
 					{% if authenticated %}
-						<form method="POST">
+						<form method="POST"> 
+							{% csrf_token %} 
+							<input name="user" id="userId" value={{current_user.uuid}}>
+							<input name="post" id="postId" value={{post.uuid}}>
 							<input name="comment" type="text" id = "addcommentfield" placeholder="Add a comment..."/>
 							<input type="submit" value="SUBMIT" id="submit-blue-button"/> <br>
 						</form>
