@@ -55,7 +55,8 @@
 
                 <div id = "{{post.uuid}}">
                 	{% for comment in comments %}
-						{% if comment.post == "{{post.uuid}}" %}
+						<!-- if the comment is for this post, make this div -->
+						{% if comment.post == post.uuid %}
 							<div class = "commentitem">
 								<div id = "commentauthor"> Author: {{comment.author}} </div>
 								<div id = "commentdate"> Published: {{comment.published}} <br> <br> </div>
