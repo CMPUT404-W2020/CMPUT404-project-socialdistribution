@@ -39,11 +39,11 @@ def explore(request):
             all_comments = Comment.objects.all()
             comments = {}
             for c in all_comments:
-                comments[c['uuid']] = {
-                    'post':c['post'],
-                    'author': c['author'],
-                    'comment': c['comment'],
-                    'published': c['published'],
+                comments[c.uuid] = {
+                    'post':c.post,
+                    'author': c.author,
+                    'comment': c.comment,
+                    'published': c.published,
                 }
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results, 'comments':comments})
         elif request.method=="POST":
