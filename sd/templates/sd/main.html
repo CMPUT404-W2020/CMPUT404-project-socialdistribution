@@ -50,10 +50,10 @@
 				{% endif %}
                 <div id = "postBody">{{post.content | safe}} <br> <br> <br> </div>
                 <a>
-                	<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post}}');"> Comments <br><br> </span>
+                	<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> Comments <br><br> </span>
           		</a>
 
-                <div id = "{{post}}" style = "display: none;">
+                <div id = "{{post.uuid}}" style = "display: none;">
                 	{% for post_comment in feed %}
                 		<div class = "commentitem">
 	                		<div id = "commentauthor"> Author {{post_comment.author}} </div>
