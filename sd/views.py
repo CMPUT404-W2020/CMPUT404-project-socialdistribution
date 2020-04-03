@@ -71,19 +71,18 @@ def feed(request):
                     if friend_posts:
                         all_posts = all_posts.union(friend_posts)
 
-                for friend in friend_ids:
-                    tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
-                    tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
-                    their_friends = tf1.union(tf2)                    #### NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
-                    for foaf in their_friends:
-                        if 'friend_id' in foaf:
-                            posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(visibility='FOAF') & Q(unlisted=False))
-                        elif 'author_id' in foaf:
-                            posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(visibility='FOAF') & Q(unlisted=False))
-                        if posts:
-                            all_posts = all_posts.union(posts)
+            for friend in friend_ids:
+                tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
+                tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
+                their_friends = tf1.union(tf2)                    #### NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
 
-                # temp = Author.objects.get(fs)
+                for foaf in their_friends:
+                    if 'friend_id' in foaf and foaf['friend_id'] in following:
+                        posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(visibility='FOAF') & Q(unlisted=False))
+                    elif 'author_id' in foaf and foaf['author_id'] in following:
+                        posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(visibility='FOAF') & Q(unlisted=False))
+                    if posts:
+                        all_posts = all_posts.union(posts)
                 
             all_posts = all_posts.distinct()
             for p in all_posts:
