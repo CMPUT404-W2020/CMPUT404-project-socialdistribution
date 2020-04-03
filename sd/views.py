@@ -45,6 +45,7 @@ def explore(request):
                     'comment': c.comment,
                     'published': c.published,
                 }
+            print(comments)
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results, 'comments':comments})
         elif request.method=="POST":
             data = request.POST
