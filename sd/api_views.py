@@ -139,7 +139,11 @@ class GetAuthorAPIView(APIView):
     serializer_class = AuthorSerializer
 
     def get(self, request, pk, format=None):
-        author = Author.objects.get(uuid=pk)
+        try:
+            author = Author.objects.get(uuid=pk)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
         authorDict = serializeAuthor(author)
 
         friendList = []
@@ -179,12 +183,105 @@ class GetPostAPIView(APIView):
     # permission_classes = [IsAuthenticated]
     serializer_class = GetPostSerializer
 
-    # Returns Post by sending UUID of Post
     def get(self, request, pk, format=None):
         post = Post.objects.get(uuid=pk)
         postDict = serializePost(post)
 
-        return Response(postDict, status=status.HTTP_200_OK)
+        if post.visibility == 'PUBLIC':
+            return Response(postDict, status=status.HTTP_200_OK)
+
+        elif str(request.user) == 'AnonymousUser':
+            return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+        elif post.visibility == 'FRIENDS':
+            friendsUUIDList = []
+            for friend in Friend.objects.filter(author=post.author.uuid):
+                friendsUUIDList.append(friend.friend.uuid)
+            for friend in Friend.objects.filter(friend=post.author.uuid):
+                friendsUUIDList.append(friend.author.uuid)
+            if request.user.uuid in friendsUUIDList:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'FOAF':
+            friendsUUIDList = []
+            for friend in Friend.objects.filter(author=post.author.uuid):
+                friendsUUIDList.append(friend.friend.uuid)
+            for friend in Friend.objects.filter(friend=post.author.uuid):
+                friendsUUIDList.append(friend.author.uuid)
+            foafUUIDList = []
+            for friendUUID in friendsUUIDList:
+                tempAuthor = Author.objects.get(uuid=friendUUID)
+                for innerFriend in Friend.objects.filter(author=tempAuthor):
+                    if innerFriend.friend.uuid not in foafUUIDList:
+                        foafUUIDList.append(innerFriend.friend.uuid)
+                for innerFriend in Friend.objects.filter(friend=tempAuthor):
+                    if innerFriend.friend.uuid not in foafUUIDList:
+                        foafUUIDList.append(innerFriend.author.uuid)
+            foafUUIDList.append(friendsUUIDList)
+            if request.user.uuid in foafUUIDList:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'PRIVATE':
+            if request.user == post.author:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'SERVERONLY':
+            if request.user.host == post.host:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
+
+    # Returns Post by sending POST request
+    def post(self, request, pk, format=None):
+        try:
+            post = Post.objects.get(uuid=request.data['postid'])
+            postDict = serializePost(post)
+        except:
+            print("EXCEPTION")
+            return Response(status=status.HTTP_404_NOT_FOUND)
+
+        userUUID = request.data['author']['id'].split('/author/')[1]
+        requestor = Author.objects.get(uuid=userUUID)
+        if post.visibility == 'PUBLIC':
+            return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'FRIENDS':
+            friendsUUIDList = []
+            for friend in Friend.objects.filter(author=post.author.uuid):
+                friendsUUIDList.append(friend.friend.uuid)
+            for friend in Friend.objects.filter(friend=post.author.uuid):
+                friendsUUIDList.append(friend.author.uuid)
+            if requestor.uuid in friendsUUIDList:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'FOAF':
+            friendsUUIDList = []
+            for friend in Friend.objects.filter(author=post.author.uuid):
+                friendsUUIDList.append(friend.friend.uuid)
+            for friend in Friend.objects.filter(friend=post.author.uuid):
+                friendsUUIDList.append(friend.author.uuid)
+            foafUUIDList = []
+            for friendUUID in friendsUUIDList:
+                tempAuthor = Author.objects.get(uuid=friendUUID)
+                for innerFriend in Friend.objects.filter(author=tempAuthor):
+                    if innerFriend.friend.uuid not in foafUUIDList:
+                        foafUUIDList.append(innerFriend.friend.uuid)
+                for innerFriend in Friend.objects.filter(friend=tempAuthor):
+                    if innerFriend.friend.uuid not in foafUUIDList:
+                        foafUUIDList.append(innerFriend.author.uuid)
+            foafUUIDList.append(friendsUUIDList)
+            if requestor.uuid in foafUUIDList:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'PRIVATE':
+            if requestor == post.author:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        elif post.visibility == 'SERVERONLY':
+            if requestor.host == post.host:
+                return Response(postDict, status=status.HTTP_200_OK)
+
+        return Response(status=status.HTTP_401_UNAUTHORIZED)
 
 
 class GetAllAuthorPostAPIView(APIView):
@@ -384,28 +481,93 @@ class CommentsAPIView(APIView):
         return CommentPagination().get_paginated_response(commentList, postHost)
 
     def post(self, request, pk, format=None):
-        if str(request.user) == "AnonymousUser":
-            return Response({"query": "addComment",
-                             "success": False,
-                             "message": "Comment not allowed"},
-                            status=status.HTTP_403_FORBIDDEN)
+        try:
+            post = Post.objects.get(
+                uuid=request.data['post'].split('/posts/')[1])
+            postDict = serializePost(post)
+        except:
+            print("EXCEPTION")
+            return Response(status=status.HTTP_404_NOT_FOUND)
 
-        post = Post.objects.get(uuid=pk)
+        userUUID = request.data['comment']['author']['id'].split('/author/')[1]
+        requestor = Author.objects.get(uuid=userUUID)
+        if post.visibility == 'PUBLIC':
+            newComment = Comment(author=requestor, comment=request.data['comment']['comment'], contentType=request.data['comment']
+                                 ['contentType'], published=request.data['comment']['published'], post=post)
+            newComment.save()
+            return Response({
+                "query": "addComment",
+                "success": True,
+                "message": "Comment Added"},
+                status=status.HTTP_200_OK)
 
-        data = request.data
+        elif post.visibility == 'FRIENDS':
+            friendsUUIDList = []
+            for friend in Friend.objects.filter(author=post.author.uuid):
+                friendsUUIDList.append(friend.friend.uuid)
+            for friend in Friend.objects.filter(friend=post.author.uuid):
+                friendsUUIDList.append(friend.author.uuid)
+            if requestor.uuid in friendsUUIDList:
+                newComment = Comment(author=requestor, comment=request.data['comment']['comment'], contentType=request.data['comment']
+                                     ['contentType'], published=request.data['comment']['published'], post=post)
+                newComment.save()
+                return Response({
+                    "query": "addComment",
+                    "success": True,
+                    "message": "Comment Added"},
+                    status=status.HTTP_200_OK)
 
-        for item in data:
-            print(item)
+        elif post.visibility == 'FOAF':
+            friendsUUIDList = []
+            for friend in Friend.objects.filter(author=post.author.uuid):
+                friendsUUIDList.append(friend.friend.uuid)
+            for friend in Friend.objects.filter(friend=post.author.uuid):
+                friendsUUIDList.append(friend.author.uuid)
+            foafUUIDList = []
+            for friendUUID in friendsUUIDList:
+                tempAuthor = Author.objects.get(uuid=friendUUID)
+                for innerFriend in Friend.objects.filter(author=tempAuthor):
+                    if innerFriend.friend.uuid not in foafUUIDList:
+                        foafUUIDList.append(innerFriend.friend.uuid)
+                for innerFriend in Friend.objects.filter(friend=tempAuthor):
+                    if innerFriend.friend.uuid not in foafUUIDList:
+                        foafUUIDList.append(innerFriend.author.uuid)
+            foafUUIDList.append(friendsUUIDList)
+            if requestor.uuid in foafUUIDList:
+                newComment = Comment(author=requestor, comment=request.data['comment']['comment'], contentType=request.data['comment']
+                                     ['contentType'], published=request.data['comment']['published'], post=post)
+                newComment.save()
+                return Response({
+                    "query": "addComment",
+                    "success": True,
+                    "message": "Comment Added"},
+                    status=status.HTTP_200_OK)
 
-        newComment = Comment(author=request.user, comment=data['comment']['comment'], contentType=data['comment']
-                             ['contentType'], published=data['comment']['published'], post=post)
-        newComment.save()
+        elif post.visibility == 'PRIVATE':
+            if requestor == post.author:
+                newComment = Comment(author=requestor, comment=request.data['comment']['comment'], contentType=request.data['comment']
+                                     ['contentType'], published=request.data['comment']['published'], post=post)
+                newComment.save()
+                return Response({
+                    "query": "addComment",
+                    "success": True,
+                    "message": "Comment Added"},
+                    status=status.HTTP_200_OK)
 
-        return Response({
-            "query": "addComment",
-            "success": True,
-            "message": "Comment Added"},
-            status=status.HTTP_200_OK)
+        elif post.visibility == 'SERVERONLY':
+            if requestor.host == post.host:
+                newComment = Comment(author=requestor, comment=request.data['comment']['comment'], contentType=request.data['comment']
+                                     ['contentType'], published=request.data['comment']['published'], post=post)
+                newComment.save()
+                return Response({
+                    "query": "addComment",
+                    "success": True,
+                    "message": "Comment Added"},
+                    status=status.HTTP_200_OK)
+        return Response({"query": "addComment",
+                         "success": False,
+                         "message": "Comment not allowed"},
+                        status=status.HTTP_403_FORBIDDEN)
 
 
 class CreateFriendRequestAPIView(CreateAPIView):

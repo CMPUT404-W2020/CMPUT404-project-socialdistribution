@@ -21,15 +21,18 @@ def explore(request):
         user = get_current_user(request)
         print_state(request)
         if user:
-            posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False)).exclude(author_id=user.uuid)
+            posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(
+                unlisted=False)).exclude(author_id=user.uuid)
         else:
-            posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(unlisted=False))
+            posts = Post.objects.filter(
+                Q(visibility='PUBLIC') & Q(unlisted=False))
 
         for p in posts:
-                if p.contentType == 'text/markdown':
-                    # make it html
-                    p.content = commonmark.commonmark(p.content)
-        results = paginated_result(request, posts, GetPostSerializer, "feed", query="feed")
+            if p.contentType == 'text/markdown':
+                # make it html
+                p.content = commonmark.commonmark(p.content)
+        results = paginated_result(
+            request, posts, GetPostSerializer, "feed", query="feed")
         is_authenticated = authenticated(request)
         user = get_current_user(request) if is_authenticated else None
         return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results})
@@ -41,12 +44,13 @@ def feed(request):
     if valid_method(request):
         user = get_current_user(request)
         if authenticated(request) and user:
-            load_github_feed(get_current_user(request)) 
+            load_github_feed(get_current_user(request))
             all_posts = Post.objects.none()
             own_posts = Post.objects.filter(Q(author_id=user.uuid))
             if own_posts:
-                all_posts  = all_posts.union(own_posts)
-            following_temp = Follow.objects.filter(Q(follower_id=user.uuid)).values('following') #### NOTE: following is a set of uuid's
+                all_posts = all_posts.union(own_posts)
+            following_temp = Follow.objects.filter(Q(follower_id=user.uuid)).values(
+                'following')  # NOTE: following is a set of uuid's
             following = []
             for i in following_temp:
                 following.append(i['following'])
@@ -56,50 +60,59 @@ def feed(request):
             for i in f1:
                 friend_ids.append(i['friend'])
             for j in f2:
-                friend_ids.append(j['author']) 
-            #### NOTE:Friends is a subset of following and are author objects
+                friend_ids.append(j['author'])
+            # NOTE:Friends is a subset of following and are author objects
 
-            for f in following: 
+            for f in following:
                 f_user = Author.objects.get(uuid=f)
-                their_pub_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PUBLIC') & Q(unlisted=False))
+                their_pub_posts = Post.objects.filter(
+                    Q(author=f_user.uuid) & Q(visibility='PUBLIC') & Q(unlisted=False))
                 if their_pub_posts:
                     all_posts = all_posts.union(their_pub_posts)
 
-
                 if f_user.host == user.host:
-                    server_spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
+                    server_spec_posts = Post.objects.filter(
+                        Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
                     if server_spec_posts:
                         all_posts = all_posts.union(server_spec_posts)
-                
-                spec_posts= Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
+
+                spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
+                    visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
                 if spec_posts:
                     all_posts = all_posts.union(spec_posts)
-                
+
                 if f_user.uuid in friend_ids:
-                    friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(visibility='FRIENDS') & Q(unlisted=False))
+                    friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
+                        visibility='FRIENDS') & Q(unlisted=False))
                     if friend_posts:
                         all_posts = all_posts.union(friend_posts)
 
             for friend in friend_ids:
-                tf1 = Friend.objects.filter(Q(author=friend)).values('friend_id')
-                tf2 = Friend.objects.filter(Q(friend=friend)).values('author_id')
-                their_friends = tf1.union(tf2)                    #### NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
+                tf1 = Friend.objects.filter(
+                    Q(author=friend)).values('friend_id')
+                tf2 = Friend.objects.filter(
+                    Q(friend=friend)).values('author_id')
+                # NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
+                their_friends = tf1.union(tf2)
 
                 for foaf in their_friends:
                     posts = []
                     if 'friend_id' in foaf and foaf['friend_id'] in following:
-                        posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(visibility='FOAF') & Q(unlisted=False))
+                        posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(
+                            visibility='FOAF') & Q(unlisted=False))
                     elif 'author_id' in foaf and foaf['author_id'] in following:
-                        posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(visibility='FOAF') & Q(unlisted=False))
+                        posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(
+                            visibility='FOAF') & Q(unlisted=False))
                     if posts:
                         all_posts = all_posts.union(posts)
-                
+
             all_posts = all_posts.distinct()
             for p in all_posts:
                 if p.contentType == 'text/markdown':
                     # make it html
                     p.content = commonmark.commonmark(p.content)
-            results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
+            results = paginated_result(
+                request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
             print("CONSOLE: Redirecting from Feed because no one is logged in")
@@ -311,10 +324,11 @@ def friendrequest(request):
         try:
             user = get_current_user(request)
             if not authenticated(request) or not user:
-                print("CONSOLE: Redirecting from friendrequest because no one is logged in.")
+                print(
+                    "CONSOLE: Redirecting from friendrequest because no one is logged in.")
                 return redirect('login')
             data = json.loads(request.body)
-            
+
             target = Author.objects.get(username=data['target_author'])
             relationship, obj = get_relationship(user, target)
             """
@@ -325,10 +339,10 @@ def friendrequest(request):
             4 --> no relationship exists yet; create one
             obj is returned in case 2 friend request to be deleted
             """
-            print("CONSOLE: Relationship: ",relationship)
+            print("CONSOLE: Relationship: ", relationship)
             if relationship == 1:
                 print("CONSOLE: "+user.username+" and " +
-                    target.username+" are already friends!")
+                      target.username+" are already friends!")
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
@@ -355,13 +369,13 @@ def friendrequest(request):
                     friend.save()
                     obj.delete()
                     print("CONSOLE: "+user.username+" and " +
-                        target.username+" are now friends!")
+                          target.username+" are now friends!")
                 else:
                     print("CONSOLE: friendserializer error:", friend.errors)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
-                    info ={'follower': target.uuid, 'following': user.uuid}
+                    info = {'follower': target.uuid, 'following': user.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from target to user")
@@ -382,11 +396,11 @@ def friendrequest(request):
 
             elif relationship == 3:
                 print("CONSOLE: "+user.username+" is already following " +
-                    target.username+". Returning")
+                      target.username+". Returning")
                 follows1 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows1:
-                    info={'follower': user.uuid, 'following': target.uuid}
+                    info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
                         print("CONSOLE: Created a Follow from user to target")
@@ -400,9 +414,10 @@ def friendrequest(request):
                 if friendreq_serializer.is_valid():
                     friendreq_serializer.save()
                     print("CONSOLE: "+user.username +
-                        " sent a friend request to "+target.username)
+                          " sent a friend request to "+target.username)
                 else:
-                    print("CONSOLE: friendreq_serializer errors:", friendreq_serializer.errors)
+                    print("CONSOLE: friendreq_serializer errors:",
+                          friendreq_serializer.errors)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
@@ -412,7 +427,7 @@ def friendrequest(request):
                         print("CONSOLE: Created a Follow from user to target")
                         s.save()
                     else:
-                        print("CONSOLE: followserializer error:",s.errors)
+                        print("CONSOLE: followserializer error:", s.errors)
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
         except Exception as e:
