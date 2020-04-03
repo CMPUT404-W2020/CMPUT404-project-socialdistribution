@@ -470,10 +470,11 @@ def new_post(request):
         return HttpResponse(status_code=405)
 
 
-def get_image(request, image_id):
+def get_image(request, url):
+    path = 'media/' + url
     try:
-        image = Image.objects.get(uuid=image_id)
-        return HttpResponse(image.image)
+        with open(path, "rb") as f:	        
+            return HttpResponse(f.read(), content_type="image/jpeg")
     except:
         return HttpResponse(open('media/404.jpg', 'rb').read(), content_type="image/jpeg")
 

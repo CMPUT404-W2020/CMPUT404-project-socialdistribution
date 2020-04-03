@@ -93,7 +93,7 @@ urlpatterns = [
     path('friendrequest', friendrequest, name='friend_request'),
     path('delete/<uuid:post_id>', delete_post, name='delete_post'),
     path('edit_post/<uuid:post_id>', edit_post, name='edit_post'),
-    path('image/<uuid:pk>', get_image, name='get_image'),
+    path('media/<uuid:pk>', get_image, name='get_image'),
 
     # """Optional Pages"""
     path('search', search, name='search'),
