@@ -77,6 +77,7 @@ def feed(request):
                 their_friends = tf1.union(tf2)                    #### NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
 
                 for foaf in their_friends:
+                    posts = []
                     if 'friend_id' in foaf and foaf['friend_id'] in following:
                         posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(visibility='FOAF') & Q(unlisted=False))
                     elif 'author_id' in foaf and foaf['author_id'] in following:
