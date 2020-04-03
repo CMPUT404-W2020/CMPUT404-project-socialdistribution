@@ -13,6 +13,7 @@ from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpRespons
 from django.core.files.storage import FileSystemStorage
 import social_distribution.settings
 import requests
+import commonmark
 
 
 def explore(request):
@@ -85,6 +86,10 @@ def feed(request):
                 # temp = Author.objects.get(fs)
                 
             all_posts = all_posts.distinct()
+            for p in all_posts:
+                if p.contentType == 'text/markdown':
+                    # make it html
+                    p.content = commonmark.commonmark(p.content)
             results = paginated_result(request, all_posts, GetPostSerializer, "feed", query="feed")
             return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
         else:
