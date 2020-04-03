@@ -42,6 +42,7 @@ def explore(request):
 
 def feed(request):
     if valid_method(request):
+        print("CONSOLE: request.method:", request.method)
         if request.method == 'GET':
             user = get_current_user(request)
             if authenticated(request) and user:
