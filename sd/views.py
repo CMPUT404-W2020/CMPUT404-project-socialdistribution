@@ -435,7 +435,6 @@ def new_post(request):
 
         else:
             if request.FILES:
-                print("CONSOLE: in request.FILES section")
                 myfile = request.FILES['image']
                 info = dict(request._post)
                 for i in info:
@@ -445,9 +444,7 @@ def new_post(request):
                 form = NewPostForm(info, request.FILES)
                 if form.is_valid():
                     post = form.save()
-                    image = Image.objects.create(image=myfile, post=post.uuid)
-                    image.save()
-                    post.link_to_image = HOSTNAME+'/image/'+image.uuid
+                    post.link_to_image = 'media/'+post.image.name
                     post.save()
                     print('CONSOLE: Post successful! Redirecting to your feed.')
                     return redirect('my_feed')
