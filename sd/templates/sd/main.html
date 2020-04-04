@@ -21,7 +21,10 @@
 
 	function loadBar() {
 		$("#navbar").load("static/sd/navbar.html");
-		$("#header").load("static/sd/header.html");
+		{% if authenticated %}
+			$("#header").load("static/sd/header.html");
+		{% if not authenticated %}
+			$("#header").load("static/sd/header_noauth.html");
 	}
 
 	function feed() {
