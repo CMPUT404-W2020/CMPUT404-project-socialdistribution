@@ -145,15 +145,22 @@ function removeFriend(uuid, author) {
 
   if (yes) {
     const origin = window.location.origin;
-    fetch(origin + "/remove_friend/" + uuid, {
+    const data = {
+      target_author: author
+    };
+    fetch(origin + "/unfollow", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
-      }
+      },
+      body: JSON.stringify(data)
     })
-      .then(function(response) {
-        return response.text();
-      })
+    .then(function(response) {
+      if (!response.ok){
+        throw Error(response.statusText)
+      }
+      return response
+    })
       .then(function(data) {
         alert(
           `You have successfully removed ${author} as a friend.\n${author} can still see your public posts.`
@@ -167,28 +174,35 @@ function removeFriend(uuid, author) {
   }
 }
 
-function unfollow(uuid, author) {
+function unfollow(author) {
   var yes = confirm("Would you like to unfollow this author?");
 
   if (yes) {
     const origin = window.location.origin;
-    fetch(origin + "/remove_follow/" + uuid, {
+    const data = {
+      target_author: author
+    };
+    fetch(origin + "/unfollow", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
-      }
+      },
+      body: JSON.stringify(data)
     })
-      .then(function(response) {
-        return response.text();
-      })
-      .then(function(data) {
-        alert(`You have successfully unfollowed ${author}.`);
-      })
-      .catch(function(data) {
-        alert(
-          "This author could not be unfollowed at this time.\nPlease try again later."
-        );
-      });
+    .then(function(response) {
+      if (!response.ok){
+        throw Error(response.statusText)
+      }
+      return response
+    })
+    .then(function(response) {
+      alert(`You have successfully unfollowed ${author}.`);
+    })
+    .catch(function(error) {
+      alert(
+        "This author could not be unfollowed at this time.\nPlease try again later."
+      );
+    });
   }
 }
 
