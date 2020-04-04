@@ -24,14 +24,18 @@
     }
 
     function loadRequests() {
-        var friends = makeItAList("{{friends|safe}}");
+        var follows = {{follows|safe}};
+        var friends = {{friends|safe}};
         var results = makeItAList("{{requests}}");
-        displayResults(results, friends);
+
+        displayResults(results, friends, follows);
     }
 
 
-    function displayResults(results, friends) {
+    function displayResults(results, friends, follows) {
         console.log(results);
+        console.log(friends);
+        console.log(follows);
 
         var display = document.getElementById("friend-requests");
         display.innerHTML = "";
@@ -54,9 +58,7 @@
         displayFriends.innerHTML = "Friends";
 
         for (let f of friends) {
-            print("CONSOLE: f:", f)
-            print("CONSOLE: f name:", ${f['name']})
-            print("CONSOLE: f id:", ${f['uuid']})
+            
             var fbtn_id = createButtonId(f);
             displayFriends.innerHTML += `<div>
             <hr class="greyline">

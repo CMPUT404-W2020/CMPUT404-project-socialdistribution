@@ -229,26 +229,57 @@ def notifications(request):
         print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
+
+            # Get all friend requests
             fr_requests = FriendRequest.objects.filter(Q(to_author=user))
             all_requests = []
             for a in fr_requests:
                 print(a.from_author)
                 all_requests.append(a.from_author)
 
+            # Get all authors
+            all_authors = Author.objects.exclude(username=user)
+
+            # Get all follows
+            my_follows = Follow.objects.filter(Q(follower=user))
+            follows_me = Follow.objects.filter(Q(following=user))
+            all_follows = my_follows.union(follows_me)
+
+            # The follow object doesn't return names, it returns more objects
+            # So I need to put it in a form that JS will understand
+            ret_follows = []
+            for f in all_follows:
+                entry = {}
+                entry["follower"] = f.follower.username
+                entry["following"] = f.following.username
+                entry["follower_uuid"] = f.follower.uuid
+                entry["following_uuid"] = f.following.uuid
+                ret_follows.append(entry)
+
             # Get all friends
-            all_friends = Friend.objects.filter(Q(author=user)) | Friend.objects.filter(Q(friend=user))
+            all_friends = Friend.objects.filter(
+                Q(author=user)) | Friend.objects.filter(Q(friend=user))
             ret_friends = []
             for f in all_friends:
                 entry = {}
                 if f.friend == user:
                     entry["uuid"] = f.author.uuid
                     entry["name"] = f.author.username
+                    #entry["host"] = f.author.host
                 else:
                     entry["uuid"] = f.friend.uuid
                     entry["name"] = f.friend.username
+                    #entry["host"] = f.friend.host
                 ret_friends.append(entry)
+            
+            context = {}
+            context['authors'] = [author.username for author in all_authors]
+            context["current_user"] = user
+            context["follows"] = ret_follows
+            context["friends"] = ret_friends
+            context["requests"] = all_requests
 
-            return render(request, 'sd/notifications.html', {"requests": all_requests, "friends": ret_friends})
+            return render(request, 'sd/notifications.html', context)
         else:
             print("CONSOLE: Redirecting from Notifications because no one is logged in")
             return redirect('login')
