@@ -491,6 +491,7 @@ def unfollow(request):
     if request.method=="POST":
         if authenticated(request):
             try:
+                data = json.loads(request.body)
                 user = request.get_current_user(request)
                 target = Author.objects.get(username=data['target_author'])
 
@@ -510,7 +511,8 @@ def unfollow(request):
 
                 return HttpResponse()
             except Exception as e:
-                print("CONSOLE: something broke. Local variables:"+locals())
+                print("CONSOLE: something broke. Local variables:",locals())
+                print("CONSOLE: Exception: ",e)
                 return HttpResponse(e)
         else:
             print("CONSOLE: not authenticated")

@@ -167,7 +167,7 @@ function removeFriend(uuid, author) {
   }
 }
 
-function unfollow(uuid, author) {
+function unfollow(author) {
   var yes = confirm("Would you like to unfollow this author?");
 
   if (yes) {
@@ -178,7 +178,6 @@ function unfollow(uuid, author) {
     fetch(origin + "/unfollow", {
       method: "POST",
       headers: {
-        "Accept": "application/json",
         "Content-Type": "application/json"
       },
       body: JSON.stringify(data)
