@@ -89,11 +89,11 @@
 
 	                <script>
 	                	var counter = commentCounter(post.uuid,comment.post,comments);
-	                	document.getElementById('commentsifyesButton').innerHTML =  counter + " Comments <br><br>";
+	                	document.getElementById("commentsifyesButton").innerHTML =  counter.toString() + " Comments <br><br>";
 	                </script>
 
                 	<a>
-                		<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')">  <br><br> </span>
+                		<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> </span>
           			</a>
 	          		
 	                <div id = "{{post.uuid}}" style = "display: none;">
