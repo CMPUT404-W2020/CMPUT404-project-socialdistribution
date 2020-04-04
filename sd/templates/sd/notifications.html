@@ -60,20 +60,15 @@
 
         var displayFriends = document.getElementById("friends");
         displayFriends.innerHTML = "Friends";
-
         for (let f of friends) {
-            
-            var fbtn_id = createButtonId(f);
+            var fName = f['name'];
             displayFriends.innerHTML += `<div>
             <hr class="greyline">
-            <span class="searchauthor">Name: '${f['name']}'</span>
-            <span class="searchauthor">id: '${f['uuid']}'</span>
-            <span class="searchauthor">All: '${f}'</span>
+            <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${fbtn_id}" onclick="sendRequest('${f}')"">-</button>
         </div>`;
         }
 
