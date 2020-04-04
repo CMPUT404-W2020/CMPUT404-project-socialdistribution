@@ -240,7 +240,7 @@ button:hover {
 /* comments */
 
 .commentSection{
-  margin: 1em 3em 1em 2em;
+  margin: 1em 4em 1em 2em;
 }
 
 /* lists number of comments in feed item */
@@ -254,26 +254,6 @@ button:hover {
   cursor: pointer;
 }
 
-
-/* show this section if comment option is clicked 
-#addcommentifyesButton {
-  float: right;
-  color: #9dc7ba; 
-  font-style: italic;
-  font-size: 0.9em;
-  word-wrap: break-word;
-}
-
-#newcomment {
-  float: left;
-  width: 98%
-}
-
-
-#showComments {
-  margin-top: 2em;
-}
-*/
 
 .commentitem {
   border-radius: 10px;
@@ -316,13 +296,6 @@ button:hover {
   cursor: pointer;
 }
 
-/*
-#addComment {
-  background-color: white;
-  margin-bottom: 1em;
-  border: 1.4px solid white;
-}
-*/
 
 #addcommentfield {
   height: 2em;
