@@ -1,10 +1,13 @@
 from django.test import SimpleTestCase
 from django.urls import resolve
 from unittest import skip
+from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from selenium import webdriver
 
 from sd.models import *
 from sd.views import *
 import social_distribution.settings as settings
+import time
 
 
 class ModelTests(SimpleTestCase):
@@ -179,3 +182,117 @@ class URLTests(SimpleTestCase):
     def test_get_edit_account(self):
         r = resolve('/edit_account')
         self.assertEqual(r.func, edit_account)
+
+class IntegratedTests(StaticLiveServerTestCase):
+    def setUp(self):
+        self.driver = webdriver.Firefox()
+        self.live_server_url = "https://cmput-404.herokuapp.com/"
+
+    def tearDown(self):
+        self.driver.close()
+
+    # def test_login_success(self):
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
+
+    # def test_login_failure(self):
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "login"
+
+
+    def test_side_bar(self):
+        # Login
+        driver = self.driver
+        driver.get(self.live_server_url + "login")
+        u_name = driver.find_element_by_name("username")
+        u_name.send_keys("JamesSmith")
+        p_word = driver.find_element_by_name("password")
+        p_word.send_keys("cmput404")
+        login_btn = driver.find_element_by_id("login-button")
+        login_btn.click()
+        assert driver.current_url == self.live_server_url + "feed"
+
+        # ensure the page is loaded before continuing
+        time.sleep(2)
+
+        # Look for sidebar
+        sidebar_post = driver.find_element_by_class_name("sidebarpost")
+        assert "POST" in sidebar_post.get_attribute('innerHTML')
+
+        nav = driver.find_element_by_class_name("sidebarfeed")
+        assert "EXPLORE" in nav.get_attribute('innerHTML')
+        assert "MY FEED" in nav.get_attribute('innerHTML')
+
+        # test clicks on sidebar
+        driver.find_element_by_class_name("plusicon").click()
+        assert driver.current_url == self.live_server_url + "newpost"
+        driver.back()
+
+        driver.find_element_by_class_name("sidebarfeed")
+
+        explore = driver.find_element_by_id("explore-btn")
+        explore.click()
+        assert driver.current_url == self.live_server_url
+        time.sleep(2)
+
+        feed = driver.find_element_by_id("feed-btn")
+        feed.click()
+        assert driver.current_url == self.live_server_url + "feed"
+        
+
+    # def test_header(self):
+    #             # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
+
+    #     time.sleep(2)
+
+    #     # Look for sidebar
+    #     sidebar_post = driver.find_element_by_class_name("sidebarpost")
+    #     assert "POST" in sidebar_post.get_attribute('innerHTML')
+
+    #     nav = driver.find_element_by_class_name("sidebarfeed")
+    #     assert "EXPLORE" in nav.get_attribute('innerHTML')
+    #     assert "MY FEED" in nav.get_attribute('innerHTML')
+
+    # def test_create_post_auth(self):
+    #     pass
+
+    # def test_edit_post_auth(self):
+    #     pass
+
+    # def test_notifications_auth(self):
+    #     pass
+
+    # def test_account_auth(self):
+    #     pass
+
+    # def test_explore_auth(self):
+    #     pass
+
+    # def test_feed_auth(self):
+    #     pass
+
+    # def test_search_auth(self):
+    #     pass
