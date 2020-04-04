@@ -18,105 +18,143 @@ import commonmark
 
 def explore(request):
     if valid_method(request):
-        user = get_current_user(request)
-        print_state(request)
-        if user:
-            posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(
-                unlisted=False)).exclude(author_id=user.uuid)
-        else:
-            posts = Post.objects.filter(
-                Q(visibility='PUBLIC') & Q(unlisted=False))
+        if request.method == "GET":
+            user = get_current_user(request)
+            print_state(request)
+            if user:
+                posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(
+                    unlisted=False)).exclude(author_id=user.uuid).order_by('-published')
+            else:
+                posts = Post.objects.filter(
+                    Q(visibility='PUBLIC') & Q(unlisted=False)).order_by('-published')
 
-        for p in posts:
-            if p.contentType == 'text/markdown':
-                # make it html
-                p.content = commonmark.commonmark(p.content)
-        results = paginated_result(
-            request, posts, GetPostSerializer, "feed", query="feed")
-        is_authenticated = authenticated(request)
-        user = get_current_user(request) if is_authenticated else None
-        return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results})
+            for p in posts:
+                if p.contentType == 'text/markdown':
+                    # make it html
+                    p.content = commonmark.commonmark(p.content)
+            results = paginated_result(
+                request, posts, GetPostSerializer, "feed", query="feed")
+            is_authenticated = authenticated(request)
+            user = get_current_user(request) if is_authenticated else None
+            all_comments = Comment.objects.all().order_by('published')
+            comments = []
+            for c in all_comments:
+                comments.append({
+                    'post': str(c.post.uuid),
+                    'author': c.author,
+                    'comment': c.comment,
+                    'published': c.published
+                })
+            return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results, 'comments':comments})
+        elif request.method=="POST":
+            data = request.POST
+            author = Author.objects.get(uuid=data['user'])
+            post = Post.objects.get(uuid=data['post'])
+            comment = Comment.objects.create(author=author, comment=
+            data['comment'], contentType= 'text/plain', post=post)
+            comment.save()
+            return redirect('explore')
     else:
         return HttpResponse(status_code=405)
 
 
 def feed(request):
     if valid_method(request):
-        user = get_current_user(request)
-        if authenticated(request) and user:
-            load_github_feed(get_current_user(request))
-            all_posts = Post.objects.none()
-            own_posts = Post.objects.filter(Q(author_id=user.uuid))
-            if own_posts:
-                all_posts = all_posts.union(own_posts)
-            following_temp = Follow.objects.filter(Q(follower_id=user.uuid)).values(
-                'following')  # NOTE: following is a set of uuid's
-            following = []
-            for i in following_temp:
-                following.append(i['following'])
-            f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
-            f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
-            friend_ids = []
-            for i in f1:
-                friend_ids.append(i['friend'])
-            for j in f2:
-                friend_ids.append(j['author'])
-            # NOTE:Friends is a subset of following and are author objects
+        print("CONSOLE: request.method:", request.method)
+        if request.method == 'GET':
+            user = get_current_user(request)
+            if authenticated(request) and user:
+                load_github_feed(get_current_user(request))
+                all_posts = Post.objects.none()
+                own_posts = Post.objects.filter(Q(author_id=user.uuid))
+                if own_posts:
+                    all_posts = all_posts.union(own_posts)
+                following_temp = Follow.objects.filter(Q(follower_id=user.uuid)).values(
+                    'following')  # NOTE: following is a set of uuid's
+                following = []
+                for i in following_temp:
+                    following.append(i['following'])
+                f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
+                f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
+                friend_ids = []
+                for i in f1:
+                    friend_ids.append(i['friend'])
+                for j in f2:
+                    friend_ids.append(j['author'])
+                # NOTE:Friends is a subset of following and are author objects
 
-            for f in following:
-                f_user = Author.objects.get(uuid=f)
-                their_pub_posts = Post.objects.filter(
-                    Q(author=f_user.uuid) & Q(visibility='PUBLIC') & Q(unlisted=False))
-                if their_pub_posts:
-                    all_posts = all_posts.union(their_pub_posts)
+                for f in following:
+                    f_user = Author.objects.get(uuid=f)
+                    their_pub_posts = Post.objects.filter(
+                        Q(author=f_user.uuid) & Q(visibility='PUBLIC') & Q(unlisted=False))
+                    if their_pub_posts:
+                        all_posts = all_posts.union(their_pub_posts)
 
-                if f_user.host == user.host:
-                    server_spec_posts = Post.objects.filter(
-                        Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
-                    if server_spec_posts:
-                        all_posts = all_posts.union(server_spec_posts)
+                    if f_user.host == user.host:
+                        server_spec_posts = Post.objects.filter(
+                            Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
+                        if server_spec_posts:
+                            all_posts = all_posts.union(server_spec_posts)
 
-                spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
-                    visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
-                if spec_posts:
-                    all_posts = all_posts.union(spec_posts)
+                    spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
+                        visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
+                    if spec_posts:
+                        all_posts = all_posts.union(spec_posts)
 
-                if f_user.uuid in friend_ids:
-                    friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
-                        visibility='FRIENDS') & Q(unlisted=False))
-                    if friend_posts:
-                        all_posts = all_posts.union(friend_posts)
+                    if f_user.uuid in friend_ids:
+                        friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
+                            visibility='FRIENDS') & Q(unlisted=False))
+                        if friend_posts:
+                            all_posts = all_posts.union(friend_posts)
 
-            for friend in friend_ids:
-                tf1 = Friend.objects.filter(
-                    Q(author=friend)).values('friend_id')
-                tf2 = Friend.objects.filter(
-                    Q(friend=friend)).values('author_id')
-                # NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
-                their_friends = tf1.union(tf2)
+                for friend in friend_ids:
+                    tf1 = Friend.objects.filter(
+                        Q(author=friend)).values('friend_id')
+                    tf2 = Friend.objects.filter(
+                        Q(friend=friend)).values('author_id')
+                    # NOTE:their_friends is a list of dictionaries of 'friend_id':<id> or 'author_id':<id>
+                    their_friends = tf1.union(tf2)
 
-                for foaf in their_friends:
-                    posts = []
-                    if 'friend_id' in foaf and foaf['friend_id'] in following:
-                        posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(
-                            visibility='FOAF') & Q(unlisted=False))
-                    elif 'author_id' in foaf and foaf['author_id'] in following:
-                        posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(
-                            visibility='FOAF') & Q(unlisted=False))
-                    if posts:
-                        all_posts = all_posts.union(posts)
+                    for foaf in their_friends:
+                        posts = []
+                        if 'friend_id' in foaf and foaf['friend_id'] in following:
+                            posts = Post.objects.filter(Q(author=foaf['friend_id']) & Q(
+                                visibility='FOAF') & Q(unlisted=False))
+                        elif 'author_id' in foaf and foaf['author_id'] in following:
+                            posts = Post.objects.filter(Q(author=foaf['author_id']) & Q(
+                                visibility='FOAF') & Q(unlisted=False))
+                        if posts:
+                            all_posts = all_posts.union(posts)
 
-            all_posts = all_posts.distinct()
-            for p in all_posts:
-                if p.contentType == 'text/markdown':
-                    # make it html
-                    p.content = commonmark.commonmark(p.content)
-            results = paginated_result(
-                request, all_posts, GetPostSerializer, "feed", query="feed")
-            return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results})
-        else:
-            print("CONSOLE: Redirecting from Feed because no one is logged in")
-            return redirect('login')
+                all_posts = all_posts.distinct().order_by('-published')
+                for p in all_posts:
+                    if p.contentType == 'text/markdown':
+                        # make it html
+                        p.content = commonmark.commonmark(p.content)
+                results = paginated_result(
+                    request, all_posts, GetPostSerializer, "feed", query="feed")
+                all_comments = Comment.objects.all().order_by('published')
+                comments = []
+                for c in all_comments:
+                    comments.append({
+                        'post': str(c.post.uuid),
+                        'author': c.author,
+                        'comment': c.comment,
+                        'published': c.published
+                    })
+                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comments':comments})
+            else:
+                print("CONSOLE: Redirecting from Feed because no one is logged in")
+                return redirect('login')
+        elif request.method=="POST":
+            data = request.POST
+            author = Author.objects.get(uuid=data['user'])
+            post = Post.objects.get(uuid=data['post'])
+            comment = Comment.objects.create(author=author, comment=
+            data['comment'], contentType= 'text/plain', post=post)
+            comment.save()
+            return redirect('my_feed')
+
     else:
         return HttpResponse(status_code=405)
 
