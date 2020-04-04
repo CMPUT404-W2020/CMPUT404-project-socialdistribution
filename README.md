@@ -49,7 +49,7 @@ Contributions:
     5. https://stackoverflow.com/questions/29321494/show-input-field-only-if-a-specific-option-is-selected/29321711. Author: https://stackoverflow.com/users/4721273/josephus87
     6. https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
     7. https://stackoverflow.com/questions/15950007/centering-floated-images-in-div. author: https://stackoverflow.com/users/2157321/dhaval-marthak*/
-    8. https://www.tjvantoll.com/2015/09/13/fetch-and-errors/ 
+    8. https://www.tjvantoll.com/2015/09/13/fetch-and-errors/
 
 # Squawk Documentation
 
@@ -77,34 +77,34 @@ For testing, we have created a number of sample user credentials:
 Now that you're logged into your Squawk account, you can take advantage of all of the exciting features:
 
 ### Server to Server Connections
-There is no more need to have accounts on countless social media sites; Squawk lets you pull information from different sources into one convenient feed. You can follow other authors within the Squawk server and all connecting servers. Refer to the "Current Connections" section in this document to see the servers available to you through Squawk or contact the Squawk admins to request a new server be added. 
+
+There is no more need to have accounts on countless social media sites; Squawk lets you pull information from different sources into one convenient feed. You can follow other authors within the Squawk server and all connecting servers. Refer to the "Current Connections" section in this document to see the servers available to you through Squawk or contact the Squawk admins to request a new server be added.
 
 ### Curate your Content
 
-On ***Your Feed*** you see content from the authors that you follow. All of your posts, regardless of their privacy settings, will also be visible to you on your feed. 
+On **_Your Feed_** you see content from the authors that you follow. All of your posts, regardless of their privacy settings, will also be visible to you on your feed.
 
-With our ***Github compatibility***, see your github activity feed on your Squawk feed. Enable this option by adding your Github ID to your Squawk profile.
+With our **_Github compatibility_**, see your github activity feed on your Squawk feed. Enable this option by adding your Github ID to your Squawk profile.
 
 ### Find New Content
 
-Check out the ***Explore*** page to see all public posts from local and remote servers. This is a great way to find new authors to follow and to gain popularity through your public posts. 
+Check out the **_Explore_** page to see all public posts from local and remote servers. This is a great way to find new authors to follow and to gain popularity through your public posts.
 
-When you'd like to follow or unfollow an author, look them up on the ***Search*** page to change your current relationship. 
+When you'd like to follow or unfollow an author, look them up on the **_Search_** page to change your current relationship.
 
-You will be notified on the ***Notifications*** page when another author follows you. You can choose to follow them back and become friends, or dismiss the notification. Here you can also see a list of users you are following or are ***friends*** with.
+You will be notified on the **_Notifications_** page when another author follows you. You can choose to follow them back and become friends, or dismiss the notification. Here you can also see a list of users you are following or are **_friends_** with.
 
 ### Own your Content
 
-Choose how you display yourself to others by editing the information on your ***Account*** page. 
+Choose how you display yourself to others by editing the information on your **_Account_** page.
 
-Every post you create has several ***privacy*** options to choose from. If you set your post to ***public***, then it will show on the explore page of all other users directly or indirectly connected to the Squawk server. Alternatively, you can restrict your post to the personal feeds of your ***friends***, ***friends of friends***, ***server only***, or a spectific group of users with ***private*** posts. For added privacy, select ***unlisted*** and your post will only be visible to the aforementioned audience if you provide them with the direct link. If you change your mind later, you can easily edit your own posts and change their privacy setting. 
-
+Every post you create has several **_privacy_** options to choose from. If you set your post to **_public_**, then it will show on the explore page of all other users directly or indirectly connected to the Squawk server. Alternatively, you can restrict your post to the personal feeds of your **_friends_**, **_friends of friends_**, **_server only_**, or a spectific group of users with **_private_** posts. For added privacy, select **_unlisted_** and your post will only be visible to the aforementioned audience if you provide them with the direct link. If you change your mind later, you can easily edit your own posts and change their privacy setting.
 
 ## Admin Access
 
-You can access the admin page through https://cmput-404.herokuapp.com/admin and using the credentials: 
+You can access the admin page through https://cmput-404.herokuapp.com/admin and using the credentials:
 
-    username: warren 
+    username: warren
     password: cmput404
 
 When running locally, you can run this command to create a superuser and access the admin interface:
@@ -114,27 +114,26 @@ When running locally, you can run this command to create a superuser and access 
 ## API Information:
 
 API Endpoint URL:
-    
-    https://cmput-404.herokuapp.com/
+
+https://cmput-404.herokuapp.com/
 
 Credentials:
-    
-    warren:cmput404
+
+warren:cmput404
 
 Example HTTPIE:
-    
-    http GET https://cmput-404.herokuapp.com/posts
+
+http GET https://cmput-404.herokuapp.com/posts
 
 Web Service Endpoint URL:
-    
-    https://cmput-404.herokuapp.com/
+
+https://cmput-404.herokuapp.com/
 
 Current Connections:
-| Remote API Endpoint                                  | Username   | Password        |
-| ---------------------------------------------------- | ---------- | --------------  |
-| https://cmput404-socialdistribution.herokuapp.com/   | admindemo  |  ualberta01!    |
-| https://glacial-earth-37816.herokuapp.com/api/       | group8     |  group8password |
-
+| Remote API Endpoint | Username | Password |
+| ---------------------------------------------------- | ---------- | -------------- |
+| https://cmput404-socialdistribution.herokuapp.com/ | admindemo | ualberta01! |
+| https://glacial-earth-37816.herokuapp.com/api/ | group8 | group8password |
 
 ### API Call Formats:
 
@@ -144,6 +143,8 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
 (will be updated to match social_distribution/sd/urls.py found on the api branch)
 
 **/author/**
+
+/author/
 
 - GET
 - Returns all users
@@ -172,7 +173,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   }
   ]
 
-**/author/<uuid>**
+/author/<uuid>
 
 - GET
 - Returns user details
@@ -202,7 +203,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-**/author/<uuid>/friends**
+/author/<uuid>/friends
 
 - GET
 - Returns all friends of user
@@ -217,7 +218,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   }
   ]
 
-**/author/<uuid:pk1>/friends/<uuid:pk2>**
+/author/<uuid:pk1>/friends/<uuid:pk2>
 
 - GET
 - returns bool to indicate whether or not two users are friends
@@ -230,7 +231,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   "friends": 1
   }
 
-**/author/posts**
+/author/posts
 
 - GET
 - returns all posts visible to user
@@ -289,9 +290,12 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-**posts/<uuid>**
+**/posts/**
+
+posts/<uuid>
 
 - GET
+- Requires Auth for posts with privacy restrictions
 - Returns values for post specified by uuid
 - Example:
   {
@@ -339,7 +343,91 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   "unlisted": false
   }
 
-**posts/<uuid>/comments**
+posts/<uuid>
+
+- POST
+- Returns values for post specified by uuid
+- POST Example:
+  {
+  "query":"getPost",
+  "postid":"d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "url":"http://service/posts/d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "author":{
+  "id":"http://127.0.0.1:5454/author/de305d54-75b4-431b-adb2-eb6b9e546013",
+  "host":"http://127.0.0.1:5454/",
+  "displayName":"Jerry Johnson",
+  "url":"http://127.0.0.1:5454/author/de305d54-75b4-431b-adb2-eb6b9e546013",
+  "github": "http://github.com/jjohnson"
+  },
+  "friends":[
+  "http://127.0.0.1:5454/author/7deee0684811f22b384ccb5991b2ca7e78abacde",
+  "http://127.0.0.1:5454/author/11c3783f15f7ade03430303573098f0d4d20797b"
+  ]
+  }
+- Return example:
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "207pm",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/2a7b68b3-9d64-4365-8f4b-ae290fa31a28",
+  "bio": "",
+  "firstName": "asdfasdf",
+  "lastName": "sdafadfa",
+  "email": "test@test.com"
+  },
+  "title": "asdfadf",
+  "source": "https://cmput-404.herokuapp.com/",
+  "origin": "https://cmput-404.herokuapp.com/",
+  "description": "asdfasdf",
+  "contentType": "text/markdown",
+  "content": "asdfsa",
+  "categories": "",
+  "comments": [
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "admin",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": ""
+  },
+  "comment": "HELLOOOOOO",
+  "contentType": "text/markdown",
+  "published": "2020-03-27T20:19:55.496559Z",
+  "id": "3a10eccb-0f2b-40e6-b45c-ea994670e0d0"
+  },
+  {
+  "author": {
+  "id": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "host": "https://cmput-404.herokuapp.com/",
+  "displayName": "admin",
+  "github": "",
+  "url": "https://cmput-404.herokuapp.com/author/7829b229-0f5a-4f0f-b312-bbb48dd7b8b9",
+  "bio": "",
+  "firstName": "",
+  "lastName": "",
+  "email": ""
+  },
+  "comment": "TEST COMMENT",
+  "contentType": "text/markdown",
+  "published": "2020-03-27T21:18:04.889486Z",
+  "id": "2faf405a-63bc-4922-959d-84534f8b4bf6"
+  }
+  ],
+  "published": "2020-03-27T20:08:11.468804Z",
+  "id": "d2535b27-4ecf-49d0-baca-b24efd6931ce",
+  "visibility": "PUBLIC",
+  "visibleTo": [],
+  "unlisted": false
+  }
+
+posts/<uuid>/comments
 
 - GET
 - returns comments from post with specified uuid
@@ -371,7 +459,7 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   ]
   }
 
-**posts/<uuid>/comments**
+posts/<uuid>/comments
 
 - post
 - creates comment on post specified with uuid
@@ -400,7 +488,9 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
   "message": "Comment Added"
   }
 
-**/author/<uuid>/friends/<uuid>/**
+**/friends/**
+
+/author/<uuid>/friends/<uuid>/
 
 - GET
 - Check if two authors are friends
@@ -447,22 +537,24 @@ The system allows GET, PUT, POST, and DELETE requests; all other requests will b
 ## Web-Browser Page Paths:
 
 ### Post Interaction:
+
     /                    (displays the default explore page with all public and listed posts in servers connected to yours)
     /feed                (displays all posts created by the logged in user, and all posts by users that the logged in user follows, if they have permission to view those posts.
     /editpost/<post_id>  (allows the user to edit the specified post if it is their post)
     /newpost             (provides a form for the user to create a new post)
-    
+
 ### Account Interaction
+
     /login               (provides a form for user to login to the system with existing credentials)
     /register            (provides a form for the user to register as an Author)
     /logout              (logs the currently authenticated user out)
     /account             (displays the currently authenticated user's information and allows them to edit that information)
     /edit_account        (allows the user to edit their profile information)
-    
+
 ### User Interaction
+
     /search              (allows the user to search for other users. From the search results, they can follow/unfollow users and see their current relationship to them)
     /notifications       (displays the user's notification of requests and a list of other users that they follow or are friends with)
-
 
 ## Testing
 
