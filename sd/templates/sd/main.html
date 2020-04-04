@@ -29,7 +29,7 @@
 		{% endif %}
 	}
 
-	function commentCounter(postID,commentPost,comments):
+	function commentCounter(postID,commentPost,comments) {
 		var counter = 0;
 		{% for comment in comments %}
 			{% if postID == commentPost %}
@@ -37,6 +37,7 @@
 		   	{% endif %}
 		{% endfor %}
 		return counter
+	}
 
 
 </script>
