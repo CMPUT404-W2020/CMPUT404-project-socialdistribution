@@ -50,7 +50,7 @@ h5 {
 p {
   font-style: normal;
   font-size: 1em;
-  word-wrap: break-word
+  word-wrap: break-word;
 }
 
 ul {
@@ -192,6 +192,7 @@ button:hover {
 #author {
   font-weight: bold;
   font-size: 1em;
+  word-wrap: break-word;
 }
 
 #date {
@@ -206,11 +207,13 @@ button:hover {
   font-weight: bold;
   font-style: normal;
   text-align: center;
+  word-wrap: break-word;
 }
 
 #postBody {
   color: black;
   text-align: center;
+  word-wrap: break-word;
 }
 
 
@@ -303,14 +306,12 @@ button:hover {
   border: 1.4px solid white;
 }
 
+
 #addcommentfield {
   height: 2em;
+  margin-bottom: 1em;
+  padding: 0.5em 1em 0.5em 1em;
 }
-
-/* input[id="id_password"] {
-  font-family: 'Comic Sans MS';
-} */
-
 
 /* side bar */
 

@@ -51,13 +51,13 @@
                 <a>
                 	<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> Comments <br><br> </span>
           		</a>
-                <div id = "{{post.uuid}}">
+                <div id = "{{post.uuid}}" style = "display: none;">
                 	{% for comment in comments %}
 						{% if post.uuid == comment.post %}
 							<div class = "commentitem">
-								<div id = "commentauthor"> Author: {{comment.author}} </div>
-								<div id = "commentdate"> Published: {{comment.published}} <br> <br> </div>
-								<div id = "commentbody"> {{ comment.comment }} <br> </div>
+								<div id = "commentauthor"> {{comment.author}} </div>
+								<div id = "commentdate"> {{comment.published}} <br> <br> </div>
+								<div id = "commentbody"> <p> {{ comment.comment }} <br> </p> </div>
 							</div>
 						{% endif %}
 					{% endfor %}
