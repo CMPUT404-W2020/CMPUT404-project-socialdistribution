@@ -92,13 +92,11 @@ def load_github_feed(user):
                     d = com['commit']['author']['date'].split('T')[0].split('-')
                     date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
                     if(current-date).days < 30:
-                        exists = Post.objects.filter(source=com['sha'])
+                        exists = Post.objects.filter(description=com['node_id'])
                         if not exists:
                             try:
                                 post = Post.objects.create(title = "Commit to "+r, source=user.host, description=com['node_id'], contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='PRIVATE', unlisted=False, link_to_image=com['committer']['avatar_url'])
                                 print("CONSOLE: Created a Github post: "+com['commit']['message'])
-                                if not Post.objects.filter(description=com['node_id']):
-                                    post.save()
                             except Exception as e:
                                 print("CONSOLE: Error creating Github post", e)
                         else:
