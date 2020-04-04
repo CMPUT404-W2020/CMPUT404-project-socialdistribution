@@ -3,6 +3,10 @@ from django.urls import resolve
 from unittest import skip
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from selenium import webdriver
+from selenium.webdriver.support.ui import WebDriverWait, Select
+from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 from sd.models import *
 from sd.views import *
@@ -11,6 +15,7 @@ import time
 
 
 class ModelTests(SimpleTestCase):
+    # Simple tests for all the django models
     def create_node(self):
         return Node()
 
@@ -135,6 +140,7 @@ class ModelTests(SimpleTestCase):
         self.assertEqual(a2, fr.friend)
 
 class URLTests(SimpleTestCase):
+    # simple tests for all the views
     def test_get_login(self):
         r = resolve('')
         self.assertEqual(r.func, explore)
@@ -185,13 +191,16 @@ class URLTests(SimpleTestCase):
 
 class IntegratedTests(StaticLiveServerTestCase):
     def setUp(self):
+        # start selenium webdriver
         self.driver = webdriver.Firefox()
         self.live_server_url = "https://cmput-404.herokuapp.com/"
 
     def tearDown(self):
+        # stop selenium webdriver
         self.driver.close()
 
     # def test_login_success(self):
+    #     # test successful login
     #     driver = self.driver
     #     driver.get(self.live_server_url + "login")
     #     u_name = driver.find_element_by_name("username")
@@ -202,7 +211,8 @@ class IntegratedTests(StaticLiveServerTestCase):
     #     login_btn.click()
     #     assert driver.current_url == self.live_server_url + "feed"
 
-    # def test_login_failure(self):
+    # def test_login_failure_bad_pass(self):
+    #     # test unsuccessful login, wrong password
     #     driver = self.driver
     #     driver.get(self.live_server_url + "login")
     #     u_name = driver.find_element_by_name("username")
@@ -213,49 +223,109 @@ class IntegratedTests(StaticLiveServerTestCase):
     #     login_btn.click()
     #     assert driver.current_url == self.live_server_url + "login"
 
+    # def test_login_failure_no_user(self):
+    #     # test unsuccessful login, wrong password
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("BadUserName")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("nopass")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "login"
 
-    def test_side_bar(self):
-        # Login
-        driver = self.driver
-        driver.get(self.live_server_url + "login")
-        u_name = driver.find_element_by_name("username")
-        u_name.send_keys("JamesSmith")
-        p_word = driver.find_element_by_name("password")
-        p_word.send_keys("cmput404")
-        login_btn = driver.find_element_by_id("login-button")
-        login_btn.click()
-        assert driver.current_url == self.live_server_url + "feed"
+    # def test_side_bar_post_auth(self):
+    #     # test locate sidebar and press all the buttons
 
-        # ensure the page is loaded before continuing
-        time.sleep(2)
+    #     # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
 
-        # Look for sidebar
-        sidebar_post = driver.find_element_by_class_name("sidebarpost")
-        assert "POST" in sidebar_post.get_attribute('innerHTML')
+    #     # ensure the page is loaded before continuing
+    #     time.sleep(2)
 
-        nav = driver.find_element_by_class_name("sidebarfeed")
-        assert "EXPLORE" in nav.get_attribute('innerHTML')
-        assert "MY FEED" in nav.get_attribute('innerHTML')
+    #     # Look for sidebar
+    #     sidebar_post = driver.find_element_by_class_name("sidebarpost")
+    #     assert "POST" in sidebar_post.get_attribute('innerHTML')
 
-        # test clicks on sidebar
-        driver.find_element_by_class_name("plusicon").click()
-        assert driver.current_url == self.live_server_url + "newpost"
-        driver.back()
+    #     nav = driver.find_element_by_class_name("sidebarfeed")
+    #     assert "EXPLORE" in nav.get_attribute('innerHTML')
+    #     assert "MY FEED" in nav.get_attribute('innerHTML')
 
-        driver.find_element_by_class_name("sidebarfeed")
+    #     # test clicks on sidebar
+    #     driver.find_element_by_class_name("plusicon").click()
+    #     assert driver.current_url == self.live_server_url + "newpost"
 
-        explore = driver.find_element_by_id("explore-btn")
-        explore.click()
-        assert driver.current_url == self.live_server_url
-        time.sleep(2)
+    # def test_side_bar_explore_auth(self):
+    #     # test locat sidebar and press all the buttons
 
-        feed = driver.find_element_by_id("feed-btn")
-        feed.click()
-        assert driver.current_url == self.live_server_url + "feed"
+    #     # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
+
+    #     # ensure the page is loaded before continuing
+    #     time.sleep(2)
+
+    #     # Look for sidebar
+    #     sidebar_post = driver.find_element_by_class_name("sidebarpost")
+    #     assert "POST" in sidebar_post.get_attribute('innerHTML')
+
+    #     nav = driver.find_element_by_class_name("sidebarfeed")
+    #     assert "EXPLORE" in nav.get_attribute('innerHTML')
+    #     assert "MY FEED" in nav.get_attribute('innerHTML')
+
+    #     # click explore button
+    #     explore = driver.find_element_by_class_name("compassicon")
+    #     explore.click()
+    #     assert driver.current_url == self.live_server_url
+
+    # def test_side_bar_feed_auth(self):
+    #     # test locat sidebar and press all the buttons
+
+    #     # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
+
+    #     # ensure the page is loaded before continuing
+    #     time.sleep(2)
+
+    #     # Look for sidebar
+    #     sidebar_post = driver.find_element_by_class_name("sidebarpost")
+    #     assert "POST" in sidebar_post.get_attribute('innerHTML')
+
+    #     nav = driver.find_element_by_class_name("sidebarfeed")
+    #     assert "EXPLORE" in nav.get_attribute('innerHTML')
+    #     assert "MY FEED" in nav.get_attribute('innerHTML')
+
+    #     # click feed button
+    #     feed = driver.find_element_by_class_name("yourfeed")
+    #     feed.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
         
-
     # def test_header(self):
-    #             # Login
+    #     # Login
     #     driver = self.driver
     #     driver.get(self.live_server_url + "login")
     #     u_name = driver.find_element_by_name("username")
@@ -268,6 +338,29 @@ class IntegratedTests(StaticLiveServerTestCase):
 
     #     time.sleep(2)
 
+    #     # Look for header
+    #     header = driver.find_element_by_id("header")
+    #     assert "SQUAWK" in header.get_attribute('innerHTML')
+
+    #     # check for all icons
+    #     icons = driver.find_elements_by_class_name("icons")
+    #     assert len(icons) == 3
+
+    # def test_create_post_auth(self):
+    #     # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
+
+    #     # ensure the page is loaded before continuing
+    #     time.sleep(2)
+
     #     # Look for sidebar
     #     sidebar_post = driver.find_element_by_class_name("sidebarpost")
     #     assert "POST" in sidebar_post.get_attribute('innerHTML')
@@ -276,23 +369,204 @@ class IntegratedTests(StaticLiveServerTestCase):
     #     assert "EXPLORE" in nav.get_attribute('innerHTML')
     #     assert "MY FEED" in nav.get_attribute('innerHTML')
 
-    # def test_create_post_auth(self):
-    #     pass
+    #     # go to new post page
+    #     driver.find_element_by_class_name("plusicon").click()
+    #     assert driver.current_url == self.live_server_url + "newpost"
+    #     time.sleep(2)
+
+    #     # enter all the info for the new post
+    #     title = driver.find_element_by_id("id_title")
+    #     title.send_keys("This is the post title")
+        
+    #     content = driver.find_element_by_id("id_content")
+    #     content.send_keys("This is the content of my post! It was made by Selenium, isn't that neat?")
+
+    #     content_type = Select(driver.find_element_by_id("id_contentType"))
+    #     content_type.select_by_visible_text("text/plain")
+
+    #     privacy = Select(driver.find_element_by_id("id_visibility"))
+    #     privacy.select_by_visible_text("Public")
+
+    #     unlisted = Select(driver.find_element_by_id("id_unlisted"))
+    #     unlisted.select_by_visible_text("LISTED")
+
+    #     # submit a new post
+    #     submit = driver.find_element_by_id("bluebackground-button")
+    #     submit.click()
+    #     time.sleep(2)
+
+    #     assert driver.current_url == self.live_server_url + "feed"
 
     # def test_edit_post_auth(self):
-    #     pass
+    #     # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
+
+    #     time.sleep(2)
+
+    #     # find the options button on a post
+    #     opts = driver.find_element_by_class_name("dropdown-button")
+    #     opts.click()
+
+    #     edit_btn = driver.find_element_by_link_text("Edit")
+    #     edit_btn.click()
+    #     assert self.live_server_url + "edit" in driver.current_url
 
     # def test_notifications_auth(self):
-    #     pass
+    #     # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
+
+    #     time.sleep(2)
+
+    #     # Look for header
+    #     header = driver.find_element_by_id("header")
+    #     assert "SQUAWK" in header.get_attribute('innerHTML')
+
+    #     # find notifications button
+    #     notis = driver.find_element_by_xpath('//img[@alt="Network"]')
+    #     notis.click()
+    #     time.sleep(2)
+    #     assert driver.current_url == self.live_server_url + "notifications"
 
     # def test_account_auth(self):
-    #     pass
+    #     # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
 
-    # def test_explore_auth(self):
-    #     pass
+    #     time.sleep(2)
 
-    # def test_feed_auth(self):
-    #     pass
+    #     # Look for header
+    #     header = driver.find_element_by_id("header")
+    #     assert "SQUAWK" in header.get_attribute('innerHTML')
+
+    #     # find notifications button
+    #     account = driver.find_element_by_xpath('//img[@alt="Account"]')
+    #     account.click()
+    #     time.sleep(2)
+    #     assert driver.current_url == self.live_server_url + "account"
 
     # def test_search_auth(self):
-    #     pass
+    #     # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
+
+    #     time.sleep(2)
+
+    #     # Look for header
+    #     header = driver.find_element_by_id("header")
+    #     assert "SQUAWK" in header.get_attribute('innerHTML')
+
+    #     # find notifications button
+    #     search = driver.find_element_by_xpath('//img[@alt="Search"]')
+    #     search.click()
+    #     time.sleep(2)
+    #     assert driver.current_url == self.live_server_url + "search"
+
+    #     # submit empty search, turns up all authors in db
+    #     search_bar = driver.find_element_by_id("search-val")
+    #     search_bar.click()
+    #     search_bar.send_keys(Keys.RETURN)
+    #     time.sleep(1)
+
+    #     # make sure there's at least 1 result
+    #     results = driver.find_elements_by_class_name("searchauthor")
+    #     assert len(results) > 0
+
+    # def test_send_friend_request(self):
+    #     # Login
+    #     driver = self.driver
+    #     driver.get(self.live_server_url + "login")
+    #     u_name = driver.find_element_by_name("username")
+    #     u_name.send_keys("JamesSmith")
+    #     p_word = driver.find_element_by_name("password")
+    #     p_word.send_keys("cmput404")
+    #     login_btn = driver.find_element_by_id("login-button")
+    #     login_btn.click()
+    #     assert driver.current_url == self.live_server_url + "feed"
+
+    #     time.sleep(2)
+
+    #     # Look for header
+    #     header = driver.find_element_by_id("header")
+    #     assert "SQUAWK" in header.get_attribute('innerHTML')
+
+    #     # find notifications button
+    #     search = driver.find_element_by_xpath('//img[@alt="Search"]')
+    #     search.click()
+    #     time.sleep(2)
+    #     assert driver.current_url == self.live_server_url + "search"
+
+    #     # submit empty search, turns up all authors in db
+    #     search_bar = driver.find_element_by_id("search-val")
+    #     search_bar.click()
+    #     search_bar.send_keys(Keys.RETURN)
+    #     time.sleep(1)
+
+    #     # make sure there's at least 1 result
+    #     results = driver.find_elements_by_class_name("searchauthor")
+    #     assert len(results) > 0
+
+    #     add_btn = driver.find_element_by_id("circle-button-Michael-Jones")
+    #     add_btn.click()
+
+    #     alert_obj = driver.switch_to.alert
+    #     assert "Michael Jones" in alert_obj.text()
+
+    #     alert_obj.accept()
+
+    def test_logout(self):
+        # Login
+        driver = self.driver
+        driver.get(self.live_server_url + "login")
+        u_name = driver.find_element_by_name("username")
+        u_name.send_keys("JamesSmith")
+        p_word = driver.find_element_by_name("password")
+        p_word.send_keys("cmput404")
+        login_btn = driver.find_element_by_id("login-button")
+        login_btn.click()
+        assert driver.current_url == self.live_server_url + "feed"
+
+        time.sleep(2)
+
+        # Look for header
+        header = driver.find_element_by_id("header")
+        assert "SQUAWK" in header.get_attribute('innerHTML')
+
+        # find notifications button
+        account = driver.find_element_by_xpath('//img[@alt="Account"]')
+        account.click()
+        time.sleep(2)
+        assert driver.current_url == self.live_server_url + "account"
+
+        logout_btn = driver.find_element_by_xpath("//input[@value='LOGOUT']")
+        logout_btn.click()
+        assert driver.current_url == self.live_server_url + "login"
