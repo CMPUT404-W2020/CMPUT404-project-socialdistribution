@@ -36,6 +36,10 @@
         console.log(results);
         console.log(friends);
         console.log(follows);
+        for (let f of friends) {
+            console.log(f['name']);
+        }
+
 
         var display = document.getElementById("friend-requests");
         display.innerHTML = "";
