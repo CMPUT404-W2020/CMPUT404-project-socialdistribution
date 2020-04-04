@@ -23,8 +23,10 @@
 		$("#navbar").load("static/sd/navbar.html");
 		{% if authenticated %}
 			$("#header").load("static/sd/header.html");
+		{% endif %}
 		{% if not authenticated %}
 			$("#header").load("static/sd/header_noauth.html");
+		{% endif %}
 	}
 
 	function feed() {
