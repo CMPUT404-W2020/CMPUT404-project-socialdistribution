@@ -26,13 +26,14 @@
     function loadRequests() {
         var follows = {{follows|safe}};
         var friends = {{friends|safe}};
+        var current_user = {{current_user|safe}};
         var results = makeItAList("{{requests}}");
 
-        displayResults(results, friends, follows);
+        displayResults(results, friends, follows, current_user);
     }
 
 
-    function displayResults(results, friends, follows) {
+    function displayResults(results, friends, follows,current_user) {
         console.log(results);
         console.log(friends);
         console.log(follows);
