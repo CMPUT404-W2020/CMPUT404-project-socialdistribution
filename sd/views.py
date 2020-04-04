@@ -184,9 +184,6 @@ def search(request):
 
     # Get all authors
     all_authors = Author.objects.exclude(username=user)
-    temp = paginated_result(
-        request, all_authors, AuthorSerializer, "authors", query="authors")
-    temp['authors'] = [author['username'] for author in temp['authors']]
 
     # Get all follows
     my_follows = Follow.objects.filter(Q(follower=user))
