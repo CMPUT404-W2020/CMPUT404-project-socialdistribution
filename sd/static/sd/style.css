@@ -120,7 +120,6 @@ input {
   word-wrap: break-word;
 }
 
-
 input[type=submit]{
   text-align: center;
   width: auto;
@@ -134,7 +133,6 @@ input[type=submit]{
   padding: 0.4em;
   margin: 0.3em;
 }
-
 
 input[type=submit]:hover{
     cursor: pointer;
@@ -173,10 +171,7 @@ textarea {
 input[type=checkbox]{
   border-radius: 10px;
   border: 1.5px solid #f0f0f0;
-  background: red;
 }
-
-
 
 /* text boxes 
 TODO: get boxes to line up*/
@@ -367,15 +362,17 @@ p label {
 #submit-blue-button{
   font-size: 1em;
   width: auto;
-  float: right;
   color: #9dc7ba;
-  margin-top: 1em;
-  margin-right: 0em;
+  margin: 0em;
 }
 
 #submit-blue-button:hover {
   background-color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
+}
+
+#submit-button-section{
+  float:right;
 }
 
 
