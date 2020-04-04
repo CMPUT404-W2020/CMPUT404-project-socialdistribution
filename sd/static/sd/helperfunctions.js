@@ -172,23 +172,31 @@ function unfollow(uuid, author) {
 
   if (yes) {
     const origin = window.location.origin;
-    fetch(origin + "/remove_follow/" + uuid, {
+    const data = {
+      target_author: author
+    };
+    fetch(origin + "/unfollow", {
       method: "POST",
       headers: {
+        "Accept": "application/json",
         "Content-Type": "application/json"
-      }
+      },
+      body: JSON.stringify(data)
     })
-      .then(function(response) {
-        return response.text();
-      })
-      .then(function(data) {
-        alert(`You have successfully unfollowed ${author}.`);
-      })
-      .catch(function(data) {
-        alert(
-          "This author could not be unfollowed at this time.\nPlease try again later."
-        );
-      });
+    .then(function(response) {
+      if (!response.ok){
+        throw Error(response.statusText)
+      }
+      return response
+    })
+    .then(function(response) {
+      alert(`You have successfully unfollowed ${author}.`);
+    })
+    .catch(function(error) {
+      alert(
+        "This author could not be unfollowed at this time.\nPlease try again later."
+      );
+    });
   }
 }
 
