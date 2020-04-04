@@ -34,6 +34,8 @@
 		{% for comment in comments %}
 			{% if postID == commentPost %}
 		    	counter = counter + 1;
+		   	{% endif %}
+		{% endfor %}
 		return counter
 
 
@@ -58,7 +60,7 @@
 				{{ messages }}
 			</div>
 			{% endif %}
-			
+
 			<div id="feed-items">
 				{% for post in results.feed %}
 	            <div class="feeditem">
