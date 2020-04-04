@@ -240,7 +240,7 @@ button:hover {
 /* comments */
 
 .commentSection{
-  margin: 1em 2em 1em 2em;
+  margin: 1em 3em 1em 2em;
 }
 
 /* lists number of comments in feed item */
@@ -309,7 +309,6 @@ button:hover {
   color: #9dc7ba;
   margin-top: 1em;
   margin-right: 0em;
-  position: absolute;
 }
 
 #submit-blue-button:hover {
