@@ -99,4 +99,5 @@ urlpatterns = [
     path('search', search, name='search'),
     path('account', account, name='account'),
     path('edit_account', edit_account, name='edit_account'),
+    path('unfollow', unfollow, name='unfollow'),
 ]
