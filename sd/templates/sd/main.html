@@ -29,14 +29,14 @@
 		{% endif %}
 	}
 
-	function commentCounter(postID,commentPost,comments) {
+	function commentCounter(postID,commentPost,comments,elementID) {
 		var counter = 0;
 		{% for comment in comments %}
 			{% if postID == commentPost %}
-		    	counter = counter + 1;
+		    	counter += 1;
 		   	{% endif %}
 		{% endfor %}
-		return counter
+		document.getElementByClassName(elementID).innerHTML =  counter.toString() + " Comments <br><br>";
 	}
 
 
@@ -85,15 +85,10 @@
 	                	<img class="feedimage" src="{{post.link_to_image}}" alt="Link to Image">
 	                </a>
 					{% endif %}
-	                <div id = "postBody">{{post.content | safe}} <br> <br> <br> </div>
-
-	                <script>
-	                	var counter = commentCounter(post.uuid,comment.post,comments);
-	                	document.getElementById("commentsifyesButton").innerHTML =  counter.toString() + " Comments <br><br>";
-	                </script>
+	                <div id = "postBody">{{post.content | safe}} <br> <br> </div>
 
                 	<a>
-                		<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> </span>
+                		<div class="commentNum{{post.uuid}}" id="commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')" onload="commentCounter({{post.uuid}},{{comment.post}},{{comments}},'commentNum{{post.uuid}}')"> </div>
           			</a>
 	          		
 	                <div id = "{{post.uuid}}" style = "display: none;">
