@@ -95,9 +95,10 @@ def load_github_feed(user):
                         exists = Post.objects.filter(source=com['sha'])
                         if not exists:
                             try:
-                                post = Post.objects.create(title = "Commit to "+r, source=user.host, description='Commit to'+com['sha'], contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='PRIVATE', unlisted=False, link_to_image=com['committer']['avatar_url'])
+                                post = Post.objects.create(title = "Commit to "+r, source=user.host, description=com['node_id'], contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='PRIVATE', unlisted=False, link_to_image=com['committer']['avatar_url'])
                                 print("CONSOLE: Created a Github post: "+com['commit']['message'])
-                                post.save()
+                                if not Post.objects.filter(description=com['node_id']):
+                                    post.save()
                             except Exception as e:
                                 print("CONSOLE: Error creating Github post", e)
                         else:
