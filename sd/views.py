@@ -495,11 +495,11 @@ def unfollow(request):
                 user = get_current_user(request)
                 target = Author.objects.get(uuid=data['target_author'])
 
-                follow = Follow.objects.filter(follower=user, following=target)
+                follow = Follow.objects.filter(follower=user.uuid, following=target.uuid)
                 if follow:
                     follow.delete()
 
-                fr = FriendRequest.object.filter(to_author=target, from_author=user)
+                fr = FriendRequest.objects.filter(Q(to_author=target.uuid) & Q(from_author=user.uuid))
                 if fr:
                     fr.delete()
 
