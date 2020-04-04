@@ -36,7 +36,7 @@ def explore(request):
                 request, posts, GetPostSerializer, "feed", query="feed")
             is_authenticated = authenticated(request)
             user = get_current_user(request) if is_authenticated else None
-            all_comments = Comment.objects.all().order_by('-published')
+            all_comments = Comment.objects.all().order_by('published')
             comments = []
             for c in all_comments:
                 comments.append({
@@ -133,7 +133,15 @@ def feed(request):
                         p.content = commonmark.commonmark(p.content)
                 results = paginated_result(
                     request, all_posts, GetPostSerializer, "feed", query="feed")
-                comments = Comment.objects.all()
+                all_comments = Comment.objects.all().order_by('published')
+                comments = []
+                for c in all_comments:
+                    comments.append({
+                        'post': str(c.post.uuid),
+                        'author': c.author,
+                        'comment': c.comment,
+                        'published': c.published
+                    })
                 return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comments':comments})
             else:
                 print("CONSOLE: Redirecting from Feed because no one is logged in")
