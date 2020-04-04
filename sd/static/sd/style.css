@@ -106,6 +106,88 @@ button:hover {
   cursor: pointer;
 }
 
+
+  /* general form styling */
+input {
+  text-align: left;
+  height: 1.5em;
+  width: 80%;
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f0;
+  padding: 0.2em;
+  margin: 0.4em;
+  outline-color: grey;
+  word-wrap: break-word;
+}
+
+
+input[type=submit]{
+  text-align: center;
+  width: auto;
+  height: 150%;
+  float: center;
+  width: 20%;
+  background: white;
+  color: #ed9a00;
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f0;
+  padding: 0.4em;
+  margin: 0.3em;
+}
+
+
+input[type=submit]:hover{
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+select {
+  margin-left: 0.5em;
+  padding: 0.4em;
+  border: 1.5px solid #f0f0f0;
+  border-radius: 10px;
+  background: white;
+  color: black;
+  height: 100%;
+  outline-color: grey;
+}
+
+#widebox{
+  width: 98%;
+}
+
+textarea {
+  width: 100%;
+  text-align: left;
+  height: 10em;
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f0;
+  padding: 0.2em;
+  margin: 0.4em;
+  width: 98%;
+  resize: vertical;
+  outline-color: grey;
+  word-wrap: break-word;
+}
+
+input[type=checkbox]{
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f0;
+  background: red;
+}
+
+
+
+/* text boxes 
+TODO: get boxes to line up*/
+#id_title, #id_description, #id_content, #id_source, #id_link_to_image, #id_categories, #id_visibleTo{
+}
+
+p label {
+}
+
+
+
 /*top navigation */
 
 .header {
@@ -747,81 +829,5 @@ width: 100%;
 }
 
 
-  /* general form styling */
-input {
-  text-align: left;
-  height: 1.5em;
-  width: 80%;
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  padding: 0.2em;
-  margin: 0.4em;
-  outline-color: grey;
-  word-wrap: break-word;
-}
 
-
-input[type=submit]{
-  text-align: center;
-  width: auto;
-  height: 150%;
-  float: center;
-  width: 20%;
-  background: white;
-  color: #ed9a00;
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  padding: 0.4em;
-  margin: 0.3em;
-}
-
-
-input[type=submit]:hover{
-    cursor: pointer;
-}
-
-select {
-  margin-left: 0.5em;
-  padding: 0.4em;
-  border: 1.5px solid #f0f0f0;
-  border-radius: 10px;
-  background: white;
-  color: black;
-  height: 100%;
-  outline-color: grey;
-}
-
-#widebox{
-  width: 98%;
-}
-
-textarea {
-  width: 100%;
-  text-align: left;
-  height: 10em;
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  padding: 0.2em;
-  margin: 0.4em;
-  width: 98%;
-  resize: vertical;
-  outline-color: grey;
-  word-wrap: break-word;
-}
-
-input[type=checkbox]{
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  background: red;
-}
-
-
-
-/* text boxes 
-TODO: get boxes to line up*/
-#id_title, #id_description, #id_content, #id_source, #id_link_to_image, #id_categories, #id_visibleTo{
-}
-
-p label {
-}
 
