@@ -36,6 +36,8 @@
         console.log(results);
         console.log(friends);
         console.log(follows);
+        console.log(request);
+        console.log(user)
         for (let f of friends) {
             console.log(f['name']);
         }
@@ -44,7 +46,7 @@
         var display = document.getElementById("friend-requests");
         display.innerHTML = "";
 
-        display.innerHTML += "You have " + results.length.toString() + " friend requests";
+        display.innerHTML += "<br>You have " + results.length.toString() + " friend requests";
         for (let a of results) {
             var btn_id = createButtonId(a);
             display.innerHTML += `<div>
@@ -59,7 +61,7 @@
         }
 
         var displayFriends = document.getElementById("friends");
-        displayFriends.innerHTML = "Friends";
+        displayFriends.innerHTML = "<br>Your Friends";
         for (let f of friends) {
             var fName = f['name'];
             displayFriends.innerHTML += `<div>
@@ -70,6 +72,23 @@
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
         </div>`;
+        }
+
+
+        var displayFollowers = document.getElementById("following");
+        displayFriends.innerHTML = "<br>Who You're Following";
+        for (let f of follows) {
+            if f['follower'] == user {
+                var fName = f['following'];
+                displayFriends.innerHTML += `<div>
+                <hr class="greyline">
+                <span class="searchauthor">${fName}</span>
+                <span class="orangedot"></span>
+                <span class="searchrelation"> Following </span>
+                <span class="bluedot"></span>
+                <span class="searchrelation"> Local </span>
+            </div>`;
+            } 
         }
 
     }
@@ -86,13 +105,11 @@
     </div>
 
     <div class="row" id="notifications">
-        <div class="navbar" id="navbar">
-        </div>
+        <div class="navbar" id="navbar"></div>
         <div style="margin-top: 7em;"></div>
-        <div class="search-results" id="friend-requests">
-        </div>
-        <div class="search-results" id="friends">
-        </div>
+        <div class="search-results" id="friend-requests"></div>
+        <div class="search-results" id="friends"></div>
+        <div class="search-results" id="following"></div>
     </div>
 </body>
 
