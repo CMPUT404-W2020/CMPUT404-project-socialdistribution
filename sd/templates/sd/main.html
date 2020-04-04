@@ -54,7 +54,6 @@
           		</a>
 
                 <div id = "{{post.uuid}}">
-					<div id = "testid"> post.uuid: {{post.uuid}} </div>
                 	{% for comment in comments %}
 						{% if post.uuid == comment.post %}
 							<div class = "commentitem">
