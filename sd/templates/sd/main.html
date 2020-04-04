@@ -29,17 +29,6 @@
 		{% endif %}
 	}
 
-	function commentCounter(postID,commentPost,comments,elementID) {
-		var counter = 0;
-		{% for comment in comments %}
-			{% if postID == commentPost %}
-		    	counter += 1;
-		   	{% endif %}
-		{% endfor %}
-		document.getElementByClassName(elementID).innerHTML =  counter.toString() + " Comments <br><br>";
-	}
-
-
 </script>
 
 <body onload="loadBar();">
@@ -87,8 +76,18 @@
 					{% endif %}
 	                <div id = "postBody">{{post.content | safe}} <br> <br> </div>
 
+	                <script>
+	                	var counter = 0;
+						{% for comment in comments %}
+							{% if postID == commentPost %}
+						    	counter += 1;
+						   	{% endif %}
+						{% endfor %}
+	                	document.getElementByClassName('commentNum{{post.uuid}}').innerHTML =  "Comments";
+	                </script>
+	                debugger
                 	<a>
-                		<div class="commentNum{{post.uuid}}" id="commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')" onload="commentCounter({{post.uuid}},{{comment.post}},{{comments}},'commentNum{{post.uuid}}')"> </div>
+                		<div class="commentNum{{post.uuid}}" id="commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> </div>
           			</a>
 	          		
 	                <div id = "{{post.uuid}}" style = "display: none;">
