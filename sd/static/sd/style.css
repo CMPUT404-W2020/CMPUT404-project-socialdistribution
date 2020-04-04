@@ -175,6 +175,7 @@ button:hover {
   margin-left: 25em; /* Same as the width of the sidebar */
   margin-right: 6em;
   margin-bottom: 6em;
+  padding: 2em 2em 2em 2em;
 }
 
 .feed#nosidebar {
@@ -188,7 +189,7 @@ button:hover {
   background-color: white;
   margin-bottom: 2em;
   top: 1; /* start after header */
-  padding: 2em 3em 2em 3em ;
+  padding: 2em 3em 2em 3em;
   border: 2.5px solid #f0f0f0;
   word-wrap: break-word;
 }
@@ -259,6 +260,7 @@ button:hover {
   word-wrap: break-word;
 }
 
+
 #newcomment {
   float: left;
   width: 98%
@@ -317,6 +319,8 @@ button:hover {
   margin-bottom: 1em;
   padding: 0.5em 1em 0.5em 1em;
 }
+
+
 
 /* side bar */
 

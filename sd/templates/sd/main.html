@@ -91,9 +91,9 @@
 						{% endfor %}
 
 						{% if counter == 1 %}
-	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comment <br>";
+	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comment <br><br>";
 	                	{% else %}
-	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments <br>";
+	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments <br><br>";
 	                	{% endif %}
 	                </script>
 	          		
@@ -123,7 +123,6 @@
 				{% endfor %}
 			</div>
 
-			</div>
 			<div class="navigate-feed">
 				{% if results.next %}
 				<a href="?page={{results.next}}">
