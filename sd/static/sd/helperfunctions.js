@@ -241,3 +241,4 @@ function updateInnerHTML(name, status) {
       .setAttribute("onclick", `"sendRequest('${author}')"`);
   }
 }
+

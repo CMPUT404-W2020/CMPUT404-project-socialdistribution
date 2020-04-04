@@ -29,64 +29,17 @@
 		{% endif %}
 	}
 
-	function feed() {
-		document.getElementById("feed-items").innerHTML = `{% for post in results.feed %}
-            <div class="feeditem">
-				<!-- if I am the author, make this div -->
-				{% if post.author == current_user.uuid %}
-				{% with 'dropdown-content-'|add:post.uuid as options_id %}
-				<div class="dropdown">
-					<button class="dropdown-button" onclick="showDropdown('{{ options_id }}')">Options...<span class="caret"></span></button>
-					<div id='{{ options_id }}' class="dropdown-content">
-						<a href="edit_post/{{post.uuid}}">Edit</a>
-						<a href="" onclick="confirmDelete('{{post.uuid}}')">Delete</a>
-					</div>
-				</div>
-				{% endwith %}
-				{% endif %}
-				<div id = "author"> {{post.author}} </div>
-                <div id = "date"> {{post.published}} <br> <br> </div>
-                <div id = "title">{{post.title}} <br> <br> </div>
-                {% if post.link_to_image %}
-                <a href="{{post.link_to_image}}">
-                	<img class="feedimage" src="{{post.link_to_image}}" alt="Link to Image">
-                </a>
-				{% endif %}
-                <div id = "postBody">{{post.content | safe}} <br> <br> <br> </div>
-                <a>
-                	<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> Comments <br><br> </span>
-          		</a>
-                <div id = "{{post.uuid}}" style = "display: none;">
-                	{% for comment in comments %}
-						{% if post.uuid == comment.post %}
-							<div class = "commentitem">
-								<div id = "commentauthor"> {{comment.author}} </div>
-								<div id = "commentdate"> {{comment.published}} <br> <br> </div>
-								<div id = "commentbody"> <p> {{ comment.comment }} <br> </p> </div>
-							</div>
-						{% endif %}
-					{% endfor %}
-					{% if authenticated %}
-						<form method="POST"> 
-							{% csrf_token %} 
-							<input name="user" id="userId" value={{current_user.uuid}} type="hidden">
-							<input name="post" id="postId" value={{post.uuid}} type="hidden">
-							<input name="comment" type="text" id = "addcommentfield" placeholder="Add a comment..."/>
-							<br>
-							<input type="submit" value="SUBMIT" id="submit-blue-button"/>
-						</form>
-						<br>
-					{% endif %}
-				</div>
-            </div>
-			{% endfor %}
-			</div>`
+	function commentCounter(postID,commentPost,comments):
+		var counter = 0;
+		{% for comment in comments %}
+			{% if postID == commentPost %}
+		    	counter = counter + 1;
+		return counter
 
-	}
 
 </script>
 
-<body onload="loadBar(); feed();">
+<body onload="loadBar();">
 
 	<div class="header" id="header">
 
@@ -99,15 +52,73 @@
 		</div>
 		{% endif %}
 
-
-
 		<div class="feed" {% if not authenticated %} id="nosidebar" {% endif %}>
 			{% if messages %}
 			<div class="feeditem">
 				{{ messages }}
 			</div>
 			{% endif %}
+			
 			<div id="feed-items">
+				{% for post in results.feed %}
+	            <div class="feeditem">
+					<!-- if I am the author, make this div -->
+					{% if post.author == current_user.uuid %}
+					{% with 'dropdown-content-'|add:post.uuid as options_id %}
+					<div class="dropdown">
+						<button class="dropdown-button" onclick="showDropdown('{{ options_id }}')">Options...<span class="caret"></span></button>
+						<div id='{{ options_id }}' class="dropdown-content">
+							<a href="edit_post/{{post.uuid}}">Edit</a>
+							<a href="" onclick="confirmDelete('{{post.uuid}}')">Delete</a>
+						</div>
+					</div>
+					{% endwith %}
+					{% endif %}
+					<div id = "author"> {{post.author}} </div>
+	                <div id = "date"> {{post.published}} <br> <br> </div>
+	                <div id = "title">{{post.title}} <br> <br> </div>
+	                {% if post.link_to_image %}
+	                <a href="{{post.link_to_image}}">
+	                	<img class="feedimage" src="{{post.link_to_image}}" alt="Link to Image">
+	                </a>
+					{% endif %}
+	                <div id = "postBody">{{post.content | safe}} <br> <br> <br> </div>
+
+	                <script>
+	                	var counter = commentCounter(post.uuid,comment.post,comments);
+	                	document.getElementById('commentsifyesButton').innerHTML =  counter + " Comments <br><br>";
+	                </script>
+
+                	<a>
+                		<span id = "commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')">  <br><br> </span>
+          			</a>
+	          		
+	                <div id = "{{post.uuid}}" style = "display: none;">
+	                	{% for comment in comments %}
+							{% if post.uuid == comment.post %}
+								<div class = "commentitem">
+									<div id = "commentauthor"> {{comment.author}} </div>
+									<div id = "commentdate"> {{comment.published}} <br> <br> </div>
+									<div id = "commentbody"> <p> {{ comment.comment }} <br> </p> </div>
+								</div>
+							{% endif %}
+						{% endfor %}
+						{% if authenticated %}
+							<form method="POST"> 
+								{% csrf_token %} 
+								<input name="user" id="userId" value={{current_user.uuid}} type="hidden">
+								<input name="post" id="postId" value={{post.uuid}} type="hidden">
+								<input name="comment" type="text" id = "addcommentfield" placeholder="Add a comment..."/>
+								<br>
+								<input type="submit" value="SUBMIT" id="submit-blue-button"/>
+							</form>
+							<br>
+						{% endif %}
+					</div>
+	            </div>
+				{% endfor %}
+			</div>
+
 			</div>
 			<div class="navigate-feed">
 				{% if results.next %}
