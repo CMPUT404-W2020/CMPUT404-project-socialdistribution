@@ -240,7 +240,7 @@ button:hover {
 /* comments */
 
 .commentSection{
-  margin: 1em 3em 1em 3em;
+  margin: 1em 1em 1em 1em;
 }
 
 /* lists number of comments in feed item */
@@ -795,7 +795,6 @@ input[type=submit]{
   border: 1.5px solid #f0f0f0;
   padding: 0.4em;
   margin: 0.3em;
-  margin-right: 3em;
 }
 
 
