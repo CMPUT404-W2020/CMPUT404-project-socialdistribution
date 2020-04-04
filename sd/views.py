@@ -492,8 +492,8 @@ def unfollow(request):
         if authenticated(request):
             try:
                 data = json.loads(request.body)
-                user = request.get_current_user(request)
-                target = Author.objects.get(username=data['target_author'])
+                user = get_current_user(request)
+                target = Author.objects.get(uuid=data['target_author'])
 
                 follow = Follow.objects.filter(follower=user, following=target)
                 if follow:
@@ -513,7 +513,7 @@ def unfollow(request):
             except Exception as e:
                 print("CONSOLE: something broke. Local variables:",locals())
                 print("CONSOLE: Exception: ",e)
-                return HttpResponse(e)
+                return HttpResponse(status_code=500)
         else:
             print("CONSOLE: not authenticated")
             return HttpResponse(status_code=401)
