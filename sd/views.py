@@ -220,7 +220,7 @@ def search(request):
         ret_friends.append(entry)
 
     context = {}
-    context['authors'] = [author['username'] for author in all_authors]
+    context['authors'] = [author.username for author in all_authors]
     context["current_user"] = user
     context["follows"] = ret_follows
     context["friends"] = ret_friends
