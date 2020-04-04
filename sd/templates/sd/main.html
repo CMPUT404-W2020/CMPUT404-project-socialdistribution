@@ -76,20 +76,21 @@
 					{% endif %}
 	                <div id = "postBody">{{post.content | safe}} <br> <br> </div>
 
-	                <script>
+                	<a>
+                		<div id="commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> 
+                			<span id="commentNum{{post.uuid}}"> </span>
+                		</div>
+          			</a>
+
+          			<script>
 	                	var counter = 0;
 						{% for comment in comments %}
 							{% if postID == commentPost %}
 						    	counter += 1;
 						   	{% endif %}
 						{% endfor %}
-	                	document.getElementById('commentNum{{post.uuid}}').innerHTML =  "Comments";
+	                	document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + "Comments";
 	                </script>
-                	<a>
-                		<div id="commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> 
-                			<span id="commentNum{{post.uuid}}"> </span>
-                		</div>
-          			</a>
 	          		
 	                <div id = "{{post.uuid}}" style = "display: none;">
 	                	{% for comment in comments %}
