@@ -85,11 +85,11 @@
           			<script>
 	                	var counter = 0;
 						{% for comment in comments %}
-							{% if postID == commentPost %}
+							{% if post.uuid == comment.post %}
 						    	counter += 1;
 						   	{% endif %}
 						{% endfor %}
-	                	document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + "Comments";
+	                	document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments";
 	                </script>
 	          		
 	                <div id = "{{post.uuid}}" style = "display: none;">
