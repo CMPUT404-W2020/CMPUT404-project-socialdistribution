@@ -240,7 +240,7 @@ button:hover {
 /* comments */
 
 .commentSection{
-  margin: 1em 1em 1em 1em;
+  margin: 1em 2em 1em 2em;
 }
 
 /* lists number of comments in feed item */
@@ -279,6 +279,8 @@ button:hover {
   border-radius: 10px;
   background-color: white;
   margin-bottom: 1em;
+  margin-right: 0em;
+  margin-left: 0em;
   top: 1; /* start after header */
   padding: 0.5em 1em 0.5em 1em ;
   border: 1.5px solid #f0f0f0;
@@ -300,12 +302,14 @@ button:hover {
   font-size: 0.8em;
 }
 
-#submit-blue-button {
+#submit-blue-button{
   font-size: 1em;
   width: auto;
   float: right;
   color: #9dc7ba;
   margin-top: 1em;
+  margin-right: 0em;
+  position: absolute;
 }
 
 #submit-blue-button:hover {
@@ -324,6 +328,8 @@ button:hover {
 #addcommentfield {
   height: 2em;
   margin-bottom: 1em;
+  margin-right: 0em;
+  margin-left: 0em;
   width: 100%;
   padding: 0.5em 1em 0.5em 1em;
 }
