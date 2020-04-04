@@ -100,6 +100,7 @@ Choose how you display yourself to others by editing the information on your **_
 
 Every post you create has several **_privacy_** options to choose from. If you set your post to **_public_**, then it will show on the explore page of all other users directly or indirectly connected to the Squawk server. Alternatively, you can restrict your post to the personal feeds of your **_friends_**, **_friends of friends_**, **_server only_**, or a spectific group of users with **_private_** posts. For added privacy, select **_unlisted_** and your post will only be visible to the aforementioned audience if you provide them with the direct link. If you change your mind later, you can easily edit your own posts and change their privacy setting.
 
+
 ## Admin Access
 
 You can access the admin page through https://cmput-404.herokuapp.com/admin and using the credentials:
