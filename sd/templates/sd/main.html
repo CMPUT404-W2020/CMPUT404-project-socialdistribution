@@ -82,19 +82,12 @@
                 		</div>
           			</a>
 
-          			<script>
-	                	var counter = 0;
-						{% for comment in comments %}
-							{% if post.uuid == comment.post %}
-						    	counter += 1;
-						   	{% endif %}
-						{% endfor %}
-	                	document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments";
-	                </script>
-	          		
+	          		<script>
+	          		var counter = 0;
 	                <div id = "{{post.uuid}}" style = "display: none;">
 	                	{% for comment in comments %}
 							{% if post.uuid == comment.post %}
+								counter += 1;
 								<div class = "commentitem">
 									<div id = "commentauthor"> {{comment.author}} </div>
 									<div id = "commentdate"> {{comment.published}} <br> <br> </div>
@@ -102,6 +95,14 @@
 								</div>
 							{% endif %}
 						{% endfor %}
+
+						{% if counter.toString()==="1" %}
+							document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comment <br>";
+						{% else %}
+							document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments <br>";
+						{% endif %}
+					</script>
+
 						{% if authenticated %}
 							<form method="POST"> 
 								{% csrf_token %} 

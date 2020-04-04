@@ -314,6 +314,7 @@ button:hover {
 
 #addcommentfield {
   height: 2em;
+  width: 100%;
   margin-bottom: 1em;
   padding: 0.5em 1em 0.5em 1em;
 }
