@@ -83,7 +83,7 @@
 						    	counter += 1;
 						   	{% endif %}
 						{% endfor %}
-	                	document.getElementsByClassName('commentNum{{post.uuid}}').innerHTML =  "Comments";
+	                	document.getElementsByClassName('commentNum{{post.uuid}}')[0].innerHTML =  "Comments";
 	                </script>
                 	<a>
                 		<div class="commentNum{{post.uuid}}" id="commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> </div>
