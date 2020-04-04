@@ -76,52 +76,56 @@
 					{% endif %}
 	                <div id = "postBody">{{post.content | safe}} <br> <br> </div>
 
-                	<a>
-                		<div id="commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> 
-                			<span id="commentNum{{post.uuid}}"> </span>
-                		</div>
-          			</a>
 
-          			<script>
-	                	var counter = 0;
-						{% for comment in comments %}
-							{% if post.uuid == comment.post %}
-						    	counter += 1;
-						   	{% endif %}
-						{% endfor %}
+	                <div class="commentSection"> 
+		                	<a>
+		                		<div id="commentsifyesButton" onclick ="displayCommentsCheck('{{post.uuid}}')"> 
+		                			<span id="commentNum{{post.uuid}}"> </span>
+		                		</div>
+		          			</a>
 
-						{% if counter == 1 %}
-	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comment <br><br>";
-	                	{% else %}
-	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments <br><br>";
-	                	{% endif %}
-	                </script>
-	          		
-	                <div id = "{{post.uuid}}" style = "display: none;">
-	                	{% for comment in comments %}
-							{% if post.uuid == comment.post %}
-								<div class = "commentitem">
-									<div id = "commentauthor"> {{comment.author}} </div>
-									<div id = "commentdate"> {{comment.published}} <br> </div>
-									<div id = "commentbody"> <p> {{ comment.comment }} <br> </p> </div>
-								</div>
-							{% endif %}
+		          			<script>
+			                	var counter = 0;
+								{% for comment in comments %}
+									{% if post.uuid == comment.post %}
+								    	counter += 1;
+								   	{% endif %}
+								{% endfor %}
+
+								{% if counter == 1 %}
+			                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comment <br><br>";
+			                	{% else %}
+			                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments <br><br>";
+			                	{% endif %}
+			                </script>
+			          		
+			                <div id = "{{post.uuid}}" style = "display: none;">
+			                	{% for comment in comments %}
+									{% if post.uuid == comment.post %}
+										<div class = "commentitem">
+											<div id = "commentauthor"> {{comment.author}} </div>
+											<div id = "commentdate"> {{comment.published}} <br> </div>
+											<div id = "commentbody"> <p> {{ comment.comment }} <br> </p> </div>
+										</div>
+									{% endif %}
+								{% endfor %}
+								{% if authenticated %}
+									<form method="POST"> 
+										{% csrf_token %} 
+										<input name="user" id="userId" value={{current_user.uuid}} type="hidden">
+										<input name="post" id="postId" value={{post.uuid}} type="hidden">
+										<input name="comment" type="text" id = "addcommentfield" placeholder="Add a comment..."/>
+										<br>
+										<input type="submit" value="SUBMIT" id="submit-blue-button"/>
+									</form>
+									<br>
+								{% endif %}
+							</div>
+			            </div>
 						{% endfor %}
-						{% if authenticated %}
-							<form method="POST"> 
-								{% csrf_token %} 
-								<input name="user" id="userId" value={{current_user.uuid}} type="hidden">
-								<input name="post" id="postId" value={{post.uuid}} type="hidden">
-								<input name="comment" type="text" id = "addcommentfield" placeholder="Add a comment..."/>
-								<br>
-								<input type="submit" value="SUBMIT" id="submit-blue-button"/>
-							</form>
-							<br>
-						{% endif %}
 					</div>
-	            </div>
-				{% endfor %}
-			</div>
+				</div>
+
 
 			<div class="navigate-feed">
 				{% if results.next %}

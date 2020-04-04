@@ -175,7 +175,6 @@ button:hover {
   margin-left: 25em; /* Same as the width of the sidebar */
   margin-right: 6em;
   margin-bottom: 6em;
-  padding: 2em 2em 2em 2em;
 }
 
 .feed#nosidebar {
@@ -240,6 +239,10 @@ button:hover {
 
 /* comments */
 
+.commentSection{
+  margin: 1em 3em 1em 3em;
+}
+
 /* lists number of comments in feed item */
 #commentsifyesButton {
   color: #ed9a00; 
@@ -251,7 +254,8 @@ button:hover {
   cursor: pointer;
 }
 
-/* show this section if comment option is clicked */
+
+/* show this section if comment option is clicked 
 #addcommentifyesButton {
   float: right;
   color: #9dc7ba; 
@@ -260,15 +264,16 @@ button:hover {
   word-wrap: break-word;
 }
 
-
 #newcomment {
   float: left;
   width: 98%
 }
 
+
 #showComments {
   margin-top: 2em;
 }
+*/
 
 .commentitem {
   border-radius: 10px;
@@ -277,6 +282,7 @@ button:hover {
   top: 1; /* start after header */
   padding: 0.5em 1em 0.5em 1em ;
   border: 1.5px solid #f0f0f0;
+  width: 100%;
  }
 
 #commentauthor {
@@ -299,24 +305,26 @@ button:hover {
   width: auto;
   float: right;
   color: #9dc7ba;
-  margin-bottom: 1em;
+  margin-top: 1em;
 }
 
 #submit-blue-button:hover {
-  color: #9dc7bab6;
+  background-color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
 }
 
+/*
 #addComment {
   background-color: white;
   margin-bottom: 1em;
   border: 1.4px solid white;
 }
-
+*/
 
 #addcommentfield {
   height: 2em;
   margin-bottom: 1em;
+  width: 100%;
   padding: 0.5em 1em 0.5em 1em;
 }
 
@@ -613,7 +621,6 @@ form>.row {
   border: none;
   cursor: pointer;
   border-radius: 8px;
-
 }
 
 .dropdown-button:hover, .dropdown-button:focus {
