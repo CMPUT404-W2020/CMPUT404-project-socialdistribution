@@ -24,7 +24,7 @@
     }
 
     function loadRequests() {
-        var friends = {{friends|safe}};
+        var friends = makeItAList("{{friends|safe}}");
         var results = makeItAList("{{requests}}");
         displayResults(results, friends);
     }
@@ -54,6 +54,9 @@
         displayFriends.innerHTML = "Friends";
 
         for (let f of friends) {
+            print("CONSOLE: f:", f)
+            print("CONSOLE: f name:", ${f['name']})
+            print("CONSOLE: f id:", ${f['uuid']})
             var fbtn_id = createButtonId(f);
             displayFriends.innerHTML += `<div>
             <hr class="greyline">
