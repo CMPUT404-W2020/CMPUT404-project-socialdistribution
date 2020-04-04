@@ -184,9 +184,9 @@ def search(request):
 
     # Get all authors
     all_authors = Author.objects.exclude(username=user)
-    context = paginated_result(
-        request, all_authors, AuthorSerializer, "authors", query="authors")
-    context['authors'] = [author['username'] for author in context['authors']]
+    # context = paginated_result(
+        # request, all_authors, AuthorSerializer, "authors", query="authors")
+    # context['authors'] = [author['username'] for author in context['authors']]
 
     # Get all follows
     my_follows = Follow.objects.filter(Q(follower=user))
@@ -219,6 +219,8 @@ def search(request):
             entry["name"] = f.friend.username
         ret_friends.append(entry)
 
+    context = {}
+    context['authors'] = [author['username'] for author in context['authors']]
     context["current_user"] = user
     context["follows"] = ret_follows
     context["friends"] = ret_friends
