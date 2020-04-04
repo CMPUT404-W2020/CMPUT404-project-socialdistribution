@@ -91,9 +91,9 @@
 						{% endfor %}
 
 						{% if counter == 1 %}
-	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comment";
+	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comment <br>";
 	                	{% else %}
-	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments";
+	                		document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments <br>";
 	                	{% endif %}
 	                </script>
 	          		
