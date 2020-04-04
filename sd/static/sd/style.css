@@ -12,6 +12,7 @@ body {
   font-size: 1em;
   background-color: white;
   font-family: "Merriweather Sans";
+  word-wrap: break-word;
 }
 
 /* orange, large */
@@ -19,6 +20,7 @@ h1 {
   font-weight: bold;
   font-size: 1.5em;
   color: #ed9a00;
+  word-wrap: break-word;
 }
 
 /* white, large */
@@ -26,6 +28,7 @@ h2 {
   font-size: 1.5em;
   color: white;
   font-weight: bold;
+  word-wrap: break-word;
 }
 
 /* blue,large */
@@ -33,23 +36,27 @@ h3 {
   font-weight: bold;
   font-size: 1.5em;
   color: #9dc7ba;
+  word-wrap: break-word;
 }
 
 /* black, large */
 h4 {
   font-weight: bold;
   font-size: 1.5em;
+  word-wrap: break-word;
 }
 
 /*black, smaller */
 h5 {
   font-weight: bold;
   font-size: 1em;
+  word-wrap: break-word;
 }
 
 p {
   font-style: normal;
   font-size: 1em;
+  word-wrap: break-word;
 }
 
 ul {
@@ -60,8 +67,14 @@ ul {
 /* links */
  a {
   text-decoration: none;
-
 }
+
+#signuplink{
+  text-decoration: underline;
+  color: black;
+}
+
+
 
 hr {
   display: block;
@@ -177,6 +190,7 @@ button:hover {
   top: 1; /* start after header */
   padding: 2em 3em 2em 3em ;
   border: 2.5px solid #f0f0f0;
+  word-wrap: break-word;
 }
 
 
@@ -242,6 +256,7 @@ button:hover {
   color: #9dc7ba; 
   font-style: italic;
   font-size: 0.9em;
+  word-wrap: break-word;
 }
 
 #newcomment {
@@ -296,14 +311,12 @@ button:hover {
   border: 1.4px solid white;
 }
 
+
 #addcommentfield {
   height: 2em;
+  margin-bottom: 1em;
+  padding: 0.5em 1em 0.5em 1em;
 }
-
-/* input[id="id_password"] {
-  font-family: 'Comic Sans MS';
-} */
-
 
 /* side bar */
 
@@ -405,12 +418,13 @@ button:hover {
   margin-top: 10em;
   margin-right: auto;
   margin-left: auto;
-  width: 20em;
+  width: 21em;
   text-align: center;
   background-color: #f0f0f0;
   border-radius: 10px;
   border: 2.5px solid #c8e6dd9d;
   padding: 2em 3.5em 2em 3.5em;
+  word-wrap: break-word;
 }
 
 .edit-form {
@@ -423,6 +437,7 @@ button:hover {
   bottom: 1;
   padding: 2em 3em 3em 3em ;
   border: 2.5px solid #f0f0f0;
+  word-wrap: break-word;
 }
 
 .signup-form {
@@ -465,6 +480,7 @@ form>.row {
   width: auto;
   font-size: medium;
   margin-top: 1em;
+  margin-bottom: 2em;
 }
 
 #login-button:hover {
@@ -485,6 +501,7 @@ form>.row {
   top: 1; /* start after header */
   padding: 0.8em 3em 2em 3em;
   border: 2.5px solid #f0f0f0;
+  word-wrap: break-word;
   clear: both;
 }
 
@@ -518,6 +535,7 @@ form>.row {
   top: 1; /* start after header */
   padding: 2em 3em 2em 3em ;
   border: 2.5px solid #f0f0f0;
+  word-wrap: break-word;
 }
 
 #orange-button {
@@ -535,6 +553,7 @@ form>.row {
 
 #orange-button:hover {
   cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 #blue-button {
@@ -552,6 +571,7 @@ form>.row {
 
 #blue-button:hover {
   cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.6);
 }
 
 #orangebackground-button {
@@ -734,6 +754,7 @@ width: 100%;
   padding: 0.8em 3em 2em 3em;
   border: 2.5px solid #f0f0f0;
   clear: both;
+  word-wrap: break-word;
 }
 
 
@@ -747,6 +768,7 @@ input {
   padding: 0.2em;
   margin: 0.4em;
   outline-color: grey;
+  word-wrap: break-word;
 }
 
 
@@ -762,6 +784,7 @@ input[type=submit]{
   border: 1.5px solid #f0f0f0;
   padding: 0.4em;
   margin: 0.3em;
+  margin-right: 3em;
 }
 
 
@@ -795,6 +818,7 @@ textarea {
   width: 98%;
   resize: vertical;
   outline-color: grey;
+  word-wrap: break-word;
 }
 
 input[type=checkbox]{

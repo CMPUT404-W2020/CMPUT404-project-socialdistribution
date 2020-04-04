@@ -184,9 +184,6 @@ def search(request):
 
     # Get all authors
     all_authors = Author.objects.exclude(username=user)
-    context = paginated_result(
-        request, all_authors, AuthorSerializer, "authors", query="authors")
-    context['authors'] = [author['username'] for author in context['authors']]
 
     # Get all follows
     my_follows = Follow.objects.filter(Q(follower=user))
@@ -219,6 +216,8 @@ def search(request):
             entry["name"] = f.friend.username
         ret_friends.append(entry)
 
+    context = {}
+    context['authors'] = [author.username for author in all_authors]
     context["current_user"] = user
     context["follows"] = ret_follows
     context["friends"] = ret_friends
@@ -236,7 +235,20 @@ def notifications(request):
                 print(a.from_author)
                 all_requests.append(a.from_author)
 
-            return render(request, 'sd/notifications.html', {"requests": all_requests})
+            # Get all friends
+            all_friends = Friend.objects.filter(Q(author=user)) | Friend.objects.filter(Q(friend=user))
+            ret_friends = []
+            for f in all_friends:
+                entry = {}
+                if f.friend == user:
+                    entry["uuid"] = f.author.uuid
+                    entry["name"] = f.author.username
+                else:
+                    entry["uuid"] = f.friend.uuid
+                    entry["name"] = f.friend.username
+                ret_friends.append(entry)
+
+            return render(request, 'sd/notifications.html', {"requests": all_requests, "friends": ret_friends})
         else:
             print("CONSOLE: Redirecting from Notifications because no one is logged in")
             return redirect('login')
@@ -473,6 +485,43 @@ def friendrequest(request):
     else:
         return HttpResponse(status_code=405)
 
+@csrf_exempt
+def unfollow(request):
+    if request.method=="POST":
+        if authenticated(request):
+            try:
+                data = json.loads(request.body)
+                user = get_current_user(request)
+                target = Author.objects.get(uuid=data['target_author'])
+
+                follow = Follow.objects.filter(follower=user.uuid, following=target.uuid)
+                if follow:
+                    follow.delete()
+
+                fr = FriendRequest.objects.filter(Q(to_author=target.uuid) & Q(from_author=user.uuid))
+                if fr:
+                    fr.delete()
+
+                friends = Friend.objects.filter((Q(author=user.uuid) & Q(friend=target.uuid)) | Q(author=target.uuid) & Q(friend=user.uuid))
+                if friends:
+                    friends.delete()
+                    fr = FriendRequest.objects.create(to_author=user, from_author=target)
+                    fr.save()
+
+                return HttpResponse()
+            except Exception as e:
+                print("CONSOLE: something broke. Local variables:",locals())
+                print("CONSOLE: Exception: ",e)
+                return HttpResponse(status_code=500)
+        else:
+            print("CONSOLE: not authenticated")
+            return HttpResponse(status_code=401)
+    else:
+        print("CONSOLE: bad method")
+        return HttpResponse(status_code=405)
+
+
+
 
 def new_post(request):
     if valid_method(request):
@@ -529,7 +578,7 @@ def get_image(request, url):
         with open(path, "rb") as f:
             return HttpResponse(f.read(), content_type="image/jpeg")
     except:
-        return HttpResponse(open('media/404.jpg', 'rb').read(), content_type="image/jpeg")
+        return HttpResponse(open('static/sd/404.jpg', 'rb').read(), content_type="image/jpeg")
 
 
 def edit_post(request, post_id):
