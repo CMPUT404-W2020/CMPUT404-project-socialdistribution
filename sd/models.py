@@ -51,7 +51,7 @@ class Post(models.Model):
                          ("PRIVATE",    "Private"),
                          ("SERVERONLY", "Server Only")]
     visibility = models.CharField(max_length=30, choices=visibilityChoices)
-    visibleTo = models.CharField(max_length=100, blank=True)
+    visibleTo = models.CharField(max_length=100000, blank=True)
     unlistedChoices = [(False, "LISTED"), (True, "UNLISTED")]
     unlisted = models.BooleanField(max_length=30, choices=unlistedChoices)
 

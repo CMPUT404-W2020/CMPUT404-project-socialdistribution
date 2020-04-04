@@ -1,6 +1,7 @@
 import os
 import json
 import uuid
+import base64
 from .models import *
 from .serializers import *
 from .forms import *
@@ -520,9 +521,6 @@ def unfollow(request):
         print("CONSOLE: bad method")
         return HttpResponse(status_code=405)
 
-
-
-
 def new_post(request):
     if valid_method(request):
         print_state(request)
@@ -546,7 +544,8 @@ def new_post(request):
                 form = NewPostForm(info, request.FILES)
                 if form.is_valid():
                     post = form.save()
-                    post.link_to_image = 'media/'+post.image.name
+                    with open(myfile, "rb") as imageFile:
+                        post.link_to_image = base64.b64encode(imageFile.read())
                     post.save()
                     print('CONSOLE: Post successful! Redirecting to your feed.')
                     return redirect('my_feed')
