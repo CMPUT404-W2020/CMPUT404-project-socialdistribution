@@ -490,23 +490,33 @@ def friendrequest(request):
 def unfollow(request):
     if request.method=="POST":
         if authenticated(request):
-            user = request.get_current_user(request)
-            target = Author.objects.get(username=data['target_author'])
+            try:
+                user = request.get_current_user(request)
+                target = Author.objects.get(username=data['target_author'])
 
-            follow = Follow.objects.filter(follower=user, following=target)
-            if follow:
-                follow.delete()
+                follow = Follow.objects.filter(follower=user, following=target)
+                if follow:
+                    follow.delete()
 
-            friends = Friend.objects.filter((Q(author=user.uuid) & Q(friend=target.uuid)) | Q(author=target.uuid) & Q(friend=user.uuid))
-            if friends:
-                friends.delete()
-                fr = FriendRequest.objects.create(to_author=user, from_author=target)
-                fr.save()
-            return HttpResponse(content="You no longer follow "+target.username)
+                fr = FriendRequest.object.filter(to_author=target, from_author=user)
+                if fr:
+                    fr.delete()
 
+                friends = Friend.objects.filter((Q(author=user.uuid) & Q(friend=target.uuid)) | Q(author=target.uuid) & Q(friend=user.uuid))
+                if friends:
+                    friends.delete()
+                    fr = FriendRequest.objects.create(to_author=user, from_author=target)
+                    fr.save()
+
+                return HttpResponse()
+            except Exception as e:
+                print("CONSOLE: something broke. Local variables:"+locals())
+                return HttpResponse(e)
         else:
+            print("CONSOLE: not authenticated")
             return HttpResponse(status_code=401)
     else:
+        print("CONSOLE: bad method")
         return HttpResponse(status_code=405)
 
 
