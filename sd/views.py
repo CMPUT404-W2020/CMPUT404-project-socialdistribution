@@ -23,10 +23,10 @@ def explore(request):
             print_state(request)
             if user:
                 posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(
-                    unlisted=False)).exclude(author_id=user.uuid)
+                    unlisted=False)).exclude(author_id=user.uuid).order_by('-published')
             else:
                 posts = Post.objects.filter(
-                    Q(visibility='PUBLIC') & Q(unlisted=False))
+                    Q(visibility='PUBLIC') & Q(unlisted=False)).order_by('-published')
 
             for p in posts:
                 if p.contentType == 'text/markdown':
@@ -36,7 +36,7 @@ def explore(request):
                 request, posts, GetPostSerializer, "feed", query="feed")
             is_authenticated = authenticated(request)
             user = get_current_user(request) if is_authenticated else None
-            all_comments = Comment.objects.all()
+            all_comments = Comment.objects.all().order_by('-published')
             comments = []
             for c in all_comments:
                 comments.append({
@@ -126,7 +126,7 @@ def feed(request):
                         if posts:
                             all_posts = all_posts.union(posts)
 
-                all_posts = all_posts.distinct()
+                all_posts = all_posts.distinct().order_by('-published')
                 for p in all_posts:
                     if p.contentType == 'text/markdown':
                         # make it html
