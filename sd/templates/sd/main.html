@@ -96,7 +96,7 @@
 							{% endif %}
 						{% endfor %}
 
-						{% if counter.toString()==="1" %}
+						{% if counter == 1 %}
 							document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comment <br>";
 						{% else %}
 							document.getElementById('commentNum{{post.uuid}}').innerHTML =  counter.toString() + " Comments <br>";
