@@ -825,6 +825,16 @@ width: 100%;
   word-wrap: break-word;
 }
 
+/* https://css-tricks.com/snippets/css/css-triangle/ */
+.arrow-left {
+  width: 0; 
+  height: 0; 
+  border-top: 0.3em solid transparent;
+  border-bottom: 0.3em solid transparent; 
+  
+  border-right:0.3em solid #ed9a00; 
+  margin: 0.1em 0.2em 0.1em 0.2em;
+}
 
 
 
