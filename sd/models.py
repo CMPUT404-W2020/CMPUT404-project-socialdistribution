@@ -57,7 +57,7 @@ class Post(models.Model):
 
     # TODO: update url with the post id and correct path based on api
     image = models.ImageField(blank=True)
-    link_to_image = models.CharField(max_length=100, blank=True)
+    link_to_image = models.CharField(max_length=100000, blank=True)
     host = models.ForeignKey(Node,
                              on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
 

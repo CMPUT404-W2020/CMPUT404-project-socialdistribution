@@ -574,9 +574,10 @@ def get_image(request, pk):
         try:
             post = Post.object.get(uuid=pk)
             if post.image:
-                outfile = open('return_image', 'wb')
+                img_format = post.image.split('.')[-1]
+                outfile = open(post.link_to_image, 'wb')
                 outfile.write(post.link_to_image.decode('base64'))
-                return 'data:image/png;base64, %s' % (encoded_string)
+                return 'data:image/%s;base64, %s' % (img_format, encoded_string)
             else:
                 return HttpResponse(status_code=204)
         except:
