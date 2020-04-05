@@ -575,9 +575,9 @@ def get_image(request, pk):
         post = Post.objects.get(uuid=pk)
         if post.image:
             img_format = post.image.name.split('.')[-1]
-            outfile = open(post.link_to_image, 'wb')
-            outfile.write(post.link_to_image.decode('base64'))
-            return 'data:image/%s;base64, %s' % (img_format, encoded_string)
+            outfile = open('temp.'+img_format, 'wb')
+            outfile.write(base64.b64decode(post.link_to_image))
+            return 'data:image/%s;base64, %s' % (img_format, outfile)
         else:
             
             return HttpResponse(status_code=204)
