@@ -184,6 +184,8 @@ function removeFriend(author) {
           "This friend could not be removed at this time.\nPlease try again later."
         );
       });
+    location.reload();
+
   }
 }
 
@@ -217,6 +219,8 @@ function unfollow(author) {
         "This author could not be unfollowed at this time.\nPlease try again later."
       );
     });
+    location.reload();
+
   }
 }
 

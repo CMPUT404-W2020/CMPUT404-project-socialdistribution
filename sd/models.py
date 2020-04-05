@@ -22,6 +22,7 @@ class Author(AbstractUser):
     displayName = AbstractUser.username
     github = models.CharField(max_length=100, blank=True)
     bio = models.CharField(max_length=500, blank=True)
+    verified = models.BooleanField(default=False)
 
 
 class Post(models.Model):
@@ -51,13 +52,13 @@ class Post(models.Model):
                          ("PRIVATE",    "Private"),
                          ("SERVERONLY", "Server Only")]
     visibility = models.CharField(max_length=30, choices=visibilityChoices)
-    visibleTo = models.CharField(max_length=100, blank=True)
+    visibleTo = models.CharField(max_length=100000, blank=True)
     unlistedChoices = [(False, "LISTED"), (True, "UNLISTED")]
     unlisted = models.BooleanField(max_length=30, choices=unlistedChoices)
 
     # TODO: update url with the post id and correct path based on api
     image = models.ImageField(blank=True)
-    link_to_image = models.CharField(max_length=100, blank=True)
+    link_to_image = models.CharField(max_length=100000, blank=True)
     host = models.ForeignKey(Node,
                              on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
 

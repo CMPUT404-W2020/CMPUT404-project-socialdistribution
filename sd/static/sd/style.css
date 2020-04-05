@@ -496,6 +496,20 @@ p label {
   word-wrap: break-word;
 }
 
+.http-response-code {
+  margin-top: 7em;
+  margin-right: auto;
+  margin-left: auto;
+  margin-bottom: 7em;
+  width: 40em;
+  text-align: center;
+  background-color: #f0f0f0;
+  border-radius: 10px;
+  border: 2.5px solid #c8e6dd9d;
+  padding: 2em 3.5em 2em 3.5em;
+  word-wrap: break-word;
+}
+
 .edit-form {
   margin-top: 7em;
   margin-left: 25em; /* Same as the width of the sidebar */
@@ -507,6 +521,11 @@ p label {
   padding: 2em 3em 3em 3em ;
   border: 2.5px solid #f0f0f0;
   word-wrap: break-word;
+}
+
+.http-code {
+  margin: auto; 
+  width: 50%;
 }
 
 .signup-form {

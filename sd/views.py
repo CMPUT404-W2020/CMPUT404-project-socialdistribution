@@ -1,6 +1,7 @@
 import os
 import json
 import uuid
+import base64
 from .models import *
 from .serializers import *
 from .forms import *
@@ -606,22 +607,14 @@ def unfollow(request):
                 if friends:
                     friends.delete()
                     fr = FriendRequest.objects.create(to_author=user, from_author=target)
-                    fr.save()
 
                 return HttpResponse()
             except Exception as e:
-                print("CONSOLE: something broke. Local variables:",locals())
-                print("CONSOLE: Exception: ",e)
                 return HttpResponse(status_code=500)
         else:
-            print("CONSOLE: not authenticated")
             return HttpResponse(status_code=401)
     else:
-        print("CONSOLE: bad method")
         return HttpResponse(status_code=405)
-
-
-
 
 def new_post(request):
     if valid_method(request):
@@ -648,10 +641,15 @@ def new_post(request):
                     post = form.save()
                     post.link_to_image = 'media/'+post.image.name
                     post.save()
-                    print('CONSOLE: Post successful! Redirecting to your feed.')
+                    with open(post.link_to_image, "rb") as image:
+                        temp = base64.b64encode(image.read())    
+                    temp = temp.decode('utf-8')    
+                    post.link_to_image = temp
+                    post.save()
+                    print('CONSOLE: Post successful! Redirecting to your feed.\nLocals:',locals())
                     return redirect('my_feed')
                 else:
-                    print('CONSOLE: Post failed, please try again.')
+                    print('CONSOLE: Post failed, please try again.\nLocal variables',locals())
                     return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
             else:
                 info = dict(request._post)
@@ -672,13 +670,42 @@ def new_post(request):
         return HttpResponse(status_code=405)
 
 
-def get_image(request, url):
-    path = 'media/'+url
-    try:
-        with open(path, "rb") as f:
-            return HttpResponse(f.read(), content_type="image/jpeg")
-    except:
-        return HttpResponse(open('static/sd/404.jpg', 'rb').read(), content_type="image/jpeg")
+def get_image(request, pk):
+    if request.method == "GET":
+        try:
+            post = Post.objects.get(uuid=pk)
+        except:
+            return render(request, 'sd/404.html') #Can't find user, Not Found
+
+        if post.image and post.link_to_image:
+            if post.unlisted==True:
+                return render(request, 'sd/403.html') #Post unlisted, Forbidden
+            if post.visibility=="PUBLIC":
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format) #200
+            try:
+                user = get_current_user(request)
+                target = Author.objects.get(uuid=post.author)
+            except:
+                return render(request, 'sd/405.html')
+            friends = Author.objects.filter(Q(author=user) & Q(friend=target)).union(Author.objects.filter(Q(author=target) & Q(friend=user)))
+            if friends and post.visibility=="FRIENDS":
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format) #200
+            else:
+                return render(request, 'sd/404.html') #TODO: keep adding authentication rules
+        else:
+            return render(request, 'sd/404.html') #Can't find no image/link to image        
+    else:
+        return HttpResponse(status_code=405) # Bad Method
 
 
 def edit_post(request, post_id):
