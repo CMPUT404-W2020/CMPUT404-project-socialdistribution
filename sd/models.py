@@ -22,6 +22,7 @@ class Author(AbstractUser):
     displayName = AbstractUser.username
     github = models.CharField(max_length=100, blank=True)
     bio = models.CharField(max_length=500, blank=True)
+    verified = models.BooleanField(default=False)
 
 
 class Post(models.Model):
