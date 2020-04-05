@@ -45,7 +45,17 @@ def explore(request):
                     'comment': c.comment,
                     'published': c.published
                 })
-            return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results, 'comments':comments})
+
+            # Get all authors
+            ret_authors = []
+            all_authors = Author.objects.all()
+            for a in all_authors:
+                entry = {}
+                entry['name'] = a.username
+                entry['uuid'] = a.uuid
+                ret_authors.append(entry)
+
+            return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results, 'comments':comments,'all_authors':ret_authors})
         elif request.method=="POST":
             data = request.POST
             author = Author.objects.get(uuid=data['user'])

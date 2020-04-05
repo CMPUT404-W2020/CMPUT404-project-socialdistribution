@@ -65,9 +65,6 @@
 							{% endwith %}
 						{% endif %}
 
-						<script>
-							console.log({{all_authors}})
-						</script>
 						<!-- get the username of post author instead of uuid -->
 						{% for author in all_authors %}
 							<script>
@@ -78,7 +75,6 @@
 								<div id = "author"> {{author.name}} </div>
 							{% endif %}
 						{% endfor %}
-						<div id = "author"> UUID: {{post.author}} </div>
 		                <div id = "date"> {{post.published}} <br> <br> </div>
 		                <div id = "title">{{post.title}} <br> <br> </div>
 		                {% if post.link_to_image %}
