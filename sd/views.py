@@ -235,7 +235,7 @@ def notifications(request):
             all_requests = []
             for a in fr_requests:
                 entry = {}
-                entry["name"] = a.from_author
+                entry["name"] = a.from_author.username
                 if a.from_author.host == user.host:
                     entry["host"] = 'Local'
                 else:
