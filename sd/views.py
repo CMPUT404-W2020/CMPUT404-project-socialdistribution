@@ -575,9 +575,7 @@ def get_image(request, pk):
                 outfile.write(post.link_to_image.decode('base64'))
                 return 'data:image/png;base64, %s' % (encoded_string)
             else:
-
-            with open(post., "rb") as f:
-                return HttpResponse(f.read(), content_type="image/jpeg")
+                return HttpResponse(status_code=204)
         except:
             return render(request, 'sd/404.html')
     else:
