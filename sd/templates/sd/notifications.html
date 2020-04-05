@@ -57,9 +57,9 @@
         }
 
         if (followingNum === '1'){
-            var followingString = "  You are following 1 user";
+            var followingString = "  You're following 1 user";
         } else {
-            var followingString = '  You are following ' + followingNum + ' users';
+            var followingString = "  You're following " + followingNum + ' users';
         }
 
         
@@ -119,7 +119,7 @@
             var btn_id = createButtonId(fName);
             friendsContent += `<div>
             <hr class="greyline">
-            <span class="searchauthor">${fName} ${fId}</span>
+            <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
@@ -143,7 +143,7 @@
             var btn_id = createButtonId(fName);
             followingContent += `<div>
             <hr class="greyline">
-            <span class="searchauthor">${fName} ${fId}</span>
+            <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Following </span>
             <span class="bluedot"></span>
