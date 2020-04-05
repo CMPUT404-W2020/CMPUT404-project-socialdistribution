@@ -39,10 +39,6 @@
             console.log(f['name']);
         }
 
-        console.log({{host1|safe}});
-        console.log({{host2|safe}});
-
-
         var notificationNum = results.length.toString();
         var friendNum = friends.length.toString();
         var followingNum = follows.length.toString();
@@ -118,6 +114,7 @@
                 style = 'display: none'> </span>` + friendString + '<span id="friend-block" style = "display: none;">';
         for (let f of friends) {
             var fName = f['name'];
+            var fHost = f['host'];
             var fId = f['uuid'];
             var btn_id = createButtonId(fName);
             friendsContent += `<div>
@@ -126,7 +123,7 @@
             <span class="orangedot"></span>
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
-            <span class="searchrelation"> Local </span>
+            <span class="searchrelation"> ${fHost} </span>
             <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')">-</button>
             </div>`;
         }
