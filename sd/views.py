@@ -507,11 +507,10 @@ def unfollow(request):
                 if friends:
                     friends.delete()
                     fr = FriendRequest.objects.create(to_author=user, from_author=target)
-                    fr.save()
 
                 return HttpResponse()
             except Exception as e:
-                print("CONSOLE: something broke. Local variables:",locals())
+                print("CONSOLE: something broke. Local variables:",locals(), "data:", data)
                 print("CONSOLE: Exception: ",e)
                 return HttpResponse(status_code=500)
         else:

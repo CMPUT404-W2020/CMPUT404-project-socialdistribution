@@ -138,7 +138,7 @@ function sendRequest(author) {
     });
 }
 
-function removeFriend(uuid, author) {
+function removeFriend(author) {
   var yes = confirm(
     "Would you like to remove this friend?\nThis author can still follow your posts even if you remove them as a friend."
   );
@@ -171,6 +171,8 @@ function removeFriend(uuid, author) {
           "This friend could not be removed at this time.\nPlease try again later."
         );
       });
+    location.reload();
+
   }
 }
 
@@ -203,6 +205,8 @@ function unfollow(author) {
         "This author could not be unfollowed at this time.\nPlease try again later."
       );
     });
+    location.reload();
+
   }
 }
 
