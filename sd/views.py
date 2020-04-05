@@ -574,19 +574,38 @@ def get_image(request, pk):
     if request.method == "GET":
         try:
             post = Post.objects.get(uuid=pk)
-            if post.image:
+        except:
+            return render(request, 'sd/404.html') #Can't find user, Not Found
+
+        if post.image and post.link_to_image:
+            if post.unlisted==False:
+                return render(request, 'sd/403.html') #Post unlisted, Forbidden
+            if post.visibility=="PUBLIC":
                 img_format = post.image.name.split('.')[-1]
                 outfile = open('temp.'+img_format, 'wb')
                 outfile.write(base64.b64decode(post.link_to_image))
                 outfile.close()
                 with open(outfile.name, 'rb') as out:
-                    return HttpResponse(out, content_type='image/'+img_format)
+                    return HttpResponse(out, content_type='image/'+img_format) #200
+            try:
+                user = get_current_user(request)
+                target = Author.objects.get(uuid=post.author)
+            except:
+                return render(request, 'sd/405.html')
+            friends = Author.objects.filter(Q(author=user) & Q(friend=target)).union(Author.objects.filter(Q(author=target) & Q(friend=user)))
+            if friends and post.visibility=="FRIENDS":
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format) #200
             else:
-                return HttpResponse(status_code=204)
-        except:
-            return render(request, 'sd/404.html')
+                return render(request, 'sd/404.html') #TODO: keep adding authentication rules
+        else:
+            return render(request, 'sd/404.html') #Can't find no image/link to image        
     else:
-        return HttpResponse(status_code=405)
+        return HttpResponse(status_code=405) # Bad Method
 
 
 def edit_post(request, post_id):
