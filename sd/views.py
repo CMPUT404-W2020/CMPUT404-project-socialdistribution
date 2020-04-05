@@ -269,11 +269,11 @@ def notifications(request):
                 if f.friend == user:
                     entry["uuid"] = f.author.uuid
                     entry["name"] = f.author.username
-                    #entry["host"] = f.author.host
+                    entry["host"] = f.author.host
                 else:
                     entry["uuid"] = f.friend.uuid
                     entry["name"] = f.friend.username
-                    #entry["host"] = f.friend.host
+                    entry["host"] = f.friend.host
                 ret_friends.append(entry)
             
             context = {}
