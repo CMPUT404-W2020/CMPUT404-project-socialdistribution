@@ -102,8 +102,17 @@
         var friendsContent = "";
         friendsContent += `
             <br> 
-            <span class='arrow-right' id='friend-right-arrow' onclick='displayNotifications("friend-block","friend-right-arrow","friend-down-arrow")' style = 'display: inline-block'> </span>
-            <span class='arrow-down' id='friend-down-arrow' onclick='displayNotifications("friend-block","friend-down-arrow","friend-right-arrow")' style = 'display: none'> </span>` + friendString + '<span id="friend-block" style = "display: none;">';
+            <span 
+                class='arrow-right' 
+                id='friend-right-arrow' 
+                onclick='displayNotifications("friend-block","friend-right-arrow","friend-down-arrow")' 
+                style = 'display: inline-block'> 
+            </span>
+            <span 
+                class='arrow-down' 
+                id='friend-down-arrow' 
+                onclick='displayNotifications("friend-block","friend-down-arrow","friend-right-arrow")' 
+                style = 'display: none'> </span>` + friendString + '<span id="friend-block" style = "display: none;">';
         for (let f of friends) {
             var fName = f['name'];
             var fId = f['following_uuid'];
@@ -115,7 +124,7 @@
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend(${fId}')">-</button>
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')">-</button>
             </div>`;
         }
         friendsContent += '</span>';
@@ -146,7 +155,7 @@
         followingContent += '</span>';
         displayFollowers.innerHTML = followingContent;
     }
-    
+
 
     function loadTheThings() {
         loadBar();
