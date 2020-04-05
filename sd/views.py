@@ -578,7 +578,8 @@ def get_image(request, pk):
             outfile = open('temp.'+img_format, 'wb')
             outfile.write(base64.b64decode(post.link_to_image))
             outfile.close()
-            return HttpResponse(outfile, content_type='image/'+img_format)
+            with open(outfile.name, 'rb') as out:
+                return HttpResponse(out.read(), content_type='image/'+img_format)
         else:
             
             return HttpResponse(status_code=204)
