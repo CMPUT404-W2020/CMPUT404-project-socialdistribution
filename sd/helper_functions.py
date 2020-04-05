@@ -24,7 +24,7 @@ def get_current_user(request):
 
 
 def paginated_result(request, objects, serializer, keyword, **result):
-    page_num = int(request.GET.get('page', 1))
+    page_num = int(request.GET.get('page', 0))
     size = int(request.GET.get('size', 10))
     first_result = size*page_num
     count = objects.count()
