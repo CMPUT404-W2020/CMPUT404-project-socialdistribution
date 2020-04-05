@@ -252,13 +252,21 @@ def notifications(request):
             # The follow object doesn't return names, it returns more objects
             # So I need to put it in a form that JS will understand
             # only returns people you follow if you are not friends with them (they don't follow you back)
+            host_list1 = []
+            host_list2 = []
             ret_follows = []
             for f in my_follows:
                 if f.following.uuid not in follows_me_list:
                     entry = {}
                     entry["following"] = f.following.username
                     entry["following_uuid"] = f.following.uuid
+                    if f.following.host == user.host:
+                        entry["host"] == 'local'
+                    else:
+                        entry["host"] == 'remote'
                     ret_follows.append(entry)
+                    host_list2.append(f.following.uuid)
+                    host_list1.append(follows_me_list)
 
             # Get all friends
             all_friends = Friend.objects.filter(
@@ -282,6 +290,8 @@ def notifications(request):
             context["follows"] = ret_follows
             context["friends"] = ret_friends
             context["requests"] = all_requests
+            context["host1"] = host_list1
+            context["host2"] = hostlist2
 
             return render(request, 'sd/notifications.html', context)
         else:
