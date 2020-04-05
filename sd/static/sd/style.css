@@ -106,6 +106,83 @@ button:hover {
   cursor: pointer;
 }
 
+
+  /* general form styling */
+input {
+  text-align: left;
+  height: 1.5em;
+  width: 80%;
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f0;
+  padding: 0.2em;
+  margin: 0.4em;
+  outline-color: grey;
+  word-wrap: break-word;
+}
+
+input[type=submit]{
+  text-align: center;
+  width: auto;
+  height: 150%;
+  float: center;
+  width: 20%;
+  background: white;
+  color: #ed9a00;
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f0;
+  padding: 0.4em;
+  margin: 0.3em;
+}
+
+input[type=submit]:hover{
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.6);
+}
+
+select {
+  margin-left: 0.5em;
+  padding: 0.4em;
+  border: 1.5px solid #f0f0f0;
+  border-radius: 10px;
+  background: white;
+  color: black;
+  height: 100%;
+  outline-color: grey;
+}
+
+#widebox{
+  width: 98%;
+}
+
+textarea {
+  width: 100%;
+  text-align: left;
+  height: 10em;
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f0;
+  padding: 0.2em;
+  margin: 0.4em;
+  width: 98%;
+  resize: vertical;
+  outline-color: grey;
+  word-wrap: break-word;
+}
+
+input[type=checkbox]{
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f0;
+}
+
+/* text boxes 
+TODO: get boxes to line up*/
+#id_title, #id_description, #id_content, #id_source, #id_link_to_image, #id_categories, #id_visibleTo{
+}
+
+p label {
+}
+
+
+
 /*top navigation */
 
 .header {
@@ -188,7 +265,7 @@ button:hover {
   background-color: white;
   margin-bottom: 2em;
   top: 1; /* start after header */
-  padding: 2em 3em 2em 3em ;
+  padding: 2em 3em 2em 3em;
   border: 2.5px solid #f0f0f0;
   word-wrap: break-word;
 }
@@ -239,6 +316,10 @@ button:hover {
 
 /* comments */
 
+.commentSection{
+  margin: 1em 4em 1em 2em;
+}
+
 /* lists number of comments in feed item */
 #commentsifyesButton {
   color: #ed9a00; 
@@ -250,31 +331,17 @@ button:hover {
   cursor: pointer;
 }
 
-/* show this section if comment option is clicked */
-#addcommentifyesButton {
-  float: right;
-  color: #9dc7ba; 
-  font-style: italic;
-  font-size: 0.9em;
-  word-wrap: break-word;
-}
-
-#newcomment {
-  float: left;
-  width: 98%
-}
-
-#showComments {
-  margin-top: 2em;
-}
 
 .commentitem {
   border-radius: 10px;
   background-color: white;
   margin-bottom: 1em;
+  margin-right: 0em;
+  margin-left: 0em;
   top: 1; /* start after header */
   padding: 0.5em 1em 0.5em 1em ;
   border: 1.5px solid #f0f0f0;
+  width: 100%;
  }
 
 #commentauthor {
@@ -292,31 +359,33 @@ button:hover {
   font-size: 0.8em;
 }
 
-#submit-blue-button {
+#submit-blue-button{
   font-size: 1em;
   width: auto;
-  float: right;
   color: #9dc7ba;
-  margin-bottom: 1em;
+  margin: 0em;
 }
 
 #submit-blue-button:hover {
-  color: #9dc7bab6;
+  background-color: rgba(255, 255, 255, 0.6);
   cursor: pointer;
 }
 
-#addComment {
-  background-color: white;
-  margin-bottom: 1em;
-  border: 1.4px solid white;
+#submit-button-section{
+  float:right;
 }
 
 
 #addcommentfield {
   height: 2em;
   margin-bottom: 1em;
+  margin-right: 0em;
+  margin-left: 0em;
+  width: 100%;
   padding: 0.5em 1em 0.5em 1em;
 }
+
+
 
 /* side bar */
 
@@ -628,7 +697,6 @@ form>.row {
   border: none;
   cursor: pointer;
   border-radius: 8px;
-
 }
 
 .dropdown-button:hover, .dropdown-button:focus {
@@ -710,7 +778,6 @@ form>.row {
   cursor: pointer;
 }
 
-
 /** https://www.w3schools.com/howto/howto_css_circles.asp */
 .orangedot {
   height: 0.3em;
@@ -776,83 +843,34 @@ width: 100%;
   word-wrap: break-word;
 }
 
-
-  /* general form styling */
-input {
-  text-align: left;
-  height: 1.5em;
-  width: 80%;
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  padding: 0.2em;
-  margin: 0.4em;
-  outline-color: grey;
-  word-wrap: break-word;
-}
-
-
-input[type=submit]{
+/* https://davidwalsh.name/css-triangles */
+.arrow-right {
+  width: 0; 
+  height: 0; 
+  border-bottom: 7px solid transparent;  /* left arrow slant */
+  border-top: 7px solid transparent; /* right arrow slant */
+  border-left: 7px solid #ed9a00; /* bottom, add background color here */
+  font-size: 0;
+  line-height: 0;
   text-align: center;
-  width: auto;
-  height: 150%;
-  float: center;
-  width: 20%;
-  background: white;
-  color: #ed9a00;
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  padding: 0.4em;
-  margin: 0.3em;
-  margin-right: 3em;
 }
 
 
-input[type=submit]:hover{
-    cursor: pointer;
+/* create an arrow that points down */
+.arrow-down {
+  width: 0; 
+  height: 0; 
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid #ed9a00;
+  font-size: 0;
+  line-height: 0;
 }
 
-select {
-  margin-left: 0.5em;
-  padding: 0.4em;
-  border: 1.5px solid #f0f0f0;
-  border-radius: 10px;
-  background: white;
-  color: black;
-  height: 100%;
-  outline-color: grey;
+.arrow-right:hover{
+  cursor: pointer;
 }
 
-#widebox{
-  width: 98%;
+.arrow-down:hover{
+  cursor: pointer;
 }
-
-textarea {
-  width: 100%;
-  text-align: left;
-  height: 10em;
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  padding: 0.2em;
-  margin: 0.4em;
-  width: 98%;
-  resize: vertical;
-  outline-color: grey;
-  word-wrap: break-word;
-}
-
-input[type=checkbox]{
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  background: red;
-}
-
-
-
-/* text boxes 
-TODO: get boxes to line up*/
-#id_title, #id_description, #id_content, #id_source, #id_link_to_image, #id_categories, #id_visibleTo{
-}
-
-p label {
-}
-

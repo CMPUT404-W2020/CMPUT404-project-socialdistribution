@@ -1,0 +1,1 @@
+DJANGO_SETTINGS_MODULE=social_distribution.test_settings python3 manage.py test
