@@ -177,6 +177,7 @@ function removeFriend(author) {
         alert(
           `You have successfully removed them as a friend.\n They can still see your public posts.`
         );
+        location.reload();
       })
       .catch(function(data) {
         alert(
@@ -209,6 +210,7 @@ function unfollow(author) {
     })
     .then(function(response) {
       alert(`You have successfully unfollowed this user.`);
+      location.reload();
     })
     .catch(function(error) {
       alert(
