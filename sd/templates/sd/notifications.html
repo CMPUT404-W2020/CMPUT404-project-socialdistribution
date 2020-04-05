@@ -62,31 +62,44 @@
             var followingString = 'You are following ' + followingNum + ' users';
         }
 
-
-        var display = document.getElementById("friend-requests");
-        display.innerHTML = "";
-        displayFriends.innerHTML = "";
-        displayFollowers.innerHTML = "";
-
-        display.innerHTML += `<br> 
-            <span class='arrow-right' id='notification-right-arrow' onclick='displayNotifications("notification-block","notification-right-arrow","notification-down-arrow")' style = 'display: inline-block'> </span>
-            <span class='arrow-down' id='notification-down-arrow' onclick='displayNotifications("notification-block","notification-down-arrow","notification-right-arrow")' style = 'display: none'> </span>`
-            + notificationString + '<span id="notification-block" style = "display: none;">';
+        var notificationContent = "";
+        notificationContent += `
+            <br> 
+            <span 
+                class='arrow-right' 
+                id='notification-right-arrow' 
+                onclick='displayNotifications("notification-block","notification-right-arrow","notification-down-arrow")' 
+                style = 'display: inline-block'> 
+            </span>
+            <span 
+                class='arrow-down' 
+                id='notification-down-arrow' 
+                onclick='displayNotifications("notification-block","notification-down-arrow","notification-right-arrow")' 
+                style = 'display: none'> 
+            </span>` + notificationString + `<span id="notification-block" style = "display: none;">`;
 
         for (let a of results) {
             var btn_id = createButtonId(a);
-            display.innerHTML += `<div>
+            notificationContent += `<div>
             <hr class="greyline">
             <span class="searchauthor">${a}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Follows You </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${a}')"">+</button></div>`;
+            <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${a}')">+</button>
+            </div>`;
         }
+        notificationContent += '</span>';
+
+        var display = document.getElementById("friend-requests");
+        display.innerHTML = notificationContent;
+
+
 
         var displayFriends = document.getElementById("friends");
-        displayFriends.innerHTML = ` 
+        displayFriends.innerHTML = "";
+        displayFriends.innerHTML += ` 
             <span class='arrow-right' id='friend-right-arrow' onclick='displayNotifications("friend-block","friend-right-arrow","friend-down-arrow")' style = 'display: inline-block'> </span>
             <span class='arrow-down' id='friend-down-arrow' onclick='displayNotifications("friend-block","friend-down-arrow","friend-right-arrow")' style = 'display: none'> </span>`
             + friendString + '<span id="friend-block" style = "display: none;">';
@@ -101,11 +114,13 @@
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend(${fId}')"">-</button></div>`;
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend(${fId}')">-</button></div>`;
         }
+        displayFriends.innerHTML += '</span>';
 
         var displayFollowers = document.getElementById("following");
-        displayFollowers.innerHTML = `<br> 
+        displayFollowers.innerHTML = "";
+        displayFollowers.innerHTML += `<br> 
             <span class='arrow-right' id='following-right-arrow' onclick='displayNotifications("following-block","following-right-arrow","following-down-arrow")' style = 'display: inline-block'> </span>
             <span class='arrow-down' id='following-down-arrow' onclick='displayNotifications("following-block","following-down-arrow","following-right-arrow")' style = 'display: none'> </span> `
             + followingString + '<span id="following-block" style = "display: none;">';
@@ -120,8 +135,9 @@
             <span class="searchrelation"> Following </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')"">-</button></div>`;
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')">-</button></div>`;
         }
+        displayFollowers.innerHTML += '</span>';
     }
 
     function loadTheThings() {
@@ -138,9 +154,9 @@
     <div class="row" id="notifications">
         <div class="navbar" id="navbar"></div>
         <div style="margin-top: 7em;"></div>
-        <div class="search-results" id="friend-requests"></span></div>
-        <div class="search-results" id="friends"></span></div>
-        <div class="search-results" id="following"></span></div>
+        <div class="search-results" id="friend-requests"></div>
+        <div class="search-results" id="friends"></div>
+        <div class="search-results" id="following"></div>
     </div>
 </body>
 
