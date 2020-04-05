@@ -510,14 +510,10 @@ def unfollow(request):
 
                 return HttpResponse()
             except Exception as e:
-                print("CONSOLE: something broke. Local variables:",locals(), "data:", data)
-                print("CONSOLE: Exception: ",e)
                 return HttpResponse(status_code=500)
         else:
-            print("CONSOLE: not authenticated")
             return HttpResponse(status_code=401)
     else:
-        print("CONSOLE: bad method")
         return HttpResponse(status_code=405)
 
 def new_post(request):
@@ -543,13 +539,13 @@ def new_post(request):
                 form = NewPostForm(info, request.FILES)
                 if form.is_valid():
                     post = form.save()
-                    with open(myfile.file.seek(0), "rb") as imageFile:
+                    with open(post.image, "rb") as imageFile:
                         post.link_to_image = base64.b64encode(imageFile.read())
                     post.save()
                     print('CONSOLE: Post successful! Redirecting to your feed.')
                     return redirect('my_feed')
                 else:
-                    print('CONSOLE: Post failed, please try again.')
+                    print('CONSOLE: Post failed, please try again.\nLocal variables',locals())
                     return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
             else:
                 info = dict(request._post)
@@ -570,13 +566,22 @@ def new_post(request):
         return HttpResponse(status_code=405)
 
 
-def get_image(request, url):
-    path = 'media/'+url
-    try:
-        with open(path, "rb") as f:
-            return HttpResponse(f.read(), content_type="image/jpeg")
-    except:
-        return HttpResponse(open('static/sd/404.jpg', 'rb').read(), content_type="image/jpeg")
+def get_image(request, pk):
+    if request.method == "GET":
+        try:
+            post = Post.object.get(uuid=pk)
+            if post.image:
+                outfile = open('return_image', 'wb')
+                outfile.write(post.link_to_image.decode('base64'))
+                return 'data:image/png;base64, %s' % (encoded_string)
+            else:
+
+            with open(post., "rb") as f:
+                return HttpResponse(f.read(), content_type="image/jpeg")
+        except:
+            return render(request, 'sd/404.html')
+    else:
+        return HttpResponse(status_code=405)
 
 
 def edit_post(request, post_id):

@@ -35,7 +35,7 @@ class NewPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title', 'description', 'content', 'source', 'image', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
+        fields = ('title', 'description', 'content', 'source', 'image', 'link_to_image', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
         widgets = {
             'contentType': forms.Select(),
             'visibility': forms.Select(),
