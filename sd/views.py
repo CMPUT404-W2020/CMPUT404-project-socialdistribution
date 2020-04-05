@@ -247,6 +247,7 @@ def search(request):
 
     context = {}
     context['authors'] = [author.username for author in all_authors]
+    context['authors_full'] = ret_authors
     context["current_user"] = user
     context["follows"] = ret_follows
     context["friends"] = ret_friends

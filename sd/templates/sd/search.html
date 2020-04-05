@@ -28,6 +28,7 @@
         var val = search_val.value;
 
         var authors = {{authors|safe}};
+        var authors_full = {{authors_full|safe}};
         var follows = {{follows|safe}};
         var friends = {{friends|safe}};
 
@@ -69,7 +70,16 @@
                     }
                 }
 
-                if (!entry['status']) { entry['status'] = ""; }
+
+
+                if (!entry['status']) { 
+                    entry['status'] = ""; 
+                    for (let a of authors_full){
+                        if(entry['name'] == a['name']){
+                            entry['host'] = a['host']
+                        }
+                    }
+                }
                 if (!entry['icon']) { entry['icon'] = "+" }
 
                 if (entry['icon'].valueOf() === '+') {
