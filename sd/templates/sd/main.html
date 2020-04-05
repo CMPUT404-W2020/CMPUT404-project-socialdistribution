@@ -64,7 +64,7 @@
 								</div>
 							{% endwith %}
 						{% endif %}
-						<div id = "author"> {{post.author}} </div>
+						<div id = "author"> {{post.author.username}} </div>
 		                <div id = "date"> {{post.published}} <br> <br> </div>
 		                <div id = "title">{{post.title}} <br> <br> </div>
 		                {% if post.link_to_image %}
