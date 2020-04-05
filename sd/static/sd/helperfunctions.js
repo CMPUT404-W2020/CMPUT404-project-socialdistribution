@@ -7,6 +7,17 @@ function displayCommentsCheck(that) {
   } else {
     document.getElementById(that).style.display = "block";
   }
+
+
+
+function displayNotifications(content,hideArrow, showArrow) {
+  if (document.getElementById(content).style.display == "block") {
+    document.getElementById(content).style.display = "none";
+  } else {
+    document.getElementById(content).style.display = "block";
+  }
+  document.getElementById(hideArrow).style.display = "none";
+  document.getElementById(showArrow).style.display = "block";
 }
 
 function showDropdown(that) {

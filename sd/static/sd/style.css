@@ -759,7 +759,7 @@ form>.row {
   cursor: pointer;
 }
 
-
+css remove visited
 /** https://www.w3schools.com/howto/howto_css_circles.asp */
 .orangedot {
   height: 0.3em;
@@ -826,7 +826,7 @@ width: 100%;
 }
 
 /* https://davidwalsh.name/css-triangles */
-.arrow-left {
+.arrow-right {
   width: 0; 
   height: 0; 
   border-bottom: 7px solid transparent;  /* left arrow slant */
@@ -838,7 +838,22 @@ width: 100%;
   display: inline-block;
 }
 
+
+/* create an arrow that points down */
+.arrow-down {
+  width: 0; 
+  height: 0; 
+  border-left: 7px solid transparent;
+  border-right: 7px solid transparent;
+  border-top: 7px solid #ed9a00;
+  font-size: 0;
+  line-height: 0;
+}
+
 .arrow-left:hover{
   cursor: pointer;
 }
 
+.arrow-down:hover{
+  cursor: pointer;
+}

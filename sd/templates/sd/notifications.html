@@ -44,7 +44,10 @@
         var display = document.getElementById("friend-requests");
         display.innerHTML = "";
 
-        display.innerHTML += `<br> <span class='arrow-left' id='notification-arrow' onclick ='displayCommentsCheck("notification-block")'> </span> You have ` + results.length.toString() + " friend requests";
+        display.innerHTML += `<br> 
+            <span class='arrow-right' id='notification-right-arrow' onclick ='displayNotifications("notification-block","notification-right-arrow","notification-down-arrow")'> </span>
+            <span class='arrow-down' id='notification-down-arrow' onclick ='displayNotifications("notification-block","notification-down-arrow","notification-right-arrow")' style = "display: none;"> </span>
+             You have ` + results.length.toString() + " friend requests";
         for (let a of results) {
             var btn_id = createButtonId(a);
             display.innerHTML += `<div id="notification-block" style = "display: none;">
@@ -59,7 +62,7 @@
         }
 
         var displayFriends = document.getElementById("friends");
-        displayFriends.innerHTML = `<br> <span class='arrow-left' id='friend-arrow' onclick ='displayCommentsCheck("friends-block")'> </span> Your Friends`;
+        displayFriends.innerHTML = `<br> <span class='arrow-right' id='friend-arrow' onclick ='displayCommentsCheck("friends-block")'> </span> Your Friends`;
         for (let f of friends) {
             var fName = f['name'];
             var fId = f['following_uuid'];
@@ -76,7 +79,7 @@
         }
 
         var displayFollowers = document.getElementById("following");
-        displayFollowers.innerHTML = `<br> <span class='arrow-left' id='follow-arrow' onclick ='displayCommentsCheck("following-block")> </span> Who You're Following`;
+        displayFollowers.innerHTML = `<br> <span class='arrow-right' id='follow-arrow' onclick ='displayCommentsCheck("following-block")> </span> Who You're Following`;
         for (let f of follows) {
             var fName = f['following'];
             var fId = f['following_uuid'];
