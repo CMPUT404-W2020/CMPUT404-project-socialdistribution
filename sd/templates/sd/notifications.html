@@ -47,7 +47,7 @@
         display.innerHTML += "<br> <span class='arrow-left' id='notification-arrow'> </span> You have " + results.length.toString() + " friend requests";
         for (let a of results) {
             var btn_id = createButtonId(a);
-            display.innerHTML += `<div>
+            display.innerHTML += `<div id="notification-block" style = "display: none;">
             <hr class="greyline">
             <span class="searchauthor">${a}</span>
             <span class="orangedot"></span>
@@ -59,12 +59,12 @@
         }
 
         var displayFriends = document.getElementById("friends");
-        displayFriends.innerHTML = "<br> <span class='arrow-left' id='friend-arrow'> </span> Your Friends";
+        displayFriends.innerHTML = `<br> <span class='arrow-left' id='friend-arrow' onclick ='displayCommentsCheck("friends-block")'> </span> Your Friends`;
         for (let f of friends) {
             var fName = f['name'];
             var fId = f['following_uuid'];
             var btn_id = createButtonId(fName);
-            displayFriends.innerHTML += `<div>
+            displayFriends.innerHTML += `<div id="friends-block" style = "display: none;">
             <hr class="greyline">
             <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
@@ -81,7 +81,7 @@
             var fName = f['following'];
             var fId = f['following_uuid'];
             var btn_id = createButtonId(fName);
-            displayFollowers.innerHTML += `<div>
+            displayFollowers.innerHTML += `<div id="following-block" style = "display: none;">
             <hr class="greyline">
             <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
