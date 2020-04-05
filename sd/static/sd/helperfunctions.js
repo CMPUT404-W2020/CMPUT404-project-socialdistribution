@@ -208,7 +208,7 @@ function unfollow(author) {
       return response
     })
     .then(function(response) {
-      alert(`You have successfully unfollowed ${author}.`);
+      alert(`You have successfully unfollowed this user.`);
     })
     .catch(function(error) {
       alert(
