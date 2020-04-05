@@ -104,15 +104,17 @@
         } else {
             display.innerHTML += results.length.toString() + " search results";
             for (let a of results) {
-                var btn_id = createButtonId(a['name']);
-                var status_id = createStatusId(a['name']);
+                var aName = a['name'];
+                var aHost = a['host'];
+                var btn_id = createButtonId(aName);
+                var status_id = createStatusId(aName);
                 display.innerHTML += `<div>
                         <hr class="greyline">
-                        <span class="searchauthor">${a['name']}</span>
+                        <span class="searchauthor">${aName}</span>
                         <span class="orangedot"></span>
                         <span class="searchrelation" id="${status_id}"> ${a['status']} </span>
                         <span class="bluedot"></span>
-                        <span class="searchrelation"> Local </span>
+                        <span class="searchrelation"> ${aHost} </span>
                         <button class="addminusbutton" id="${btn_id}" onclick=${a['action']}>${a['icon']}</button>
                     </div>`;
             }
