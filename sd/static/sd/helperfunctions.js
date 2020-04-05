@@ -9,6 +9,18 @@ function displayCommentsCheck(that) {
   }
 }
 
+//used to show drop down information on the notification page
+//will switch between showArrow element and hideArrow element
+function displayNotifications(content,hideArrow, showArrow) {
+  if (document.getElementById(content).style.display == "block") {
+    document.getElementById(content).style.display = "none";
+  } else {
+    document.getElementById(content).style.display = "block";
+  }
+  document.getElementById(hideArrow).style.display = "none";
+  document.getElementById(showArrow).style.display = "inline-block";
+}
+
 function showDropdown(that) {
   document.getElementById(that).classList.toggle("show-dropdown");
 }
@@ -163,8 +175,9 @@ function removeFriend(author) {
     })
       .then(function(data) {
         alert(
-          `You have successfully removed them as a friend.\nTheycan still see your public posts.`
+          `You have successfully removed them as a friend.\n They can still see your public posts.`
         );
+        location.reload();
       })
       .catch(function(data) {
         alert(
@@ -198,7 +211,8 @@ function unfollow(author) {
       return response
     })
     .then(function(response) {
-      alert(`You have successfully unfollowed them.`);
+      alert(`You have successfully unfollowed this user.`);
+      location.reload();
     })
     .catch(function(error) {
       alert(
