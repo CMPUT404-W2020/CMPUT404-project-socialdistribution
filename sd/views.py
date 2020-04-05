@@ -572,7 +572,7 @@ def new_post(request):
 def get_image(request, pk):
     if request.method == "GET":
         # try:
-        post = Post.object.get(uuid=pk)
+        post = Post.objects.get(uuid=pk)
         if post.image:
             img_format = post.image.split('.')[-1]
             outfile = open(post.link_to_image, 'wb')
