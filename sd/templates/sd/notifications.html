@@ -26,7 +26,7 @@
     function loadRequests() {
         var follows = {{follows|safe}};
         var friends = {{friends|safe}};
-        var results = makeItAList("{{requests}}");
+        var results = {{requests|safe}};
 
         displayResults(results, friends, follows);
     }
@@ -82,15 +82,17 @@
             </span>` + notificationString + `<span id="notification-block" style = "display: none;">`;
 
         for (let a of results) {
+            var aName = a['name'];
+            var aHost = a['host'];
             var btn_id = createButtonId(a);
             notificationContent += `<div>
             <hr class="greyline">
-            <span class="searchauthor">${a}</span>
+            <span class="searchauthor">${aName}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Follows You </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${a}')">+</button>
+            <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${aName}')">+</button>
             </div>`;
         }
         notificationContent += '</span>';

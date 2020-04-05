@@ -234,8 +234,13 @@ def notifications(request):
             fr_requests = FriendRequest.objects.filter(Q(to_author=user))
             all_requests = []
             for a in fr_requests:
-                print(a.from_author)
-                all_requests.append(a.from_author)
+                entry = {}
+                entry["name"] = a.from_author
+                if a.from_author.host == user.host:
+                    entry["host"] = 'Local'
+                else:
+                    entry["host"] = 'Remote'
+                all_requests.append(entry)
 
             # Get all authors
             all_authors = Author.objects.exclude(username=user)
@@ -259,9 +264,9 @@ def notifications(request):
                     entry["following"] = f.following.username
                     entry["following_uuid"] = f.following.uuid
                     if f.following.host == user.host:
-                        entry["host"] = 'local'
+                        entry["host"] = 'Local'
                     else:
-                        entry["host"] = 'remote'
+                        entry["host"] = 'Remote'
                     ret_follows.append(entry)
 
             # Get all friends
@@ -274,16 +279,16 @@ def notifications(request):
                     entry["uuid"] = f.author.uuid
                     entry["name"] = f.author.username
                     if f.author.host == user.host:
-                        entry["host"] = 'local'
+                        entry["host"] = 'Local'
                     else:
-                        entry["host"] = 'remote'
+                        entry["host"] = 'Remote'
                 else:
                     entry["uuid"] = f.friend.uuid
                     entry["name"] = f.friend.username
                     if f.friend.host == user.host:
-                        entry["host"] = 'local'
+                        entry["host"] = 'Local'
                     else:
-                        entry["host"] = 'remote'
+                        entry["host"] = 'Remote'
                 ret_friends.append(entry)
             
             context = {}
