@@ -7,6 +7,7 @@ function displayCommentsCheck(that) {
   } else {
     document.getElementById(that).style.display = "block";
   }
+}
 
 
 
