@@ -45,9 +45,9 @@
         display.innerHTML = "";
 
         display.innerHTML += `<br> 
-            <span class='arrow-right' id='notification-right-arrow' onclick ='displayNotifications("notification-block","notification-right-arrow","notification-down-arrow")'> </span>
-            <span class='arrow-down' id='notification-down-arrow' onclick ='displayNotifications("notification-block","notification-down-arrow","notification-right-arrow")' style = "display: none;"> </span>
-             You have ` + results.length.toString() + " friend requests";
+            <span class='arrow-right' id='notification-right-arrow' onclick ='displayNotifications("notification-block","notification-right-arrow","notification-down-arrow")' style = 'display: block'> </span>
+            <span class='arrow-down' id='notification-down-arrow' onclick ='displayNotifications("notification-block","notification-down-arrow","notification-right-arrow")' style = 'display: none'> </span>
+            You have ` + results.length.toString() + " friend requests";
         for (let a of results) {
             var btn_id = createButtonId(a);
             display.innerHTML += `<div id="notification-block" style = "display: none;">
