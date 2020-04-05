@@ -69,7 +69,7 @@
         display.innerHTML += `<br> 
             <span class='arrow-right' id='notification-right-arrow' onclick='displayNotifications("notification-block","notification-right-arrow","notification-down-arrow")' style = 'display: inline-block'> </span>
             <span class='arrow-down' id='notification-down-arrow' onclick='displayNotifications("notification-block","notification-down-arrow","notification-right-arrow")' style = 'display: none'> </span>`
-            + notificationString + '<div id="notification-block" style = "display: none;">';
+            + notificationString + '<span id="notification-block" style = "display: none;">';
         for (let a of results) {
             var btn_id = createButtonId(a);
             display.innerHTML += `
@@ -81,13 +81,13 @@
             <span class="searchrelation"> Local </span>
             <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${a}')"">+</button>`;
         }
-        display.innerHTML += '</div>'
+        display.innerHTML += '</span>'
 
         var displayFriends = document.getElementById("friends");
         displayFriends.innerHTML = ` 
             <span class='arrow-right' id='friend-right-arrow' onclick='displayNotifications("friend-block","friend-right-arrow","friend-down-arrow")' style = 'display: inline-block'> </span>
             <span class='arrow-down' id='friend-down-arrow' onclick='displayNotifications("friend-block","friend-down-arrow","friend-right-arrow")' style = 'display: none'> </span>`
-            + friendString + '<div id="friend-block" style = "display: none;">';
+            + friendString + '<span id="friend-block" style = "display: none;">';
         for (let f of friends) {
             var fName = f['name'];
             var fId = f['following_uuid'];
@@ -101,13 +101,13 @@
             <span class="searchrelation"> Local </span>
             <button class="addminusbutton" id="${btn_id}" onclick="removeFriend(${fId}')"">-</button></div>`;
         }
-        displayFriends.innerHTML += '</div>'
+        displayFriends.innerHTML += '</span>'
 
         var displayFollowers = document.getElementById("following");
         displayFollowers.innerHTML = `<br> 
             <span class='arrow-right' id='following-right-arrow' onclick='displayNotifications("following-block","following-right-arrow","following-down-arrow")' style = 'display: inline-block'> </span>
             <span class='arrow-down' id='following-down-arrow' onclick='displayNotifications("following-block","following-down-arrow","following-right-arrow")' style = 'display: none'> </span> `
-            + followingString + '<div id="following-block" style = "display: none;">';
+            + followingString + '<span id="following-block" style = "display: none;">';
         for (let f of follows) {
             var fName = f['following'];
             var fId = f['following_uuid'];
@@ -121,7 +121,7 @@
             <span class="searchrelation"> Local </span>
             <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')"">-</button></div>`;
         }
-        displayFollowers.innerHTML += '</div>'
+        displayFollowers.innerHTML += '</span>'
 
     }
 
