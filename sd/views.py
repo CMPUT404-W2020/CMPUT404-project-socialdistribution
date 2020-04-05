@@ -265,8 +265,8 @@ def notifications(request):
                     else:
                         entry["host"] = 'remote'
                     ret_follows.append(entry)
-                    host_list2.append(f.following.host)
-                    host_list1.append(user.host)
+                    #host_list2.append(f.following.host)
+                    #host_list1.append(user.host)
 
             # Get all friends
             all_friends = Friend.objects.filter(
@@ -290,8 +290,8 @@ def notifications(request):
             context["follows"] = ret_follows
             context["friends"] = ret_friends
             context["requests"] = all_requests
-            context["host1"] = host_list1
-            context["host2"] = host_list2
+            #context["host1"] = host_list1
+            #context["host2"] = host_list2
 
             return render(request, 'sd/notifications.html', context)
         else:
