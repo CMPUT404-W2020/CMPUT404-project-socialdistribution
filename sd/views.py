@@ -240,21 +240,25 @@ def notifications(request):
             # Get all authors
             all_authors = Author.objects.exclude(username=user)
 
-            # Get all follows
+            # Get all users that current user follows
             my_follows = Follow.objects.filter(Q(follower=user))
             follows_me = Follow.objects.filter(Q(following=user))
-            all_follows = my_follows.union(follows_me)
+
+            #find a list of people who follow you
+            follows_me_list = []
+            for f in follows_me:
+                follows_me_list.append(f.follower.uuid)
 
             # The follow object doesn't return names, it returns more objects
             # So I need to put it in a form that JS will understand
+            # only returns people you follow if you are not friends with them (they don't follow you back)
             ret_follows = []
-            for f in all_follows:
-                entry = {}
-                entry["follower"] = f.follower.username
-                entry["following"] = f.following.username
-                entry["follower_uuid"] = f.follower.uuid
-                entry["following_uuid"] = f.following.uuid
-                ret_follows.append(entry)
+            for f in my_follows:
+                if f.following.uuid not in follows_me_list:
+                    entry = {}
+                    entry["following"] = f.following.username
+                    entry["following_uuid"] = f.following.uuid
+                    ret_follows.append(entry)
 
             # Get all friends
             all_friends = Friend.objects.filter(

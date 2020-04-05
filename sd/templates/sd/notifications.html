@@ -73,10 +73,10 @@
         }
 
         var displayFollowers = document.getElementById("following");
-        displayFriends.innerHTML = "<br>Who You're Following";
+        displayFollowers.innerHTML = "<br>Who You're Following";
         for (let f of follows) {
             var fName = f['following'];
-            displayFriends.innerHTML += `<div>
+            displayFollowers.innerHTML += `<div>
             <hr class="greyline">
             <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
