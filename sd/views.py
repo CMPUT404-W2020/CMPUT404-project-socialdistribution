@@ -252,8 +252,6 @@ def notifications(request):
             # The follow object doesn't return names, it returns more objects
             # So I need to put it in a form that JS will understand
             # only returns people you follow if you are not friends with them (they don't follow you back)
-            host_list1 = []
-            host_list2 = []
             ret_follows = []
             for f in my_follows:
                 if f.following.uuid not in follows_me_list:
@@ -265,8 +263,6 @@ def notifications(request):
                     else:
                         entry["host"] = 'remote'
                     ret_follows.append(entry)
-                    #host_list2.append(f.following.host)
-                    #host_list1.append(user.host)
 
             # Get all friends
             all_friends = Friend.objects.filter(
@@ -277,11 +273,17 @@ def notifications(request):
                 if f.friend == user:
                     entry["uuid"] = f.author.uuid
                     entry["name"] = f.author.username
-                    #entry["host"] = f.author.host
+                    if f.author.host == user.host:
+                        entry["host"] = 'local'
+                    else:
+                        entry["host"] = 'remote'
                 else:
                     entry["uuid"] = f.friend.uuid
                     entry["name"] = f.friend.username
-                    #entry["host"] = f.friend.host
+                    if f.friend.host == user.host:
+                        entry["host"] = 'local'
+                    else:
+                        entry["host"] = 'remote'
                 ret_friends.append(entry)
             
             context = {}
@@ -290,8 +292,6 @@ def notifications(request):
             context["follows"] = ret_follows
             context["friends"] = ret_friends
             context["requests"] = all_requests
-            #context["host1"] = host_list1
-            #context["host2"] = host_list2
 
             return render(request, 'sd/notifications.html', context)
         else:

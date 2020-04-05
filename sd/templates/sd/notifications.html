@@ -139,6 +139,7 @@
             + followingString + '<span id="following-block" style = "display: none;">';
         for (let f of follows) {
             var fName = f['following'];
+            var fHost = f['host'];
             var fId = f['following_uuid'];
             var btn_id = createButtonId(fName);
             followingContent += `<div>
@@ -147,7 +148,7 @@
             <span class="orangedot"></span>
             <span class="searchrelation"> Following </span>
             <span class="bluedot"></span>
-            <span class="searchrelation"> Local </span>
+            <span class="searchrelation"> ${fHost} </span>
             <button class="addminusbutton" id="${btn_id}" onclick="unfollow('${fId}')">-</button>
             </div>`;
         }
