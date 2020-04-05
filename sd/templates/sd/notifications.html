@@ -73,7 +73,6 @@
             <span class='arrow-down' id='notification-down-arrow' onclick='displayNotifications("notification-block","notification-down-arrow","notification-right-arrow")' style = 'display: none'> </span>`
             + notificationString + '<span id="notification-block" style = "display: none;">';
 
-        console.log(display.innerHTML)
         for (let a of results) {
             var btn_id = createButtonId(a);
             display.innerHTML += `<div>
@@ -85,7 +84,6 @@
             <span class="searchrelation"> Local </span>
             <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${a}')"">+</button></div>`;
         }
-        console.log(display.innerHTML)
 
         var displayFriends = document.getElementById("friends");
         displayFriends.innerHTML = ` 
