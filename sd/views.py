@@ -145,7 +145,7 @@ def feed(request):
 
                 # Get all authors
                 ret_authors = []
-                all_authors = Author.objects.exclude(username=user)
+                all_authors = Author.objects
                 for a in all_authors:
                     entry = {}
                     entry['name'] = a.username
