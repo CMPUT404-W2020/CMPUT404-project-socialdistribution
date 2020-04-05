@@ -115,7 +115,7 @@
                 style = 'display: none'> </span>` + friendString + '<span id="friend-block" style = "display: none;">';
         for (let f of friends) {
             var fName = f['name'];
-            var fId = f['following_uuid'];
+            var fId = f['uuid'];
             var btn_id = createButtonId(fName);
             friendsContent += `<div>
             <hr class="greyline">
