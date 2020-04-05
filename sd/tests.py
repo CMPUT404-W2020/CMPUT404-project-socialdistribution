@@ -455,7 +455,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         # make sure the notifications button isn't there
         assert not len(driver.find_elements_by_xpath('//img[@alt="Network"]'))
 
-    def test_nest_prev_buttons(self):
+    def test_next_prev_buttons(self):
         # Login
         driver = self.driver
         driver.get(self.live_server_url + "login")
@@ -635,6 +635,7 @@ class IntegratedTests(StaticLiveServerTestCase):
 
         submit = driver.find_element_by_id("login-button")
         submit.click()
+        time.sleep(2)
 
         # check that the user was logged in and brought to the feed
         assert driver.current_url == self.live_server_url + "feed"
@@ -702,4 +703,3 @@ class IntegratedTests(StaticLiveServerTestCase):
         email = driver.find_element_by_id("id_email")
         assert email.get_attribute("value") == "selenium@test.ca"
 
-        

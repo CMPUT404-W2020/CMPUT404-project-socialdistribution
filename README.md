@@ -566,3 +566,5 @@ The following functions do not have automated tests as they all have alerts and 
 * Send friend request
 * Unfriend another author
 * Unfollow another author
+
+It is possible that one of tests will fail on a unique key constraint. This is because we are testing the registration of a new user and this test communicates with our live server. To resolve this issue and have the test pass, login to [https://cmput-404.herokuapp.com/admin] with username "warren" and password "cmput404", navigate to the 'Users' tab, and delete the user with username 'Selenium'.
