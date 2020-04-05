@@ -24,18 +24,18 @@ def get_current_user(request):
 
 
 def paginated_result(request, objects, serializer, keyword, **result):
-    page_num = int(request.GET.get('page', 0))
+    page_num = int(request.GET.get('page', 1))
     size = int(request.GET.get('size', 10))
     first_result = size*page_num
     count = objects.count()
     if count <= first_result:
         first_result = 0
-        page_num = 0
+        page_num = 1
     last_result = first_result + size
 
     result["count"] = count
     result["size"] = size
-    if page_num >= 1:
+    if page_num > 1:
         result["previous"] = page_num - 1
     if objects.count() >= last_result:
         result["next"] = page_num + 1
@@ -71,8 +71,6 @@ def get_relationship(user, target):
     return 4,None #no relationship
 
 def load_github_feed(user):
-    print("CONSOLE: load_github_feed function")
-    print("CONSOLE: user:", user, '\n', vars(user))
     if user.github != '':
         try:
             repo_data = json.loads(requests.get('https://api.github.com/users/'+user.github+'/repos').content.decode())
