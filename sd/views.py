@@ -261,12 +261,12 @@ def notifications(request):
                     entry["following"] = f.following.username
                     entry["following_uuid"] = f.following.uuid
                     if f.following.host == user.host:
-                        entry["host"] == 'local'
+                        entry["host"] = 'local'
                     else:
-                        entry["host"] == 'remote'
+                        entry["host"] = 'remote'
                     ret_follows.append(entry)
-                    host_list2.append(f.following.uuid)
-                    host_list1.append(follows_me_list)
+                    host_list2.append(f.following.host)
+                    host_list1.append(user.host)
 
             # Get all friends
             all_friends = Friend.objects.filter(
