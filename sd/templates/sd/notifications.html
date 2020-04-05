@@ -62,6 +62,8 @@
         displayFriends.innerHTML = "<br>Your Friends";
         for (let f of friends) {
             var fName = f['name'];
+            var fId = f['following_uuid'];
+            var btn_id = createButtonId(fName);
             displayFriends.innerHTML += `<div>
             <hr class="greyline">
             <span class="searchauthor">${fName}</span>
@@ -69,6 +71,7 @@
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fName}','${fId}')"">-</button>
         </div>`;
         }
 
@@ -76,6 +79,8 @@
         displayFollowers.innerHTML = "<br>Who You're Following";
         for (let f of follows) {
             var fName = f['following'];
+            var fId = f['following_uuid'];
+            var btn_id = createButtonId(fName);
             displayFollowers.innerHTML += `<div>
             <hr class="greyline">
             <span class="searchauthor">${fName}</span>
@@ -83,6 +88,7 @@
             <span class="searchrelation"> Following </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
+            <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${fName}','${fId}')"">-</button>
         </div>`;
             
         }
