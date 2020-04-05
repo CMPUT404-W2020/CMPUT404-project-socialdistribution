@@ -44,7 +44,7 @@
         var display = document.getElementById("friend-requests");
         display.innerHTML = "";
 
-        display.innerHTML += "<br> <span class="arrow-left" id="notification-arrow"> <span> You have " + results.length.toString() + " friend requests";
+        display.innerHTML += "<br> <span class="arrow-left" id="notification-arrow"> </span> You have " + results.length.toString() + " friend requests";
         for (let a of results) {
             var btn_id = createButtonId(a);
             display.innerHTML += `<div>
@@ -59,7 +59,7 @@
         }
 
         var displayFriends = document.getElementById("friends");
-        displayFriends.innerHTML = "<br> <span class="arrow-left" id="friend-arrow"> <span> Your Friends";
+        displayFriends.innerHTML = "<br> <span class="arrow-left" id="friend-arrow"> </span> Your Friends";
         for (let f of friends) {
             var fName = f['name'];
             var fId = f['following_uuid'];
@@ -71,12 +71,12 @@
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fName}','${fId}')"">-</button>
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend(${fId}')"">-</button>
         </div>`;
         }
 
         var displayFollowers = document.getElementById("following");
-        displayFollowers.innerHTML = "<br> <span class="arrow-left" id="follow-arrow"> <span> Who You're Following";
+        displayFollowers.innerHTML = "<br> <span class="arrow-left" id="follow-arrow"> </span> Who You're Following";
         for (let f of follows) {
             var fName = f['following'];
             var fId = f['following_uuid'];
@@ -88,7 +88,7 @@
             <span class="searchrelation"> Following </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${fName}','${fId}')"">-</button>
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')"">-</button>
         </div>`;
             
         }

@@ -138,7 +138,7 @@ function sendRequest(author) {
     });
 }
 
-function removeFriend(uuid, author) {
+function removeFriend(author) {
   var yes = confirm(
     "Would you like to remove this friend?\nThis author can still follow your posts even if you remove them as a friend."
   );
@@ -163,7 +163,7 @@ function removeFriend(uuid, author) {
     })
       .then(function(data) {
         alert(
-          `You have successfully removed ${author} as a friend.\n${author} can still see your public posts.`
+          `You have successfully removed them as a friend.\n They can still see your public posts.`
         );
       })
       .catch(function(data) {
