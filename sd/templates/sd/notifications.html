@@ -26,18 +26,16 @@
     function loadRequests() {
         var follows = {{follows|safe}};
         var friends = {{friends|safe}};
-        var current_user = {{current_user|safe}};
         var results = makeItAList("{{requests}}");
 
-        displayResults(results, friends, follows, current_user);
+        displayResults(results, friends, follows);
     }
 
 
-    function displayResults(results, friends, follows,current_user) {
+    function displayResults(results, friends, follows) {
         console.log(results);
         console.log(friends);
         console.log(follows);
-        console.log(current_user)
         for (let f of friends) {
             console.log(f['name']);
         }
@@ -73,7 +71,6 @@
             <span class="searchrelation"> Local </span>
         </div>`;
         }
-
 
         var displayFollowers = document.getElementById("following");
         displayFriends.innerHTML = "<br>Who You're Following";
