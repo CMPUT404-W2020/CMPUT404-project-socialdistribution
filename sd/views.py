@@ -578,7 +578,7 @@ def get_image(request, pk):
             return render(request, 'sd/404.html') #Can't find user, Not Found
 
         if post.image and post.link_to_image:
-            if post.unlisted==False:
+            if post.unlisted==True:
                 return render(request, 'sd/403.html') #Post unlisted, Forbidden
             if post.visibility=="PUBLIC":
                 img_format = post.image.name.split('.')[-1]
