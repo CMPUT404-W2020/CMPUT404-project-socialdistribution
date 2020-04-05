@@ -541,9 +541,11 @@ def new_post(request):
                     post = form.save()
                     post.link_to_image = 'media/'+post.image.name
                     post.save()
+                    filetype = post.image.name.split('.')[1]
                     with open(post.link_to_image, "rb") as image:
-                        temp = base64.b64encode(image.read())        
-                    post.link_to_image = temp
+                        temp = base64.b64encode(image.read())    
+                    temp.decode('utf-8')    
+                    post.link_to_image = 'data:image/'+filetype+';base64,'+temp
                     post.save()
                     print('CONSOLE: Post successful! Redirecting to your feed.\nLocals:',locals())
                     return redirect('my_feed')
@@ -579,7 +581,7 @@ def get_image(request, pk):
             outfile.write(base64.b64decode(post.link_to_image))
             outfile.close()
             with open(outfile.name, 'rb') as out:
-                return HttpResponse(out.read(), content_type='image/'+img_format)
+                return HttpResponse(out, content_type='image/'+img_format)
         else:
             
             return HttpResponse(status_code=204)
