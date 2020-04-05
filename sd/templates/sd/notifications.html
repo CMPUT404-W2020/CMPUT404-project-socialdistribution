@@ -45,23 +45,27 @@
         var followingNum = follows.length.toString();
 
         if (notificationNum === '1'){
-            var notificationString = " You have 1 friend request";
+            var notificationString = "  You have 1 friend request";
         } else {
-            var notificationString = 'You have ' + notificationNum + ' friend requests';
+            var notificationString = '  You have ' + notificationNum + ' friend requests';
         }
 
         if (friendNum === '1'){
-            var friendString = " You have 1 friend";
+            var friendString = "  You have 1 friend";
         } else {
-            var friendString = 'You have ' + friendNum + ' friends';
+            var friendString = '  You have ' + friendNum + ' friends';
         }
 
         if (followingNum === '1'){
-            var followingString = " You are following 1 user";
+            var followingString = "  You are following 1 user";
         } else {
-            var followingString = 'You are following ' + followingNum + ' users';
+            var followingString = '  You are following ' + followingNum + ' users';
         }
 
+        
+        
+        
+        var display = document.getElementById("friend-requests");
         var notificationContent = "";
         notificationContent += `
             <br> 
@@ -91,36 +95,37 @@
             </div>`;
         }
         notificationContent += '</span>';
-
-        var display = document.getElementById("friend-requests");
         display.innerHTML = notificationContent;
 
 
-
         var displayFriends = document.getElementById("friends");
-        displayFriends.innerHTML = "";
-        displayFriends.innerHTML += ` 
+        var friendsContent = "";
+        friendsContent += `
+            <br> 
             <span class='arrow-right' id='friend-right-arrow' onclick='displayNotifications("friend-block","friend-right-arrow","friend-down-arrow")' style = 'display: inline-block'> </span>
-            <span class='arrow-down' id='friend-down-arrow' onclick='displayNotifications("friend-block","friend-down-arrow","friend-right-arrow")' style = 'display: none'> </span>`
-            + friendString + '<span id="friend-block" style = "display: none;">';
+            <span class='arrow-down' id='friend-down-arrow' onclick='displayNotifications("friend-block","friend-down-arrow","friend-right-arrow")' style = 'display: none'> </span>` + friendString + '<span id="friend-block" style = "display: none;">';
         for (let f of friends) {
             var fName = f['name'];
             var fId = f['following_uuid'];
             var btn_id = createButtonId(fName);
-            displayFriends.innerHTML += `<div>
+            friendsContent += `<div>
             <hr class="greyline">
             <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend(${fId}')">-</button></div>`;
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend(${fId}')">-</button>
+            </div>`;
         }
-        displayFriends.innerHTML += '</span>';
+        friendsContent += '</span>';
+
+        
+        displayFriends.innerHTML = friendsContent;
 
         var displayFollowers = document.getElementById("following");
-        displayFollowers.innerHTML = "";
-        displayFollowers.innerHTML += `<br> 
+        var followingContent = "";
+        followingContent += `<br> 
             <span class='arrow-right' id='following-right-arrow' onclick='displayNotifications("following-block","following-right-arrow","following-down-arrow")' style = 'display: inline-block'> </span>
             <span class='arrow-down' id='following-down-arrow' onclick='displayNotifications("following-block","following-down-arrow","following-right-arrow")' style = 'display: none'> </span> `
             + followingString + '<span id="following-block" style = "display: none;">';
@@ -128,17 +133,20 @@
             var fName = f['following'];
             var fId = f['following_uuid'];
             var btn_id = createButtonId(fName);
-            displayFollowers.innerHTML += `<div>
+            followingContent += `<div>
             <hr class="greyline">
             <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Following </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')">-</button></div>`;
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')">-</button>
+            </div>`;
         }
-        displayFollowers.innerHTML += '</span>';
+        followingContent += '</span>';
+        displayFollowers.innerHTML = followingContent;
     }
+    
 
     function loadTheThings() {
         loadBar();
