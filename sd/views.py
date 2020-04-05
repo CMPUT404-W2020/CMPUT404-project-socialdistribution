@@ -539,8 +539,11 @@ def new_post(request):
                 form = NewPostForm(info, request.FILES)
                 if form.is_valid():
                     post = form.save()
-                    # with open(myfile, "rb") as image_file:
-                    post.link_to_image = base64.b64encode(myfile.read())        
+                    post.link_to_image = 'media/'+post.image.name
+                    post.save()
+                    with open(post.link_to_image, "rb") as image:
+                        temp = base64.b64encode(image.read())        
+                    post.link_to_image = temp
                     post.save()
                     print('CONSOLE: Post successful! Redirecting to your feed.\nLocals:',locals())
                     return redirect('my_feed')
