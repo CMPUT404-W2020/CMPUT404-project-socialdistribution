@@ -163,7 +163,7 @@ function removeFriend(author) {
     })
       .then(function(data) {
         alert(
-          `You have successfully removed ${author} as a friend.\n${author} can still see your public posts.`
+          `You have successfully removed them as a friend.\nTheycan still see your public posts.`
         );
       })
       .catch(function(data) {
@@ -198,7 +198,7 @@ function unfollow(author) {
       return response
     })
     .then(function(response) {
-      alert(`You have successfully unfollowed ${author}.`);
+      alert(`You have successfully unfollowed them.`);
     })
     .catch(function(error) {
       alert(
