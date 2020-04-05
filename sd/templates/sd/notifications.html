@@ -84,7 +84,7 @@
         display.innerHTML += '</div>'
 
         var displayFriends = document.getElementById("friends");
-        displayFriends.innerHTML = `<br> 
+        displayFriends.innerHTML = ` 
             <span class='arrow-right' id='friend-right-arrow' onclick='displayNotifications("friend-block","friend-right-arrow","friend-down-arrow")' style = 'display: inline-block'> </span>
             <span class='arrow-down' id='friend-down-arrow' onclick='displayNotifications("friend-block","friend-down-arrow","friend-right-arrow")' style = 'display: none'> </span>`
             + friendString + '<div id="friend-block" style = "display: none;">';
@@ -92,14 +92,14 @@
             var fName = f['name'];
             var fId = f['following_uuid'];
             var btn_id = createButtonId(fName);
-            displayFriends.innerHTML += `<br>
+            displayFriends.innerHTML += `<div>
             <hr class="greyline">
             <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend(${fId}')"">-</button>`;
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend(${fId}')"">-</button></div>`;
         }
         displayFriends.innerHTML += '</div>'
 
@@ -112,14 +112,14 @@
             var fName = f['following'];
             var fId = f['following_uuid'];
             var btn_id = createButtonId(fName);
-            displayFollowers.innerHTML += `<br>
+            displayFollowers.innerHTML += `<div>
             <hr class="greyline">
             <span class="searchauthor">${fName}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Following </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> Local </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')"">-</button>`;
+            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')"">-</button></div>`;
         }
         displayFollowers.innerHTML += '</div>'
 
