@@ -560,3 +560,9 @@ posts/<uuid>/comments
 ## Testing
 
 There is a script for running tests. The tests require selenium, which should be installed when you run `pip install -r requirements.txt` from the root directory of the project. Next, you need Firefox installed on your machine. Lastly, you need gecko installed on your machine, which can be done on a Mac by running `brew install gecko`. Then, ensure the test script is executable or run `chmod +x runtests.sh` to make it executable. Now, run `./runtests.sh` to run the tests! There are basic tests for the models and views as well as integration tests for all the major functionality. The tests should take approximately 4 minutes to run, so please be patient.
+
+The following functions do not have automated tests as they all have alerts and Selenium has a known issue with dismissing alerts:
+* Delete post
+* Send friend request
+* Unfriend another author
+* Unfollow another author
