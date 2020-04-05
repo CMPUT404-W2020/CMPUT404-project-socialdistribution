@@ -574,7 +574,7 @@ def get_image(request, pk):
         # try:
         post = Post.objects.get(uuid=pk)
         if post.image:
-            img_format = post.image.split('.')[-1]
+            img_format = post.image.name.split('.')[-1]
             outfile = open(post.link_to_image, 'wb')
             outfile.write(post.link_to_image.decode('base64'))
             return 'data:image/%s;base64, %s' % (img_format, encoded_string)
