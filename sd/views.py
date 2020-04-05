@@ -142,7 +142,17 @@ def feed(request):
                         'comment': c.comment,
                         'published': c.published
                     })
-                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comments':comments})
+
+                # Get all authors
+                ret_authors = []
+                all_authors = Author.objects.exclude(username=user)
+                for a in all_authors:
+                    entry = {}
+                    entry['name'] = a.username
+                    entry['uuid'] = a.uuid
+                    ret_authors.append(entry)
+
+                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comments':comments, 'all_authors':ret_authors})
             else:
                 print("CONSOLE: Redirecting from Feed because no one is logged in")
                 return redirect('login')

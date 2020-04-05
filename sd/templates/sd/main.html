@@ -64,7 +64,14 @@
 								</div>
 							{% endwith %}
 						{% endif %}
-						<div id = "author"> {{post.author.username}} </div>
+
+						<!-- get the username of post author instead of uuid -->
+						{% for author in all_authors %}
+							{% if post.author == author.uuid %}
+								<div id = "author"> {{author.name}} </div>
+							{% endif %}
+						{% endfor %}
+
 		                <div id = "date"> {{post.published}} <br> <br> </div>
 		                <div id = "title">{{post.title}} <br> <br> </div>
 		                {% if post.link_to_image %}
