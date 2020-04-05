@@ -68,8 +68,8 @@
 						<!-- get the username of post author instead of uuid -->
 						{% for author in all_authors %}
 							<script>
-								console.log(post.author)
-								console.log(author)
+								console.log({{post.author}})
+								console.log({{author}})
 							</script>
 							{% if post.author == author.uuid %}
 								<div id = "author"> {{author.name}} </div>
