@@ -291,7 +291,7 @@ def notifications(request):
             context["friends"] = ret_friends
             context["requests"] = all_requests
             context["host1"] = host_list1
-            context["host2"] = hostlist2
+            context["host2"] = host_list2
 
             return render(request, 'sd/notifications.html', context)
         else:
