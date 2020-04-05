@@ -572,20 +572,19 @@ def new_post(request):
 
 def get_image(request, pk):
     if request.method == "GET":
-        # try:
-        post = Post.objects.get(uuid=pk)
-        if post.image:
-            img_format = post.image.name.split('.')[-1]
-            outfile = open('temp.'+img_format, 'wb')
-            outfile.write(base64.b64decode(post.link_to_image))
-            outfile.close()
-            with open(outfile.name, 'rb') as out:
-                return HttpResponse(out, content_type='image/'+img_format)
-        else:
-            
-            return HttpResponse(status_code=204)
-        # except:
-        #     return render(request, 'sd/404.html')
+        try:
+            post = Post.objects.get(uuid=pk)
+            if post.image:
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format)
+            else:
+                return HttpResponse(status_code=204)
+        except:
+            return render(request, 'sd/404.html')
     else:
         return HttpResponse(status_code=405)
 
