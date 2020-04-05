@@ -119,7 +119,7 @@
             var btn_id = createButtonId(fName);
             friendsContent += `<div>
             <hr class="greyline">
-            <span class="searchauthor">${fName}</span>
+            <span class="searchauthor">${fName} ${fId}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
@@ -128,9 +128,8 @@
             </div>`;
         }
         friendsContent += '</span>';
-
-        
         displayFriends.innerHTML = friendsContent;
+
 
         var displayFollowers = document.getElementById("following");
         var followingContent = "";
@@ -144,7 +143,7 @@
             var btn_id = createButtonId(fName);
             followingContent += `<div>
             <hr class="greyline">
-            <span class="searchauthor">${fName}</span>
+            <span class="searchauthor">${fName} ${fId}</span>
             <span class="orangedot"></span>
             <span class="searchrelation"> Following </span>
             <span class="bluedot"></span>

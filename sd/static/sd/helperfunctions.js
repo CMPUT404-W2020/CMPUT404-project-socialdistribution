@@ -177,6 +177,7 @@ function removeFriend(author) {
         alert(
           `You have successfully removed them as a friend.\n They can still see your public posts.`
         );
+        location.reload();
       })
       .catch(function(data) {
         alert(
