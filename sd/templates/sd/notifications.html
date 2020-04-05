@@ -32,13 +32,8 @@
     }
 
     function displayResults(results, friends, follows) {
-        console.log(results);
-        console.log(friends);
-        console.log(follows);
-        for (let f of friends) {
-            console.log(f['name']);
-        }
 
+        //Change grammar to plural or singular depending on number of results
         var notificationNum = results.length.toString();
         var friendNum = friends.length.toString();
         var followingNum = follows.length.toString();
@@ -63,7 +58,7 @@
 
         
         
-        
+        //display the friend requests
         var display = document.getElementById("friend-requests");
         var notificationContent = "";
         notificationContent += `
@@ -99,6 +94,7 @@
         display.innerHTML = notificationContent;
 
 
+        //display the list of your friends
         var displayFriends = document.getElementById("friends");
         var friendsContent = "";
         friendsContent += `
@@ -133,6 +129,7 @@
         displayFriends.innerHTML = friendsContent;
 
 
+        //display the list of people you follow
         var displayFollowers = document.getElementById("following");
         var followingContent = "";
         followingContent += `<br> 

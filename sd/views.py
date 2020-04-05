@@ -183,7 +183,18 @@ def search(request):
         return redirect('login')
 
     # Get all authors
+    ret_authors = []
     all_authors = Author.objects.exclude(username=user)
+    for a in all_authors:
+        entry = {}
+        entry['name']=a.username
+        if a.host == user.host:
+            entry["host"] = 'Local'
+        else:
+            entry["host"] = 'Remote'
+        ret_authors.append(entry)
+
+
 
     # Get all follows
     my_follows = Follow.objects.filter(Q(follower=user))
@@ -200,6 +211,16 @@ def search(request):
         entry["follower_uuid"] = f.follower.uuid
         entry["following_uuid"] = f.following.uuid
 
+        #see if they are local or remote
+        if f.following.host == user.host:
+            entry["followinghost"] = 'Local'
+        else:
+            entry["followinghost"] = 'Remote'
+        if f.follower.host == user.host:
+            entry["followerhost"] = 'Local'
+        else:
+            entry["followerhost"] = 'Remote'
+
         ret_follows.append(entry)
 
     # Get all friends
@@ -211,9 +232,17 @@ def search(request):
         if f.friend == user:
             entry["uuid"] = f.author.uuid
             entry["name"] = f.author.username
+            if f.author.host == user.host:
+                entry["host"] = 'Local'
+            else:
+                entry["host"] = 'Remote'
         else:
             entry["uuid"] = f.friend.uuid
             entry["name"] = f.friend.username
+            if f.friend.host == user.host:
+                entry["host"] = 'Local'
+            else:
+                entry["host"] = 'Remote'            
         ret_friends.append(entry)
 
     context = {}

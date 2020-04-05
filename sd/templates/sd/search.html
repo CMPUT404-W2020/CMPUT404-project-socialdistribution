@@ -46,6 +46,7 @@
                         entry['status'] = 'Friends';
                         entry['icon'] = '-';
                         entry['action'] = `"removeFriend('${f['uuid']}')"`
+                        entry['host'] = f['host'];
                     }
                 }
 
@@ -56,10 +57,13 @@
                             entry['status'] = 'Following';
                             entry['icon'] = '-';
                             entry['action'] = `"unfollow('${f['following_uuid']}', '${f['following']}')"`
+                            entry['host'] = f['followinghost'];
+
                             break;
                         } else if (f['follower'] == a) {
                             entry['status'] = 'Follows you'
                             entry['icon'] = '+';
+                            entry['host'] = f['followerhost'];
                             break;
                         }
                     }
