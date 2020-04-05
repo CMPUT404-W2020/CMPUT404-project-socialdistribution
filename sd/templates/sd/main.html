@@ -69,7 +69,7 @@
 						{% for author in all_authors %}
 							<script>
 								console.log({{post.author}})
-								console.log({{author}})
+								console.log({{author.uuid}})
 							</script>
 							{% if post.author == author.uuid %}
 								<div id = "author"> {{author.name}} </div>
