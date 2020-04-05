@@ -45,7 +45,17 @@ def explore(request):
                     'comment': c.comment,
                     'published': c.published
                 })
-            return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results, 'comments':comments})
+
+            # Get all authors
+            ret_authors = []
+            all_authors = Author.objects.all()
+            for a in all_authors:
+                entry = {}
+                entry['name'] = a.username
+                entry['uuid'] = a.uuid
+                ret_authors.append(entry)
+
+            return render(request, 'sd/main.html', {'current_user': user, 'authenticated': is_authenticated, 'results': results, 'comments':comments,'all_authors':ret_authors})
         elif request.method=="POST":
             data = request.POST
             author = Author.objects.get(uuid=data['user'])
@@ -142,7 +152,17 @@ def feed(request):
                         'comment': c.comment,
                         'published': c.published
                     })
-                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comments':comments})
+
+                # Get all authors
+                ret_authors = []
+                all_authors = Author.objects.all()
+                for a in all_authors:
+                    entry = {}
+                    entry['name'] = a.username
+                    entry['uuid'] = a.uuid
+                    ret_authors.append(entry)
+
+                return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comments':comments, 'all_authors':ret_authors})
             else:
                 print("CONSOLE: Redirecting from Feed because no one is logged in")
                 return redirect('login')
@@ -183,7 +203,18 @@ def search(request):
         return redirect('login')
 
     # Get all authors
+    ret_authors = []
     all_authors = Author.objects.exclude(username=user)
+    for a in all_authors:
+        entry = {}
+        entry['name']=a.username
+        if a.host == user.host:
+            entry["host"] = 'Local'
+        else:
+            entry["host"] = 'Remote'
+        ret_authors.append(entry)
+
+
 
     # Get all follows
     my_follows = Follow.objects.filter(Q(follower=user))
@@ -200,6 +231,16 @@ def search(request):
         entry["follower_uuid"] = f.follower.uuid
         entry["following_uuid"] = f.following.uuid
 
+        #see if they are local or remote
+        if f.following.host == user.host:
+            entry["followinghost"] = 'Local'
+        else:
+            entry["followinghost"] = 'Remote'
+        if f.follower.host == user.host:
+            entry["followerhost"] = 'Local'
+        else:
+            entry["followerhost"] = 'Remote'
+
         ret_follows.append(entry)
 
     # Get all friends
@@ -211,13 +252,22 @@ def search(request):
         if f.friend == user:
             entry["uuid"] = f.author.uuid
             entry["name"] = f.author.username
+            if f.author.host == user.host:
+                entry["host"] = 'Local'
+            else:
+                entry["host"] = 'Remote'
         else:
             entry["uuid"] = f.friend.uuid
             entry["name"] = f.friend.username
+            if f.friend.host == user.host:
+                entry["host"] = 'Local'
+            else:
+                entry["host"] = 'Remote'            
         ret_friends.append(entry)
 
     context = {}
     context['authors'] = [author.username for author in all_authors]
+    context['authors_full'] = ret_authors
     context["current_user"] = user
     context["follows"] = ret_follows
     context["friends"] = ret_friends
@@ -229,26 +279,76 @@ def notifications(request):
         print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
+
+            # Get all friend requests
             fr_requests = FriendRequest.objects.filter(Q(to_author=user))
             all_requests = []
             for a in fr_requests:
-                print(a.from_author)
-                all_requests.append(a.from_author)
+                entry = {}
+                entry["name"] = a.from_author.username
+                if a.from_author.host == user.host:
+                    entry["host"] = 'Local'
+                else:
+                    entry["host"] = 'Remote'
+                all_requests.append(entry)
+
+            # Get all authors
+            all_authors = Author.objects.exclude(username=user)
+
+            # Get all users that current user follows
+            my_follows = Follow.objects.filter(Q(follower=user))
+            follows_me = Follow.objects.filter(Q(following=user))
+
+            #find a list of people who follow you
+            follows_me_list = []
+            for f in follows_me:
+                follows_me_list.append(f.follower.uuid)
+
+            # The follow object doesn't return names, it returns more objects
+            # So I need to put it in a form that JS will understand
+            # only returns people you follow if you are not friends with them (they don't follow you back)
+            ret_follows = []
+            for f in my_follows:
+                if f.following.uuid not in follows_me_list:
+                    entry = {}
+                    entry["following"] = f.following.username
+                    entry["following_uuid"] = f.following.uuid
+                    if f.following.host == user.host:
+                        entry["host"] = 'Local'
+                    else:
+                        entry["host"] = 'Remote'
+                    ret_follows.append(entry)
 
             # Get all friends
-            all_friends = Friend.objects.filter(Q(author=user)) | Friend.objects.filter(Q(friend=user))
+            all_friends = Friend.objects.filter(
+                Q(author=user)) | Friend.objects.filter(Q(friend=user))
             ret_friends = []
             for f in all_friends:
                 entry = {}
                 if f.friend == user:
                     entry["uuid"] = f.author.uuid
                     entry["name"] = f.author.username
+                    if f.author.host == user.host:
+                        entry["host"] = 'Local'
+                    else:
+                        entry["host"] = 'Remote'
                 else:
                     entry["uuid"] = f.friend.uuid
                     entry["name"] = f.friend.username
+                    if f.friend.host == user.host:
+                        entry["host"] = 'Local'
+                    else:
+                        entry["host"] = 'Remote'
                 ret_friends.append(entry)
+            
+            context = {}
+            context['authors'] = [author.username for author in all_authors]
+            context["current_user"] = user
+            context["follows"] = ret_follows
+            context["friends"] = ret_friends
+            context["requests"] = all_requests
 
-            return render(request, 'sd/notifications.html', {"requests": all_requests, "friends": ret_friends})
+            return render(request, 'sd/notifications.html', context)
         else:
             print("CONSOLE: Redirecting from Notifications because no one is logged in")
             return redirect('login')
