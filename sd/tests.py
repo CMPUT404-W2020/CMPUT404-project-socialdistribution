@@ -190,6 +190,7 @@ class URLTests(SimpleTestCase):
         self.assertEqual(r.func, edit_account)
 
 class IntegratedTests(StaticLiveServerTestCase):
+    # Integration tests for all major functionality
     def setUp(self):
         # start selenium webdriver
         self.driver = webdriver.Firefox()
@@ -474,17 +475,15 @@ class IntegratedTests(StaticLiveServerTestCase):
         assert "SQUAWK" in header.get_attribute('innerHTML')
 
         # find next button
-        right_page = False
-        while not right_page:
-            buttons = driver.find_elements_by_xpath('.//span[@id="blue-button"]')
-            for b in buttons:
-                if b.text == "NEXT":
-                    b.click()
-                    break
-            if driver.current_url == self.live_server_url + "feed?page=2":
-                right_page = True
-                assert driver.current_url == self.live_server_url + "feed?page=2"
+        buttons = driver.find_elements_by_xpath('.//span[@id="blue-button"]')
+        for b in buttons:
+            if b.text == "NEXT":
+                b.click()
+                break
 
+        assert driver.current_url == self.live_server_url + "feed?page=2"
+
+        # find back button
         buttons = driver.find_elements_by_xpath('.//span[@id="blue-button"]')
         for b in buttons:
             if b.text == "PREVIOUS":
@@ -606,7 +605,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         logout_btn.click()
         assert driver.current_url == self.live_server_url + "login"
 
-    def test_register(self):
+    def register(self):
         # find and click register button
         driver = self.driver
         driver.get(self.live_server_url + "login")
@@ -660,24 +659,10 @@ class IntegratedTests(StaticLiveServerTestCase):
         login_btn.click()
         assert driver.current_url == self.live_server_url + "feed"
 
-    def test_edit_account(self):
-        # login as the test user
+    def edit_account(self):
         driver = self.driver
-        driver.get(self.live_server_url + "login")
-        u_name = driver.find_element_by_name("username")
-        u_name.send_keys("Selenium")
-        p_word = driver.find_element_by_name("password")
-        p_word.send_keys("testing")
-        login_btn = driver.find_element_by_id("login-button")
-        login_btn.click()
-        assert driver.current_url == self.live_server_url + "feed"
 
         time.sleep(2)
-
-        # Look for header
-        header = driver.find_element_by_id("header")
-        assert "SQUAWK" in header.get_attribute('innerHTML')
-
         # find account button
         account = driver.find_element_by_xpath('//img[@alt="Account"]')
         account.click()
@@ -703,3 +688,6 @@ class IntegratedTests(StaticLiveServerTestCase):
         email = driver.find_element_by_id("id_email")
         assert email.get_attribute("value") == "selenium@test.ca"
 
+    def test_register_then_edit(self):
+        self.register()
+        self.edit_account()
