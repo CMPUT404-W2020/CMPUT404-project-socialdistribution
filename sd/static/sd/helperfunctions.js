@@ -9,8 +9,8 @@ function displayCommentsCheck(that) {
   }
 }
 
-
-
+//used to show drop down information on the notification page
+//will switch between showArrow element and hideArrow element
 function displayNotifications(content,hideArrow, showArrow) {
   if (document.getElementById(content).style.display == "block") {
     document.getElementById(content).style.display = "none";
@@ -18,7 +18,7 @@ function displayNotifications(content,hideArrow, showArrow) {
     document.getElementById(content).style.display = "block";
   }
   document.getElementById(hideArrow).style.display = "none";
-  document.getElementById(showArrow).style.display = "block";
+  document.getElementById(showArrow).style.display = "inline-block";
 }
 
 function showDropdown(that) {
