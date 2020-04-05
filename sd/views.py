@@ -544,7 +544,7 @@ def new_post(request):
                     filetype = post.image.name.split('.')[1]
                     with open(post.link_to_image, "rb") as image:
                         temp = base64.b64encode(image.read())    
-                    temp.decode('utf-8')    
+                    temp = temp.decode('utf-8')    
                     post.link_to_image = 'data:image/'+filetype+';base64,'+temp
                     post.save()
                     print('CONSOLE: Post successful! Redirecting to your feed.\nLocals:',locals())
