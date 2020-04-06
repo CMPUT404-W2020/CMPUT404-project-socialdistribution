@@ -10,7 +10,7 @@ def valid_method(request):
 def authenticated(request):
     try:
         return request.session['authenticated'] and get_current_user(request).verified
-    except KeyError:
+    except KeyError as k:
         return False
 
 

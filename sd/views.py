@@ -70,9 +70,8 @@ def explore(request):
 
 @csrf_exempt
 def verify(request):
-    if request.method == "GET" and authenticated(request):
-        user = get_current_user(request)
-        if user.is_superuser and user.is_staff:
+    if request.method == "GET":
+        if authenticated(request) and get_current_user(request).is_superuser and get_current_user(request).is_staff:
             unverified = Author.objects.filter(Q(verified=False))
             return render(request, 'sd/verify.html', {'unverified': unverified})
         else:
@@ -87,7 +86,6 @@ def verify(request):
         except Exception as e:
             print("CONSOLE: Couldn't verify:",e, locals())
             return HttpResponse(status_code=500)
-
     else:
         return HttpResponse(status_code=405)
 
