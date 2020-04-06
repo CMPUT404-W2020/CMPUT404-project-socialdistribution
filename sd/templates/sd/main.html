@@ -125,7 +125,7 @@
 										{% csrf_token %} 
 										<input name="user" id="userId" value={{current_user.uuid}} type="hidden">
 										<input name="post" id="postId" value={{post.uuid}} type="hidden">
-										<input name="comment" type="text" id = "addcommentfield" placeholder="Add a comment..."/>
+										<input name="comment" type="text" id = "addcommentfield" placeholder="Add a comment..." required/>
 										<div id="submit-button-section">
 											<input type="submit" value="SUBMIT" id="submit-blue-button"/>
 										</div>

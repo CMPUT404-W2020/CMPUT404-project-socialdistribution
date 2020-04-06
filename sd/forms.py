@@ -42,11 +42,11 @@ class NewPostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'content', 'contentType', 'description', 'categories', 'image', 'link_to_image', 'author', 'visibility', 'visibleTo', 'unlisted',)
         widgets = {
-            'contentType': forms.Select(choices=WEB_CONTENT_CHOICES),
-            'visibility': forms.Select(),
+            'contentType': forms.Select(choices=WEB_CONTENT_CHOICES, attrs={'required':'true'}),
+            'visibility': forms.Select(attrs={'required':'true'}),
             'author': forms.HiddenInput(),
-            'content': forms.Textarea(),
-            'title': forms.Textarea(),
+            'content': forms.Textarea(attrs={'required':'true'}),
+            'title': forms.Textarea(attrs={'required':'true'}),
             'description': forms.Textarea(),
             'link_to_image': forms.Textarea(attrs={'placeholder':'https://cdn1.iconfinder.com/data/icons/cute-bear-emoticon/595/CUTE_BEAR_EMOTICON-05-512.png'}),
             'categories': forms.Textarea(attrs={'placeholder': 'comma-separated tags'}),
@@ -68,11 +68,11 @@ class EditPostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'content', 'contentType', 'description', 'categories', 'author', 'visibility', 'visibleTo', 'unlisted',)
         widgets = {
-            'contentType': forms.Select(choices=WEB_CONTENT_CHOICES),
-            'visibility': forms.Select(),
+            'contentType': forms.Select(choices=WEB_CONTENT_CHOICES, attrs={'required':'true'}),
+            'visibility': forms.Select(attrs={'required':'true'}),
             'author': forms.HiddenInput(),
-            'content': forms.Textarea(),
-            'title': forms.Textarea(),
+            'content': forms.Textarea(attrs={'required':'true'}),
+            'title': forms.Textarea(attrs={'required':'true'}),
             'description': forms.Textarea(),
             'categories': forms.Textarea(attrs={'placeholder': 'comma-separated tags'}),
             'visibleTo': forms.Textarea(attrs={'placeholder': 'comma-separated usernames'})
