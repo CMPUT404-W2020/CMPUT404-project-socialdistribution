@@ -27,12 +27,12 @@ class EditAccountForm(forms.ModelForm):
         model = Author
         fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'github']
         widgets = {
-            'first_name': forms.Textarea(attrs={'required':'true', 'rows':1}),
-            'last_name': forms.Textarea(attrs={'required':'true', 'rows':1}),
-            'username': forms.Textarea(attrs={'required':'true', 'rows':1}),
-            'email': forms.Textarea(attrs={'placeholder': 'e.g. coolbear@uberta.ca', 'rows':1}),
+            'first_name': forms.Textarea(attrs={'required':'true', 'height':'-1px'}),
+            'last_name': forms.Textarea(attrs={'required':'true', 'height':'-1px'}),
+            'username': forms.Textarea(attrs={'required':'true', 'height':'-1px'}),
+            'email': forms.Textarea(attrs={'placeholder': 'e.g. coolbear@uberta.ca', 'height':'-1px'}),
             'bio': forms.Textarea(),
-            'github': forms.Textarea(attrs={'placeholder': 'Github account name e.g. wlt91', 'rows':1})
+            'github': forms.Textarea(attrs={'placeholder': 'Github account name e.g. wlt91', 'height':'-1px'})
         }
         labels = {
             "first_name" : "* First Name:",
