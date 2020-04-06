@@ -30,7 +30,7 @@ class EditAccountForm(forms.ModelForm):
             'first_name': forms.Textarea(attrs={'required':'true'}),
             'last_name': forms.Textarea(attrs={'required':'true'}),
             'username': forms.Textarea(attrs={'required':'true'}),
-            'email': forms.EmailField(),
+            'email': forms.Textarea((attrs={'placeholder': 'e.g. coolbear@uberta.ca'}),
             'bio': forms.Textarea(),
             'github': forms.Textarea(attrs={'placeholder': 'Github account name e.g. wlt91'})
         }
