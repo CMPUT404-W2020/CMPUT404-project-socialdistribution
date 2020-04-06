@@ -160,12 +160,15 @@ textarea {
   height: 10em;
   border-radius: 10px;
   border: 1.5px solid #f0f0f0;
-  padding: 0.2em;
+  padding: 0.5em;
   margin: 0.4em;
   width: 98%;
   resize: vertical;
   outline-color: grey;
   word-wrap: break-word;
+  font-style: normal;
+  font-size: 0.8em;
+  font-family: "Merriweather Sans";
 }
 
 input[type=checkbox]{
@@ -173,12 +176,34 @@ input[type=checkbox]{
   border: 1.5px solid #f0f0f0;
 }
 
-/* text boxes 
-TODO: get boxes to line up*/
-#id_title, #id_description, #id_content, #id_source, #id_link_to_image, #id_categories, #id_visibleTo{
+/* text boxes on create post and edit post*/
+#id_title, #id_description,  #id_link_to_image, #id_categories, #id_visibleTo{
+ box-sizing: border-box;
+ height: 2.5em;
+ margin: 0.5em;
+ word-wrap: break-word;
 }
 
-p label {
+#id_content{
+ box-sizing: border-box;
+ height: 6em;
+ padding: 0.5em;
+ word-wrap: break-word;
+}
+
+#id_image{
+  height: 3em;
+  border:none;
+  word-wrap: break-word;
+  }
+
+#id_contentType, #id_visibility, #id_unlisted {
+  font-style: normal;
+  font-size: 0.8em;
+  font-family: "Merriweather Sans";
+  padding: 0.5em;
+  margin: 0.5em;
+  word-wrap: break-word;
 }
 
 
@@ -264,7 +289,6 @@ p label {
   border-radius: 10px;
   background-color: white;
   margin-bottom: 2em;
-  top: 1; /* start after header */
   padding: 2em 3em 2em 3em;
   border: 2.5px solid #f0f0f0;
   word-wrap: break-word;
@@ -331,7 +355,7 @@ p label {
 /* comments */
 
 .commentSection{
-  margin: 1em 4em 1em 2em;
+  margin: 1em 2em 1em 2em;
 }
 
 /* lists number of comments in feed item */
@@ -350,12 +374,8 @@ p label {
   border-radius: 10px;
   background-color: white;
   margin-bottom: 1em;
-  margin-right: 0em;
-  margin-left: 0em;
-  top: 1; /* start after header */
-  padding: 0.5em 1em 0.5em 1em ;
+  padding: 0.5em 0em 0.5em 1em ;
   border: 1.5px solid #f0f0f0;
-  width: 100%;
  }
 
 #commentauthor {
@@ -391,12 +411,11 @@ p label {
 
 
 #addcommentfield {
-  height: 2em;
-  margin-bottom: 1em;
-  margin-right: 0em;
-  margin-left: 0em;
+  height: 3em;
+  margin: 0em 0em 1em 0em;
   width: 100%;
   padding: 0.5em 1em 0.5em 1em;
+  box-sizing: border-box;
 }
 
 
@@ -650,7 +669,7 @@ form>.row {
   background-color: white;
   margin: 0.2em;
   border: 1.5px solid;
-  border-color: black;
+  border-color: #f0f0f0;
 }
 
 #orange-button:hover {
@@ -668,12 +687,12 @@ form>.row {
   background-color: white;
   margin: 0.2em;
   border: 1.5px solid;
-  border-color: lightgray;
+  border-color: #f0f0f0;
 }
 
 #blue-button:hover {
-  cursor: pointer;
   background-color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
 }
 
 #orangebackground-button {
@@ -768,6 +787,12 @@ form>.row {
   clear: both;
 }
 
+#search-val{
+  margin-left:0em;
+  margin-right:0em;
+  width:100%
+}
+
 .search-results {
   margin-top: 2em;
 }
@@ -785,7 +810,7 @@ form>.row {
   border: 1.5px solid black;
   color: black;
   float: right;
-}
+}search
 
 .addminusbutton:hover {
   color: #ed9a00;
