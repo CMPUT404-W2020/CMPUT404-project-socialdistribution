@@ -768,6 +768,12 @@ form>.row {
   clear: both;
 }
 
+#search-val{
+  margin-left:0em;
+  margin-right:0em;
+  width:100%
+}
+
 .search-results {
   margin-top: 2em;
 }
