@@ -421,9 +421,10 @@ def login(request):
             return redirect('login')
 
         if (pass_word != user.password) and not (check_password(pass_word, user.password)):
+            errors = "Invalid password, please try again"
             print("CONSOLE: Incorrect password for " +
                   user_name+", please try again")
-            return redirect('login')
+            return render(request, 'login', {'user':user.username, 'errors':errors})
 
         request.session['authenticated'] = True
         user = Author.objects.get(username=user_name)
@@ -470,7 +471,7 @@ def register(request):
             else:
                 return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':author_serializer.errors})
         except IntegrityError as i:
-            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':i})
+            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':i, 'data':info})
     else:
         return HttpResponse(status_code=405)
 
