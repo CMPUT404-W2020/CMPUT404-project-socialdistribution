@@ -663,12 +663,12 @@ form>.row {
   background-color: white;
   margin: 0.2em;
   border: 1.5px solid;
-  border-color: lightgray;
+  border-color: #f0f0f0;
 }
 
 #blue-button:hover {
-  cursor: pointer;
   background-color: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
 }
 
 #orangebackground-button {
