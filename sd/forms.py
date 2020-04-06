@@ -50,6 +50,7 @@ class NewPostForm(forms.ModelForm):
         labels = {
             "title" : "*Post Title:",
             "image" : "Upload Image:",
+            "link_to_image" : "Image link (will be overwritten if an image file is uploaded)"
             "visibility" : "*Privacy Setting:",
             "visibleTo" : "Who can see your private post?",
             "unlisted" : "*Allow your post to be listed in other's feeds?",
