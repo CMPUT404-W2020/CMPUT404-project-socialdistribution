@@ -140,20 +140,44 @@ def load_foreign_databases():
                                     host=node)
                     author.save()
                 comments = post.get('comments',[])
-                post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
-                     title=post.get('title', 'NOTITLEFOUND'),
+
+                title = post.get('title', 'NOTITLEFOUND')
+                if any(x in title for x in ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico']):
+                    image = title
+                    link = post.get('content', 'NOCONTENTFOUND')
+                    new_title = "Image"
+                    new_content = ""
+                    post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
+                     title=new_title,
                      source=post.get('source', node),
                      origin=post.get('source', node),
-                     content=post.get('content', 'NOCONTENTFOUND')[:5000],
+                     content=new_content,
                      description=post.get('description', 'NODESCRIPTIONFOUND'),
-                     contentType=post.get('contentType', 'text/plain'),
+                     contentType='text/plain',
                      author=author,
                      #categories
                      published=post.get('published', 'NOPUBLISHDATEFOUND'),
                      unlisted=post.get('unlisted', False),
                      visibility=post.get('visibility','PUBLIC'),
+                     image=image,
+                     link_to_image=link,
                      #visibleTo
                      )
+                else:
+                    post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
+                        title=post.get('title', 'NOTITLEFOUND'),
+                        source=post.get('source', node),
+                        origin=post.get('source', node),
+                        content=post.get('content', 'NOCONTENTFOUND')[:5000],
+                        description=post.get('description', 'NODESCRIPTIONFOUND'),
+                        contentType=post.get('contentType', 'text/plain'),
+                        author=author,
+                        #categories
+                        published=post.get('published', 'NOPUBLISHDATEFOUND'),
+                        unlisted=post.get('unlisted', False),
+                        visibility=post.get('visibility','PUBLIC'),
+                        #visibleTo
+                        )
                 post.save()
                 for comment in comments:
                      try:
