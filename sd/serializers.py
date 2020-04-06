@@ -62,11 +62,13 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
 
 class GetPostSerializer(serializers.ModelSerializer):
+    published = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
 
     class Meta:
         model = Post
-        fields = ['title', 'source', 'description', 'contentType', 'content', 'author', 'categories',
-                  'uuid', 'visibility', 'visibleTo', 'unlisted', 'link_to_image', 'image']
+        fields = '__all__'
+
+    
 
 
 class DeletePostSerializer(serializers.ModelSerializer):
