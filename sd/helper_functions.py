@@ -94,15 +94,14 @@ def load_github_feed(user):
             print("CONSOLE: repo_names", repo_names)
             for r in repo_names:
                 commit_data = json.loads(requests.get('https://api.github.com/repos/'+user.github+'/' + r + '/commits').content.decode())
-                posts = []
-                for com in commit_data:
+            for com in commit_data:
                     d = com['commit']['author']['date'].split('T')[0].split('-')
                     date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
                     if(current-date).days < 30:
                         exists = Post.objects.filter(Q(description=com['node_id']) & Q(author=user.uuid))
                         if not exists:
                             try:
-                                post = Post.objects.create(title = "Commit to "+r, source=user.host, description=com['node_id'], contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='PRIVATE', unlisted=False, link_to_image=com['committer']['avatar_url'])
+                                Post.objects.create(title = "Commit to "+r, source=user.host, description=com['node_id'], contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='PRIVATE', unlisted=False, link_to_image=com['committer']['avatar_url'])
                                 print("CONSOLE: Created a Github post: "+com['commit']['message'])
                             except Exception as e:
                                 print("CONSOLE: Error creating Github post", e)
@@ -128,9 +127,14 @@ def load_foreign_databases():
                        password='password',
                        github=author['github'],
                        host=node)
+                new_author.save()
         except IntegrityError:
-            new_author.username = new_author.username+'('+trimmed_name+')'
-        new_author.save()
+            new_author = Author(uuid=post['author']['id'],
+                username=post['author']['displayName']+'@'+trimmed_name,
+                password='password',
+                github=post['author']['github'],
+                host=node)
+            new_author.save()
             
 
         try:
