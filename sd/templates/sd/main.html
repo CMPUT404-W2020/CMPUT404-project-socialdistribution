@@ -71,7 +71,7 @@
 								<div id = "author"> {{author.name}} </div>
 							{% endif %}
 						{% endfor %}
-		                <div id = "date"> {{post.published}} <br> <br> </div>
+		                <div id = "date"> {{post.published | date:"d-m-Y h:M"}} <br> <br> </div>
 						<div id = "title">{{post.title}} <br> <br> </div>
 						{% if post.image %}
 							<a class="feedimage-link" href="image/{{post.uuid}}">
@@ -112,7 +112,7 @@
 									{% if post.uuid == comment.post %}
 										<div class = "commentitem">
 											<div id = "commentauthor"> {{comment.author}} </div>
-											<div id = "commentdate"> {{comment.published | date:"d-m-Y h:M"}} <br> </div>
+											<div id = "commentdate"> {{comment.published}} <br> </div>
 											<div id = "commentbody"> <p> {{ comment.comment }} <br> </p> </div>
 										</div>
 									{% endif %}
