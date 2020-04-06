@@ -12,7 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponse
 from django.core.files.storage import FileSystemStorage
-from django.core.exceptions import IntegrityError
+from django.db import IntegrityError
 import social_distribution.settings
 import requests
 import commonmark
