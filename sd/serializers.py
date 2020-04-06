@@ -62,7 +62,7 @@ class CreatePostSerializer(serializers.ModelSerializer):
 
 
 class GetPostSerializer(serializers.ModelSerializer):
-    published = serializers.DateTimeField(format="%d-%m-%Y %H:%M:%S")
+    published = serializers.DateTimeField(format="%B %d, %Y, %I:%M $p")
 
     class Meta:
         model = Post
