@@ -164,7 +164,7 @@ def load_foreign_databases():
                      unlisted=post.get('unlisted', False),
                      visibility=post.get('visibility','PUBLIC'),
                      image=post.get('image', None),
-                     link_to_image=post.get('link', post.get('link_to_image', None))
+                     link_to_image=post.get('link', '')
                      )
 
                 if any(x in new_post.title for x in ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico']):
