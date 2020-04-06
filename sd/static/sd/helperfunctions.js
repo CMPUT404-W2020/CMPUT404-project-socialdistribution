@@ -50,7 +50,7 @@ function confirmDelete(post) {
   }
 }
 
-function confirmVerify(user) {
+function confirmVerify(author) {
   var yes = confirm(
     "Verify user?"
   );
@@ -58,7 +58,7 @@ function confirmVerify(user) {
   if (yes) {
     const origin = window.location.origin;
     const data = {
-      target_author: user
+      target_author: author
     };
     fetch(origin + "/verify", {
       method: "POST",
