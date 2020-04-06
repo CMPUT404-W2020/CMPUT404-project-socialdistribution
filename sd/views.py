@@ -424,7 +424,7 @@ def login(request):
             errors = "Invalid password, please try again."
             print("CONSOLE: Incorrect password for " +
                   user_name+", please try again")
-            return render(request, 'login', {'user':user.username, 'errors':errors})
+            return render(request, 'sd/login.html', {'user':user.username, 'errors':errors})
 
         request.session['authenticated'] = True
         user = Author.objects.get(username=user_name)
