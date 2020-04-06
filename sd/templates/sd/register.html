@@ -25,7 +25,6 @@
     </div>
 
     <div class="signup-form">
-        {% block content %}
         <h3>Create Account</h3>
 
         <form method="POST">
@@ -84,8 +83,7 @@
             &nbsp;
 
         </form>
-        {% endblock content %}
-        <br>
+        <p>Already a user? Log in <a id="signuplink" href="{% url 'login' %}">here</a></p>        
     </div>
 
 
