@@ -78,8 +78,8 @@ class EditPostForm(forms.ModelForm):
             'visibleTo': forms.Textarea()
         }
         labels = {
-            "title" : "* Post Title:",
-            "visibility" : "* Privacy Setting:",
+            "title" : "* Title:",
+            "visibility" : "* Privacy:",
             "visibleTo" : "Who can see your private post?",
             "unlisted" : "* Allow your post to be listed in other's feeds?",
             "contentType" : "* Content Type:"

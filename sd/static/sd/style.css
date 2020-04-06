@@ -160,12 +160,15 @@ textarea {
   height: 10em;
   border-radius: 10px;
   border: 1.5px solid #f0f0f0;
-  padding: 0.2em;
+  padding: 0.5em;
   margin: 0.4em;
   width: 98%;
   resize: vertical;
   outline-color: grey;
   word-wrap: break-word;
+  font-style: normal;
+  font-size: 0.8em;
+  font-family: "Merriweather Sans";
 }
 
 input[type=checkbox]{
@@ -176,18 +179,32 @@ input[type=checkbox]{
 /* text boxes on create post and edit post*/
 #id_title, #id_description,  #id_link_to_image, #id_categories, #id_visibleTo{
  box-sizing: border-box;
- height: 2em;
+ height: 2.5em;
+ margin: 0.5em;
+ word-wrap: break-word;
 }
 
 #id_content{
  box-sizing: border-box;
  height: 6em;
  padding: 0.5em;
+ word-wrap: break-word;
 }
 
 #id_image{
+  height: 3em;
   border:none;
+  word-wrap: break-word;
   }
+
+#id_contentType, #id_visibility, #id_unlisted {
+  font-style: normal;
+  font-size: 0.8em;
+  font-family: "Merriweather Sans";
+  padding: 0.5em;
+  margin: 0.5em;
+  word-wrap: break-word;
+}
 
 
 
