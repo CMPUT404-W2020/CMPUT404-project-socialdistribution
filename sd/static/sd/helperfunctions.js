@@ -84,6 +84,7 @@ function confirmVerify(author) {
           "Couldn't verify user.\nPlease try again later."
           );
       });
+    }
   }
 
 function simpleText() {
