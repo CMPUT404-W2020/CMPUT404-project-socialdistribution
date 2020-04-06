@@ -68,6 +68,7 @@ def explore(request):
     else:
         return HttpResponse(status_code=405)
 
+@csrf_exempt
 def verify(request):
     if request.method == "GET" and authenticated(request):
         user = get_current_user(request)
