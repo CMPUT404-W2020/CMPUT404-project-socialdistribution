@@ -653,6 +653,8 @@ form>.row {
   margin-right:auto;
   margin-left:auto;
   text-align: center;
+  padding-top: 0.1em;
+  padding-bottom: 0.1em;
 }
 
 .edit-button {
