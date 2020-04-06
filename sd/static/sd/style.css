@@ -350,12 +350,8 @@ p label {
   border-radius: 10px;
   background-color: white;
   margin-bottom: 1em;
-  margin-right: 0em;
-  margin-left: 0em;
-  top: 1; /* start after header */
-  padding: 0.5em 1em 0.5em 1em ;
+  padding: 0.5em 0em 0.5em 1em ;
   border: 1.5px solid #f0f0f0;
-  width: 100%;
  }
 
 #commentauthor {
@@ -391,12 +387,11 @@ p label {
 
 
 #addcommentfield {
-  height: 2em;
+  height: 3em;
   margin-bottom: 1em;
-  margin-right: 0em;
-  margin-left: 0em;
   width: 100%;
   padding: 0.5em 1em 0.5em 1em;
+  box-sizing: border-box;
 }
 
 
@@ -791,7 +786,7 @@ form>.row {
   border: 1.5px solid black;
   color: black;
   float: right;
-}
+}search
 
 .addminusbutton:hover {
   color: #ed9a00;
