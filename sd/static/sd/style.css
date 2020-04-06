@@ -696,8 +696,8 @@ form>.row {
 
 .newusers{
   margin-top: 7em;
-  margin-left: 25em; /* Same as the width of the sidebar */
-  margin-right: 6em;
+  margin-left: 10em; /* Same as the width of the sidebar */
+  margin-right: 10em;
   margin-bottom: 7em;
   border-radius: 10px;
   background-color: white;
