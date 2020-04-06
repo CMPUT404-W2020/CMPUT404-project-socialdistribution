@@ -425,7 +425,7 @@ def login(request):
             return render(request, 'sd/login.html', {'username':user.username, 'errors':errors})
         
         elif not user.verified:
-            errors = "Unverified user. Please wait till the admins approve your account."
+            errors = "Unverified user. Please wait until the administrators approve your account."
             return render(request, 'sd/login.html', {'username':user.username, 'errors':errors})
 
         request.session['authenticated'] = True
@@ -470,9 +470,11 @@ def register(request):
                     " successfully registered! Redirecting to your feed")
                 return redirect('my_feed')
             else:
-                return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':author_serializer.errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
+                errors = "Username taken"
+                return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
         except IntegrityError as i:
-            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':i, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
+            errors = "Username taken"
+            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
     else:
         return HttpResponse(status_code=405)
 
