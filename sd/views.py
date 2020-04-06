@@ -807,7 +807,7 @@ def edit_post(request, post_id):
             post.description = data['description']
             post.categories = data['categories']
             post.visibility = data['visibility']
-            post.visibleTo = date['visibleTo']
+            post.visibleTo = data['visibleTo']
             post.unlisted = data['unlisted']
             post.save()
             return redirect('my_feed')
