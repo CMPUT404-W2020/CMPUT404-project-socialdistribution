@@ -842,7 +842,7 @@ def edit_account(request):
             return render(request, 'sd/edit_account.html', {'form': form, 'current_user': user, 'authenticated': True})
         else:
             data = request.POST
-            if Author.objects.filter(username=data['username']):
+            if Author.objects.filter(username=data['username']).exclude(uuid=user.uuid):
                 errors = "Username taken"
                 return render(request, 'sd/edit_account.html', {'form': EditAccountForm(instance=user), 'current_user': user, 'authenticated': True, 'errors':errors})
             user.first_name = data['first_name']
