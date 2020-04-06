@@ -4,7 +4,7 @@ from rest_framework.generics import CreateAPIView, RetrieveAPIView
 from rest_framework.authtoken.models import Token
 from rest_framework.authtoken.views import ObtainAuthToken
 from rest_framework.permissions import AllowAny, IsAuthenticated
-from rest_framework.authentication import SessionAuthentication, BasicAuthentication
+from rest_framework.authentication import SessionAuthentication, BasicAuthentication, BaseAuthentication
 from rest_framework.response import Response
 from rest_framework.views import APIView
 from rest_framework import status
@@ -23,6 +23,7 @@ from .forms import *
 import os
 import json
 import uuid
+from base64 import b64decode
 from uuid import uuid4
 
 
@@ -76,6 +77,19 @@ def serializeAuthor(author):
     authorDict['email'] = author.email
     return authorDict
 
+
+class NodeBasicAuth(BaseAuthentication):
+    def authenticate(self, request):
+        try:
+            auth = request.META['HTTP_AUTHORIZATION'].split()
+            if auth[0].lower() == "basic":
+                server_name, server_password = b64decode(auth[1]).decode().split(':')
+                node = Node.objects.get(server_name=server_name, server_password=server_password)
+                if node:
+                    return (Author.objects.get(username='warren'), None)
+            raise
+        except:
+            return None
 
 class CreateAuthorAPIView(CreateAPIView):
     authentication_classes = [SessionAuthentication, BasicAuthentication]
@@ -328,8 +342,8 @@ class GetAllAuthorFriendsAPIView(APIView):
             "authors": friendsList
         })
 
-
 class GetAllPublicPostsAPIView(APIView):
+    authentication_classes = [NodeBasicAuth,SessionAuthentication, BasicAuthentication]
     serializer_class = GetPostSerializer
 
     def get(self, request, format=None):
