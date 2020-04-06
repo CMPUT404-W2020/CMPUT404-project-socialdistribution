@@ -142,7 +142,7 @@ def load_foreign_databases():
                 comments = post.get('comments',[])
 
                 title = post.get('title', 'NOTITLEFOUND')
-                if any(x in title for x in ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico'])
+                if any(x in title for x in ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico']):
                     image = title
                     link = post.get('content', 'NOCONTENTFOUND')
                     new_title = "Image"
