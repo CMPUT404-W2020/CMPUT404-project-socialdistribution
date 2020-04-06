@@ -417,19 +417,18 @@ def login(request):
             user = Author.objects.get(username=user_name)
         except:
             request.session['authenticated'] = False
-            errors = "No account found for username="+user_name+". Please check the spelling and try again."
-            return render(request, 'sd/login.html', {'user':user.username, 'errors':errors})
+            errors = "No account found for "+user_name+". Please check the spelling and try again."
+            return render(request, 'sd/login.html', {'username':user_name, 'errors':errors})
 
         if (pass_word != user.password) and not (check_password(pass_word, user.password)):
             errors = "Invalid password, please try again."
-            return render(request, 'sd/login.html', {'username':user.username, 'errors':errors})
+            return render(request, 'sd/login.html', {'username':user_name, 'errors':errors})
         
         elif not user.verified:
             errors = "Unverified user. Please wait until the administrators approve your account."
-            return render(request, 'sd/login.html', {'username':user.username, 'errors':errors})
+            return render(request, 'sd/login.html', {'username':user_name, 'errors':errors})
 
         request.session['authenticated'] = True
-        user = Author.objects.get(username=user_name)
         key = user.uuid
         request.session['auth-user'] = str(key)
         request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
