@@ -18,9 +18,10 @@ class CreateAuthorSerializer(serializers.ModelSerializer):
         # read_only_fields = ('uuid',)
 
     def create(self, validated_data):
-        author = Author(validated_data)
+        author = super(CreateAuthorSerializer, self).create(validated_data)
         author.set_password(validated_data['password'])
         author.host = Node.objects.get(hostname=(settings.HOSTNAME))
+        author.save()
         return author
 
     # def update(self, instance, validated_data):
