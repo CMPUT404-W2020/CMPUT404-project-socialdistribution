@@ -48,9 +48,9 @@ class NewPostForm(forms.ModelForm):
             'content': forms.Textarea(),
             'title': forms.Textarea(),
             'description': forms.Textarea(),
-            'link_to_image': forms.Textarea(),
-            'categories': forms.Textarea(),
-            'visibleTo': forms.Textarea()
+            'link_to_image': forms.Textarea(attrs={'placeholder':'https://cdn1.iconfinder.com/data/icons/cute-bear-emoticon/595/CUTE_BEAR_EMOTICON-05-512.png'),
+            'categories': forms.Textarea(attrs={'placeholder': 'comma-separated tags'}),
+            'visibleTo': forms.Textarea(attrs={'placeholder': 'comma-separated usernames'})
         }
         labels = {
             "title" : "* Title:",
@@ -74,8 +74,8 @@ class EditPostForm(forms.ModelForm):
             'content': forms.Textarea(),
             'title': forms.Textarea(),
             'description': forms.Textarea(),
-            'categories': forms.Textarea(),
-            'visibleTo': forms.Textarea()
+            'categories': forms.Textarea(attrs={'placeholder': 'comma-separated tags'}),
+            'visibleTo': forms.Textarea(attrs={'placeholder': 'comma-separated usernames'})
         }
         labels = {
             "title" : "* Title:",
