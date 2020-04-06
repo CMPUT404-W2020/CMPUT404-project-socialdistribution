@@ -189,7 +189,7 @@ def load_foreign_databases():
                              published=comment.get('published', datetime.datetime.now()),
                              contentType=comment.get('contentType', 'text/plain'),
                              author=author,
-                             post=post
+                             post=new_post
                              ).save()
             try:
                 posts = requests.get('{}posts?page={}'.format(node.hostname, int(posts['next']))).json()
