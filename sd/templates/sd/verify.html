@@ -32,7 +32,7 @@ function loadBar() {
 		<hr class="greyline">
 		<span class="searchauthor">{{user.username}}</span>
 		<span class="searchrelation"> From {{user.host}} </span>
-		<button class="button" id="save-button" onclick="confirmVerify('{{user.uuid}}')">VERIFY</button>
+		<button type="button" id="save-button" onclick="confirmVerify('{{user.uuid}}')">VERIFY</button>
 		<br>
 		{% endfor %}
 	</div>
