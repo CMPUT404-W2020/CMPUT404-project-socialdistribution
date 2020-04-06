@@ -173,13 +173,21 @@ input[type=checkbox]{
   border: 1.5px solid #f0f0f0;
 }
 
-/* text boxes 
-TODO: get boxes to line up*/
-#id_title, #id_description, #id_content, #id_source, #id_link_to_image, #id_categories, #id_visibleTo{
+/* text boxes on create post and edit post*/
+#id_title, #id_description,  #id_link_to_image, #id_categories, #id_visibleTo{
+ box-sizing: border-box;
+ height: 3em;
 }
 
-p label {
+#id_content{
+ box-sizing: border-box;
+ height: 6em;
+ padding: 0.5em;
 }
+
+#id_content{
+  border:none;
+  }
 
 
 
@@ -264,7 +272,6 @@ p label {
   border-radius: 10px;
   background-color: white;
   margin-bottom: 2em;
-  top: 1; /* start after header */
   padding: 2em 3em 2em 3em;
   border: 2.5px solid #f0f0f0;
   word-wrap: break-word;
@@ -388,7 +395,7 @@ p label {
 
 #addcommentfield {
   height: 3em;
-  margin-bottom: 1em;
+  margin: 0em 0em 1em 0em;
   width: 100%;
   padding: 0.5em 1em 0.5em 1em;
   box-sizing: border-box;

@@ -40,18 +40,23 @@ class NewPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title', 'description', 'content', 'image', 'link_to_image', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
+        fields = ('title', 'content', 'contentType', 'description', 'categories', 'image', 'link_to_image', 'author', 'visibility', 'visibleTo', 'unlisted',)
         widgets = {
             'contentType': forms.Select(choices=WEB_CONTENT_CHOICES),
             'visibility': forms.Select(),
             'author': forms.HiddenInput(),
-            'content': forms.Textarea()
+            'content': forms.Textarea(),
+            'title': forms.Textarea(),
+            'description': forms.Textarea(),
+            'link_to_image': forms.Textarea(),
+            'categories': forms.Textarea(),
+            'visibleTo': forms.Textarea()
         }
         labels = {
-            "title" : "*Post Title:",
+            "title" : "*Title:",
             "image" : "Upload Image:",
             "link_to_image" : "Image link (will be ignored if an image file is uploaded)",
-            "visibility" : "*Privacy Setting:",
+            "visibility" : "*Privacy:",
             "visibleTo" : "Who can see your private post?",
             "unlisted" : "*Allow your post to be listed in other's feeds?",
             "contentType" : "* Content Type:"
@@ -61,12 +66,17 @@ class EditPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title', 'description', 'content', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
+        fields = ('title', 'content', 'contentType', 'description', 'categories', 'author', 'visibility', 'visibleTo', 'unlisted',)
         widgets = {
             'contentType': forms.Select(choices=WEB_CONTENT_CHOICES),
             'visibility': forms.Select(),
             'author': forms.HiddenInput(),
-            'content': forms.Textarea()
+            'content': forms.Textarea(),
+            'title': forms.Textarea(),
+            'description': forms.Textarea(),
+            'link_to_image': forms.Textarea(),
+            'categories': forms.Textarea(),
+            'visibleTo': forms.Textarea()
         }
         labels = {
             "title" : "*Post Title:",
