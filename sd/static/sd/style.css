@@ -283,7 +283,6 @@ input[type=checkbox]{
   margin-left: 6em;
 }
 
-
 /* each feed item style */
 .feeditem {
   border-radius: 10px;
@@ -584,6 +583,24 @@ form>.row {
   margin: 0.2em;
 }
 
+#button1 {
+  color: white;
+  font-size: 1em;
+  width: auto;
+  float: right;
+  background-color: #9dc7ba;
+  border-radius: 10px;
+  border: 1.5px solid #f0f0f0;
+  padding: 0.4em;
+  margin-top:-0.5em;
+  text-align: center;
+}
+
+#button1:hover {
+  background-color: #9dc7baa2;
+  cursor: pointer;
+}
+
 #cancel-button{
   width: auto;
   float: right;
@@ -651,6 +668,19 @@ form>.row {
   margin-top: 7em;
   margin-left: 25em; /* Same as the width of the sidebar */
   margin-right: 6em;
+  border-radius: 10px;
+  background-color: white;
+  top: 1; /* start after header */
+  padding: 2em 3em 2em 3em ;
+  border: 2.5px solid #f0f0f0;
+  word-wrap: break-word;
+}
+
+.newusers{
+  margin-top: 7em;
+  margin-left: 25em; /* Same as the width of the sidebar */
+  margin-right: 6em;
+  margin-bottom: 7em;
   border-radius: 10px;
   background-color: white;
   top: 1; /* start after header */

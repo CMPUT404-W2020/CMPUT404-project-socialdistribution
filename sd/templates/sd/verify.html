@@ -1,0 +1,43 @@
+{% load static %}
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Squawk | Verify</title>
+	<meta charset="UTF-8">
+	<meta name="description" content="Post Page">
+	<meta name="author" content="CMPUT404 Group">
+
+	<!-- stylesheets / css -->
+	<link rel="stylesheet" href="../../static/sd/style.css">
+	<link rel="icon" href="{% static '../../static/sd/icons/favicon.png' %}">
+	<script type="text/javascript" src="../../static/sd/helperfunctions.js"></script>
+	<script src="https://code.jquery.com/jquery-1.10.2.js"></script>
+</head>
+
+<script type="text/javascript">
+
+function loadBar() {
+    $("#header").load("../static/sd/header.html");
+    $("#navbar").load("../static/sd/navbar.html");
+}
+
+</script>
+
+<body onload="loadBar()">
+    <div class="header" id="header">
+    </div>
+
+    <div class="newusers">
+		<h1>Unverified Users</h1>
+		{% for user in unverified %}
+		<hr class="greyline">
+		<span class="searchauthor">{{user.username}}</span>
+		<span class="searchrelation"> From {{user.host}} </span>
+		<button type="button" id="button1" onclick="confirmVerify('{{user.uuid}}')">VERIFY</button>
+		<br>
+		{% endfor %}
+	</div>
+</body>
+</html>
+
+

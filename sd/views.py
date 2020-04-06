@@ -68,6 +68,27 @@ def explore(request):
     else:
         return HttpResponse(status_code=405)
 
+@csrf_exempt
+def verify(request):
+    if request.method == "GET":
+        if authenticated(request) and get_current_user(request).is_superuser and get_current_user(request).is_staff:
+            unverified = Author.objects.filter(Q(verified=False))
+            return render(request, 'sd/verify.html', {'unverified': unverified})
+        else:
+            return render(request, 'sd/401.html', status=401)
+    elif request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            target = Author.objects.get(uuid=data['target_author'])
+            target.verified = True
+            target.save()
+            return HttpResponse()
+        except Exception as e:
+            print("CONSOLE: Couldn't verify:",e, locals())
+            return HttpResponse(status_code=500)
+    else:
+        return HttpResponse(status_code=405)
+
 
 def feed(request):
     if valid_method(request):
@@ -680,11 +701,9 @@ def get_image(request, pk):
         try:
             post = Post.objects.get(uuid=pk)
         except:
-            return render(request, 'sd/404.html') #Can't find user, return Not Found
+            return render(request, 'sd/404.html', status=404) #Can't find user, return Not Found
 
         if post.image and post.link_to_image:
-            if post.unlisted==True:
-                return render(request, 'sd/403.html') #Post unlisted, Forbidden
 
             if post.visibility=="PUBLIC":
                 img_format = post.image.name.split('.')[-1]
@@ -698,7 +717,7 @@ def get_image(request, pk):
                 user = get_current_user(request)
                 target = Author.objects.get(uuid=post.author)
             except:
-                return render(request, 'sd/404.html') #Author not found, return Not Found
+                return render(request, 'sd/404.html', status=404) #Author not found, return Not Found
 
             my_friends = Friend.objects.filter(Q(author=user.uuid) | Q(friend=user.uuid))
             friend_check = my_friends.objects.filter(Q(author=target.uuid) | Q(friend=target.uuid))
@@ -740,9 +759,9 @@ def get_image(request, pk):
                 with open(outfile.name, 'rb') as out:
                     return HttpResponse(out, content_type='image/'+img_format) #200
         
-            return render(request, 'sd/401.html') #Checked all the rules and you're not allowed to see it
+            return render(request, 'sd/401.html', status=401) #Checked all the rules and you're not allowed to see it
         else:
-            return render(request, 'sd/404.html') #Can't find no image/link to image        
+            return render(request, 'sd/404.html', status=404) #Can't find no image/link to image        
     else:
         return HttpResponse(status_code=405) # Bad Method
 

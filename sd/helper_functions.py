@@ -9,7 +9,7 @@ def valid_method(request):
 
 def authenticated(request):
     try:
-        return request.session['authenticated'] == True
+        return request.session['authenticated'] and get_current_user(request).verified
     except KeyError as k:
         return False
 
@@ -186,7 +186,7 @@ def load_foreign_databases():
                          continue
                      Comment(uuid=comment.get('id', 'NOUUIDFOUND'),
                              comment=comment.get('comment', 'NOTITLEFOUND'),
-                             published=comment.get('published', 'NOPUBLISHDATEFOUND'),
+                             published=comment.get('published', datetime.datetime.now()),
                              contentType=comment.get('contentType', 'text/plain'),
                              author=author,
                              post=post
