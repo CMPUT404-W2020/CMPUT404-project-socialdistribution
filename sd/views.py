@@ -454,7 +454,7 @@ def register(request):
             return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False})
         info = request._post
         author_serializer = CreateAuthorSerializer(data=info)
-        if friend_serializer.is_valid():
+        if author_serializer.is_valid():
             author_serializer.save()
             request.session['authenticated'] = True
             user = Author.objects.get(
