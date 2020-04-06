@@ -38,6 +38,11 @@ function loadBar() {
         <form method="POST">
             {% csrf_token %}
             {{ form.as_p }}
+            {% if errors %}
+            <div id="error-message">
+                {{errors}}
+            </div>
+            {% endif %}
             <input type="submit" value="SAVE" id="save-button" style="float: right;">
             <a href="../account">
                 <button id="cancel-button"> CANCEL </button>
