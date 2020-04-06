@@ -47,13 +47,13 @@ class Post(models.Model):
     uuid = models.UUIDField(
         primary_key=True, default=uuid4, editable=False, unique=True)
     visibilityChoices = [("PUBLIC",     "Public"),
-                         ("FOAF",       "Friends of friends"),
+                         ("FOAF",       "Friends of Friends"),
                          ("FRIENDS",    "Friends"),
                          ("PRIVATE",    "Private"),
-                         ("SERVERONLY", "Server Only")]
+                         ("SERVERONLY", "Local Friends")]
     visibility = models.CharField(max_length=30, choices=visibilityChoices)
     visibleTo = models.CharField(max_length=10000000, blank=True)
-    unlistedChoices = [(False, "LISTED"), (True, "UNLISTED")]
+    unlistedChoices = [(False, "Listed"), (True, "Unlisted")]
     unlisted = models.BooleanField(max_length=30, choices=unlistedChoices)
 
     # TODO: update url with the post id and correct path based on api
