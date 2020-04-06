@@ -621,6 +621,13 @@ form>.row {
   margin-bottom: 2em;
 }
 
+#signup-button {
+  width: auto;
+  font-size: medium;
+  margin-top: 1em;
+  margin-bottom: 2em;
+}
+
 #login-button:hover {
   background-color: rgba(255, 255, 255, 0.6);
   cursor: pointer;

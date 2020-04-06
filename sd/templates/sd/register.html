@@ -36,7 +36,7 @@
                 </div>
                 <div class="column" style="float: right;">
                     
-                    <input name="first_name" {% if first_name %} placeholder="{{first_name}}" {% else %} placeholder="First Name" {% endif %}><br>
+                    <input name="first_name" {% if first_name %} placeholder="{{first_name}}" {% else %} placeholder="First Name" {% endif %} style="padding-left: 0.5em"><br>
                 </div>
             </div>
              <div class="row">
@@ -44,7 +44,7 @@
                     Last Name:
                 </div>
                 <div class="column" style="float: right;">
-                    <input name="last_name" {% if last_name %} placeholder="{{last_name}}" {% else %} placeholder="Last Name" {% endif %}><br>
+                    <input name="last_name" {% if last_name %} placeholder="{{last_name}}" {% else %} placeholder="Last Name" {% endif %} style="padding-left: 0.5em"><br>
                 </div>
             </div>
             <div class="row">
@@ -52,7 +52,7 @@
                     Username:
                 </div>
                 <div class="column" style="float: right;">
-                    <input name="username" {% if username  %} placeholder="{{username}}" {% else %} placeholder="Username" {% endif %}><br>
+                    <input name="username" {% if username  %} placeholder="{{username}}" {% else %} placeholder="Username" {% endif %} style="padding-left: 0.5em"><br>
                 </div>
             </div>
             <div class="row">
@@ -60,7 +60,7 @@
                     Password:
                 </div>
                 <div class="column" style="float: right;">
-                    <input name="password" type="password" placeholder="Password"><br>
+                    <input name="password" type="password" placeholder="Password" style="padding-left: 0.5em"><br>
                 </div>
             </div>
             <div class="row">
@@ -68,7 +68,7 @@
                     Email:
                 </div>
                 <div class="column" style="float: right;">
-                    <input name="email" type="email" {% if email %} placeholder="{{email}}" {% else %} placeholder="Email Address" {% endif %}><br>
+                    <input name="email" type="email" {% if email %} placeholder="{{email}}" {% else %} placeholder="Email Address" {% endif %} style="padding-left: 0.5em"><br>
                 </div>
             </div>
             <br>
@@ -78,11 +78,8 @@
                 {{errors}}
             </div>
             {% endif %}
-            <input type="submit" value="SIGN-UP" id="login-button" style="float: right;">
-
-
+            <input type="submit" value="SIGN-UP" id="signup-button"">
         </form>
-        <br><br>
         <p>Already a user? Log in <a id="signuplink" href="{% url 'login' %}">here</a></p>        
     </div>
 
