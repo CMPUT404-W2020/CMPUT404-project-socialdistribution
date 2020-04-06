@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponse
 from django.core.files.storage import FileSystemStorage
+from django.core.exceptions import IntegrityError
 import social_distribution.settings
 import requests
 import commonmark
@@ -453,20 +454,23 @@ def register(request):
         if request.method == "GET":
             return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False})
         info = request._post
-        author_serializer = CreateAuthorSerializer(data=info)
-        if author_serializer.is_valid():
-            author_serializer.save()
-            request.session['authenticated'] = True
-            user = Author.objects.get(
-                username=author_serializer.data['username'])
-            key = user.uuid
-            request.session['auth-user'] = str(key)
-            request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
-            print("CONSOLE: "+user.username +
-                  " successfully registered! Redirecting to your feed")
-            return redirect('my_feed')
-        else:
-            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':author_serializer.errors})
+        try:
+            author_serializer = CreateAuthorSerializer(data=info)
+            if author_serializer.is_valid():
+                author_serializer.save()
+                request.session['authenticated'] = True
+                user = Author.objects.get(
+                    username=author_serializer.data['username'])
+                key = user.uuid
+                request.session['auth-user'] = str(key)
+                request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
+                print("CONSOLE: "+user.username +
+                    " successfully registered! Redirecting to your feed")
+                return redirect('my_feed')
+            else:
+                return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':author_serializer.errors})
+        except IntegrityError as i:
+            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':i})
     else:
         return HttpResponse(status_code=405)
 
