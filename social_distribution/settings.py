@@ -114,11 +114,6 @@ DATABASES = {
     }
 }
 
-DATE_FORMAT = "%d-%m-%Y %H:%M:%S"
-DATETIME_FORMAT = "%d-%m-%Y %H:%M:%S"
-USE_L10N = False
-USE_TZ = False
-
 
 # Password validation
 # https://docs.djangoproject.com/en/2.2/ref/settings/#auth-password-validators

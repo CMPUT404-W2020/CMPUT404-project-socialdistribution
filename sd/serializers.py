@@ -65,7 +65,8 @@ class GetPostSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Post
-        fields = '__all__'
+        fields = ['title', 'source', 'description', 'contentType', 'content', 'author', 'categories',
+                  'uuid', 'visibility', 'visibleTo', 'unlisted', 'link_to_image', 'image']
 
 
 class DeletePostSerializer(serializers.ModelSerializer):

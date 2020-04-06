@@ -62,8 +62,6 @@ class Post(models.Model):
     host = models.ForeignKey(Node,
                              on_delete=models.CASCADE, default=settings.HOSTNAME, db_column='host')
 
-    def nice_date(self):
-        return self.published.strftime("%d-%m-%Y %H:%M:%S")
 
 class Comment(models.Model):
     uuid = models.UUIDField(
