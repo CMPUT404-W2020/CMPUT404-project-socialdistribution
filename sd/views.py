@@ -417,22 +417,23 @@ def login(request):
             user = Author.objects.get(username=user_name)
         except:
             request.session['authenticated'] = False
-            print("CONSOLE: "+user_name+" not found, please try again")
-            return redirect('login')
+            errors = "No account found for username="+user_name+". Please check the spelling and try again."
+            return render(request, 'sd/login.html', {'user':user.username, 'errors':errors})
 
         if (pass_word != user.password) and not (check_password(pass_word, user.password)):
             errors = "Invalid password, please try again."
-            print("CONSOLE: Incorrect password for " +
-                  user_name+", please try again")
-            return render(request, 'sd/login.html', {'user':user.username, 'errors':errors})
+            return render(request, 'sd/login.html', {'username':user.username, 'errors':errors})
+        
+        elif not user.verified:
+            errors = "Unverified user. Please wait till the admins approve your account."
+            return render(request, 'sd/login.html', {'username':user.username, 'errors':errors})
 
         request.session['authenticated'] = True
         user = Author.objects.get(username=user_name)
         key = user.uuid
         request.session['auth-user'] = str(key)
         request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
-        print("CONSOLE: "+user.username +
-              " successfully logged in, redirecting to feed")
+
         load_foreign_databases()
         return redirect('my_feed')
     else:
@@ -469,9 +470,9 @@ def register(request):
                     " successfully registered! Redirecting to your feed")
                 return redirect('my_feed')
             else:
-                return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':author_serializer.errors})
+                return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':author_serializer.errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
         except IntegrityError as i:
-            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':i})
+            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':i, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
     else:
         return HttpResponse(status_code=405)
 

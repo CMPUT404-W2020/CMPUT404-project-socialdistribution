@@ -37,7 +37,7 @@
                 </div>
                 <div class="column" style="float: right;">
                     
-                    <input name="first_name" placeholder="First Name"><br>
+                    <input name="first_name" {% if first_name %} placeholder="{{first_name}}" {% else %} placeholder="First Name" {% endif %}><br>
                 </div>
             </div>
              <div class="row">
@@ -45,7 +45,7 @@
                     Last Name:
                 </div>
                 <div class="column" style="float: right;">
-                    <input name="last_name" placeholder="Last Name"><br>
+                    <input name="last_name" {% if last_name %} placeholder="{{last_name}}" {% else %} placeholder="Last Name" {% endif %}><br>
                 </div>
             </div>
             <div class="row">
@@ -53,7 +53,7 @@
                     Username:
                 </div>
                 <div class="column" style="float: right;">
-                    <input name="username" placeholder="Username"><br>
+                    <input name="username" {% if username  %} placeholder="{{username}}" {% else %} placeholder="Username" {% endif %}><br>
                 </div>
             </div>
             <div class="row">
@@ -69,7 +69,7 @@
                     Email:
                 </div>
                 <div class="column" style="float: right;">
-                    <input name="email" type="email" placeholder="Email Address"><br>
+                    <input name="email" type="email" {% if email %} placeholder="{{email}}" {% else %} placeholder="Email Address" {% endif %}><br>
                 </div>
             </div>
             <br>
