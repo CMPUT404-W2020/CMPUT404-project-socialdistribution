@@ -320,6 +320,13 @@ p label {
   margin-bottom: 2em;
 }
 
+#imagelink{
+  width:10em;
+  margin-left: auto;
+  margin-right: auto;
+  display: block;
+}
+
 
 /* comments */
 
