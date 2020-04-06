@@ -73,17 +73,19 @@
 						{% endfor %}
 		                <div id = "date"> {{post.published}} <br> <br> </div>
 						<div id = "title">{{post.title}} <br> <br> </div>
+
 						<div>
 							{% if post.image %}
-								<a id="imagelink" href="image/{{post.uuid}}">
+								<a class="feedimage-link" id="imagelink" href="image/{{post.uuid}}">
 									<img class="feedimage" src="image/{{post.uuid}}" alt="Image">
 								</a>
 			                {% elif post.link_to_image %}
-				                <a id="imagelink" href="{{post.link_to_image}}">
+				                <a class="feedimage-link" id="imagelink" href="{{post.link_to_image}}">
 				                	<img class="feedimage" src="{{post.link_to_image}}" alt="Link to Image">
 				                </a>
 							{% endif %}
 						</div>
+						
 		                <div id = "postBody">{{post.content | safe}} <br> <br> </div>
 
 		                <div class="commentSection"> 
@@ -137,12 +139,12 @@
 
 				<div class="navigate-feed">
 					{% if results.next %}
-						<a href="?page={{results.next}}">
+						<a href="?page={{results.next}}&size={{results.size}}">
 							<span class="button" id="blue-button"> NEXT </span>
 						</a>
 					{% endif %}
 					{% if results.previous %}
-						<a href="?page={{results.previous}}">
+						<a href="?page={{results.previous}}&size={{results.size}}">
 						<span class="button" id="blue-button"> PREVIOUS </span>
 						</a>
 					{% endif %}
