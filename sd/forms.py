@@ -53,12 +53,12 @@ class NewPostForm(forms.ModelForm):
             'visibleTo': forms.Textarea()
         }
         labels = {
-            "title" : "*Title:",
+            "title" : "* Title:",
             "image" : "Upload Image:",
             "link_to_image" : "Image link (will be ignored if an image file is uploaded)",
-            "visibility" : "*Privacy:",
+            "visibility" : "* Privacy:",
             "visibleTo" : "Who can see your private post?",
-            "unlisted" : "*Allow your post to be listed in other's feeds?",
+            "unlisted" : "* Allow your post to be listed in other's feeds?",
             "contentType" : "* Content Type:"
         }
 
@@ -74,15 +74,14 @@ class EditPostForm(forms.ModelForm):
             'content': forms.Textarea(),
             'title': forms.Textarea(),
             'description': forms.Textarea(),
-            'link_to_image': forms.Textarea(),
             'categories': forms.Textarea(),
             'visibleTo': forms.Textarea()
         }
         labels = {
-            "title" : "*Post Title:",
-            "visibility" : "*Privacy Setting:",
+            "title" : "* Post Title:",
+            "visibility" : "* Privacy Setting:",
             "visibleTo" : "Who can see your private post?",
-            "unlisted" : "*Allow your post to be listed in other's feeds?",
+            "unlisted" : "* Allow your post to be listed in other's feeds?",
             "contentType" : "* Content Type:"
         }
 
