@@ -10,7 +10,14 @@ def valid_method(request):
 
 def authenticated(request):
     try:
-        return request.session['authenticated'] and get_current_user(request).verified
+        if request.session['authenticated']:
+            try:
+                user = get_current_user(request)
+                if user.verified:
+                    return True
+            except:
+                return False
+        return False
     except KeyError as k:
         return False
 
@@ -146,8 +153,12 @@ def load_foreign_databases():
                                         host=node)
                         author.save()
                     except IntegrityError:
-                        author.username = author.username+'('+trimmed_name+')'
-                    author.save()
+                        author = Author(uuid=post['author']['id'],
+                                        username=post['author']['displayName']+'@'+trimmed_name,
+                                        password='password',
+                                        github=post['author']['github'],
+                                        host=node)
+                        author.save()
                 
                 print("CONSOLE: post:", post)
 
