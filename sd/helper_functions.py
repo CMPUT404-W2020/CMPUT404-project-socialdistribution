@@ -168,7 +168,7 @@ def load_foreign_databases():
                      )
 
                 if any(x in new_post.title for x in ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico']):
-                    new_post.image = title
+                    new_post.image = new_post.title
                     new_post.link_to_image = post.get('content', 'NOCONTENTFOUND')
                     new_post.title = 'Image'
                     new_post.content = None
