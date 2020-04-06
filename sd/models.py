@@ -37,7 +37,7 @@ class Post(models.Model):
                           ("application/base64", 'application/base64'),
                           ("image/png;base64",  'image/png;base64'),
                           ("image/jpeg;base64", 'image/jpeg;base64')]
-    contentType = models.CharField(max_length=30, choices=contentTypeChoices)
+    contentType = models.CharField(max_length=30)
     # TODO: TEMPORARY, how to do multiple content types?
     content = models.CharField(default="", max_length=5000, blank=True)
     author = models.ForeignKey(Author, on_delete=models.CASCADE)

@@ -6,6 +6,11 @@ from django.contrib.auth.forms import UserCreationForm
 
 # class RegistrationForm(UserCreationForm):
 
+WEB_CONTENT_CHOICES= [
+    ('text/plain', 'Plaintext'),
+    ('text/markdown', 'Markdown')
+]
+
 
 class RegistrationForm(forms.ModelForm):
 
@@ -35,9 +40,9 @@ class NewPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title', 'description', 'content', 'source', 'image', 'link_to_image', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
+        fields = ('title', 'description', 'content', 'image', 'link_to_image', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
         widgets = {
-            'contentType': forms.Select(),
+            'contentType': forms.Select(choices=WEB_CONTENT_CHOICES),
             'visibility': forms.Select(),
             'author': forms.HiddenInput(),
             'content': forms.Textarea()
@@ -55,9 +60,9 @@ class EditPostForm(forms.ModelForm):
 
     class Meta:
         model = Post
-        fields = ('title', 'description', 'content', 'source', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
+        fields = ('title', 'description', 'content', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
         widgets = {
-            'contentType': forms.Select(),
+            'contentType': forms.Select(choices=WEB_CONTENT_CHOICES),
             'visibility': forms.Select(),
             'author': forms.HiddenInput(),
             'content': forms.Textarea()
