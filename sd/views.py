@@ -77,11 +77,16 @@ def verify(request):
         else:
             return render(request, 'sd/401.html', status=401)
     elif request.method == "POST":
-        data = json.loads(request.body)
-        target = Author.objects.get(uuid=data['target_author'])
-        target.verified = True
-        target.save()
-        return HttpResponse()
+        try:
+            data = json.loads(request.body)
+            target = Author.objects.get(uuid=data['target_author'])
+            target.verified = True
+            target.save()
+            return HttpResponse()
+        except Exception as e:
+            print("CONSOLE: Couldn't verify:",e, locals())
+            return HttpResponse(status_code=500)
+
     else:
         return HttpResponse(status_code=405)
 
