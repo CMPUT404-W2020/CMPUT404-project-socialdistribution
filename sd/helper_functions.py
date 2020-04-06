@@ -150,7 +150,6 @@ def load_foreign_databases():
                     author.save()
                 
                 print("CONSOLE: post:", post)
-                print("CONSOLE: vars(post):", vars(post))
 
                 new_post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
                      title=post.get('title', 'NOTITLEFOUND'),
