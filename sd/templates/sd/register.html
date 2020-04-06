@@ -37,7 +37,7 @@
                 </div>
                 <div class="column" style="float: right;">
                     
-                    <input name="first_name" placeholder="{{data.first_name ? 'First Name': data.first_name }}"><br>
+                    <input name="first_name" placeholder="{{data.first_name && 'First Name' || data.first_name }}"><br>
                 </div>
             </div>
              <div class="row">
