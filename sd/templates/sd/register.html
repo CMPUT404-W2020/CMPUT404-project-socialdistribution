@@ -28,12 +28,6 @@
         {% block content %}
         <h3>Create Account</h3>
 
-        <!-- This form needs authentication!! Right now it's basically just a redirect -->
-        <!-- This does not connect to the back-end at all -->
-{% comment %} 
-        <form method="POST">
-            {% csrf_token %}
-                {{ form.as_p }} {% endcomment %}
         <form method="POST">
                 {% csrf_token %}
 
@@ -77,25 +71,13 @@
                     <input name="email" type="email" placeholder="Email Address"><br>
                 </div>
             </div>
-            {% comment %} <div class="row">
-                <div class="column" style="float: left;">
-                    Birthday:
-                </div>
-                <div class="column" style="float: right;">
-                    <input name="dob" type="date" placeholder="Date of Birth"><br>
-                </div>
-            </div> {% endcomment %}
-            {% comment %} <div class="row">
-                <div class="column" style="float: left;">
-                    Phone:
-                </div>
-                <div class="column" style="float: right;">
-                    <input name="phone" type="tel" placeholder="Phone Number"><br>
-                </div>
-            </div> {% endcomment %}
             <br>
             <br>
-
+            {% if errors %}
+            <div id="error-message">
+                {{errors}}
+            </div>
+            {% endif %}
             <input type="submit" value="SIGN-UP" id="login-button" style="float: right;">
 
             &nbsp;

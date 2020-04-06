@@ -453,12 +453,12 @@ def register(request):
         if request.method == "GET":
             return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False})
         info = request._post
-        friend_serializer = CreateAuthorSerializer(data=info)
+        author_serializer = CreateAuthorSerializer(data=info)
         if friend_serializer.is_valid():
-            friend_serializer.save()
+            author_serializer.save()
             request.session['authenticated'] = True
             user = Author.objects.get(
-                username=friend_serializer.data['username'])
+                username=author_serializer.data['username'])
             key = user.uuid
             request.session['auth-user'] = str(key)
             request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
@@ -466,7 +466,7 @@ def register(request):
                   " successfully registered! Redirecting to your feed")
             return redirect('my_feed')
         else:
-            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False})
+            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':author_serializer.errors})
     else:
         return HttpResponse(status_code=405)
 

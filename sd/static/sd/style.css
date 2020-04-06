@@ -647,6 +647,14 @@ form>.row {
   text-align: justify;
 }
 
+#error-message{
+  color:white;
+  background-color: #960000;
+  margin-right:auto;
+  margin-left:auto;
+  text-align: center;
+}
+
 .edit-button {
   float: right;
   background-color: #c8e6dd;
