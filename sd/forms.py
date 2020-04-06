@@ -6,6 +6,11 @@ from django.contrib.auth.forms import UserCreationForm
 
 # class RegistrationForm(UserCreationForm):
 
+WEB_CONTENT_CHOICES= [
+    ('text/plain', 'text/plain'),
+    ('text/markdown', 'text/markdown')
+]
+
 
 class RegistrationForm(forms.ModelForm):
 
@@ -37,7 +42,7 @@ class NewPostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'description', 'content', 'source', 'image', 'link_to_image', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
         widgets = {
-            'contentType': forms.Select(choices=["text/plain", "text/markdown"] ),
+            'contentType': forms.Select(choices=WEB_CONTENT_CHOICES),
             'visibility': forms.Select(),
             'author': forms.HiddenInput(),
             'content': forms.Textarea()
