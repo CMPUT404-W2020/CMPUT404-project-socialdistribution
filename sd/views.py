@@ -844,7 +844,7 @@ def edit_account(request):
             data = request.POST
             if Author.objects.filter(username=data['username']):
                 errors = "Username taken"
-                return render(request, 'sd/edit_account.html', {'form': form, 'current_user': user, 'authenticated': True, 'errors':errors})
+                return render(request, 'sd/edit_account.html', {'form': EditAccountForm(instance=user), 'current_user': user, 'authenticated': True, 'errors':errors})
             user.first_name = data['first_name']
             user.last_name = data['last_name']
             user.username = data['username']
