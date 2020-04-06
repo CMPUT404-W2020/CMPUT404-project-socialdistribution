@@ -26,6 +26,22 @@ class EditAccountForm(forms.ModelForm):
     class Meta:
         model = Author
         fields = ['first_name', 'last_name', 'username', 'email', 'bio', 'github']
+        widgets = {
+            'first_name': forms.Textarea(attrs={'required':'true'}),
+            'last_name': forms.Textarea(attrs={'required':'true'}),
+            'username': forms.Textarea(attrs={'required':'true'}),
+            'email': forms.EmailField(),
+            'bio': forms.Textarea(),
+            'github': forms.Textarea(attrs={'placeholder': 'Github account name e.g. wlt91'})
+        }
+        labels = {
+            "first_name" : "* First Name:",
+            "last_name" : "* Last Name:",
+            "username" : "* Username:",
+            "email" : "Email:",
+            "bio" : "Bio:",
+            "github" : "Github:"
+        }
 
 
 
@@ -59,7 +75,8 @@ class NewPostForm(forms.ModelForm):
             "visibility" : "* Privacy:",
             "visibleTo" : "Who can see your private post?",
             "unlisted" : "* Allow your post to be listed in other's feeds?",
-            "contentType" : "* Content Type:"
+            "contentType" : "* Content Type:",
+            "content": "* Content:"
         }
 
 class EditPostForm(forms.ModelForm):
@@ -82,6 +99,7 @@ class EditPostForm(forms.ModelForm):
             "visibility" : "* Privacy:",
             "visibleTo" : "Who can see your private post?",
             "unlisted" : "* Allow your post to be listed in other's feeds?",
-            "contentType" : "* Content Type:"
+            "contentType" : "* Content Type:",
+            "content": "* Content:"
         }
 
