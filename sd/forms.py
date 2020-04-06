@@ -37,7 +37,7 @@ class NewPostForm(forms.ModelForm):
         model = Post
         fields = ('title', 'description', 'content', 'source', 'image', 'link_to_image', 'author', 'contentType', 'categories','visibility', 'visibleTo', 'unlisted',)
         widgets = {
-            'contentType': forms.Select(),
+            'contentType': forms.Select(choices=["text/plain", "text/markdown"] ),
             'visibility': forms.Select(),
             'author': forms.HiddenInput(),
             'content': forms.Textarea()

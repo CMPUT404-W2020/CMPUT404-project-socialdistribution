@@ -297,6 +297,13 @@ p label {
   text-align: center;
 }
 
+.feedimage-link{
+  width: fit-content;
+  height: fit-content;
+  margin-left: auto;
+  margin-right: auto;
+}
+
 
 .feedimage {
   max-width: 10em;
