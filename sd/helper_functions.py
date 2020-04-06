@@ -109,7 +109,7 @@ def load_foreign_databases():
         # delete existing contents
         Author.objects.filter(host=node.hostname).delete()
 
-        trimmed_name = node.split('https://')[1].split('.herokuapp.com/')[0]
+        trimmed_name = node.hostname.split('https://')[1].split('.herokuapp.com/')[0]
 
         try:
             authors = requests.get(node.hostname + 'author').json()
