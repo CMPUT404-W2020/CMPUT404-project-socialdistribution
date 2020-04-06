@@ -171,7 +171,7 @@ def load_foreign_databases():
                     new_post.image = new_post.title
                     new_post.link_to_image = post.get('content', 'NOCONTENTFOUND')
                     new_post.title = 'Image'
-                    new_post.content = None
+                    new_post.content = 'Content'
                 elif re.findall('.*\[(.*?)\]\((.*)\)', new_post.content):
                     new_post.contentType='text/markdown'
                 elif any(x in new_post.content for x in ['#', '*', '_']):
