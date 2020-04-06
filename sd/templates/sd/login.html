@@ -30,7 +30,7 @@
         <form method = "POST" action="{% url 'login' %}">
             {% csrf_token %}
             Username<br>
-            <input name="username" hint="Username" {% if username %} placeholder="{{username}}" {% else %} placeholder="Username"{% endif %} style="padding-left: 0.5em"><br>
+            <input name="username" hint="Username" {% if username %} value="{{username}}" {% else %} placeholder="Username"{% endif %} style="padding-left: 0.5em"><br>
             <br>Password<br>
             <input name="password" hint="Password" type="password" placeholder="Password" style="padding-left: 0.5em"><br>
             {% if errors %}

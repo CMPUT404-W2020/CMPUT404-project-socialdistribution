@@ -318,6 +318,16 @@ input[type=checkbox]{
 #postBody {
   color: black;
   text-align: center;
+  max-width: ;
+}
+
+.markdown-image{
+  max-width: 10em;
+  max-height: 10em;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+  padding-bottom: 2em;
 }
 
 .feedimage-link{
