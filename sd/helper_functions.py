@@ -1,6 +1,7 @@
-import uuid, requests, datetime, json
+import uuid, requests, datetime, json, re
 from .models import *
 from django.db.models import Q
+from django.db import IntegrityError
 
 
 def valid_method(request):
@@ -108,77 +109,77 @@ def load_foreign_databases():
         # delete existing contents
         Author.objects.filter(host=node.hostname).delete()
 
+        trimmed_name = node.split('https://')[1].split('.herokuapp.com/')[0]
+
         try:
             authors = requests.get(node.hostname + 'author').json()
             for author in authors:
                 if author['host'] != node.hostname:
                     continue
-                Author(uuid=author['id'],
+                new_author = Author(uuid=author['id'],
                        username=author['displayName'],
                        password='password',
                        github=author['github'],
-                       host=node).save()
-        except:
-            pass
+                       host=node)
+        except IntegrityError:
+            new_author.username = new_author.username+'('+trimmed_name+')'
+        new_author.save()
+            
 
         try:
             posts = requests.get(node.hostname + 'posts').json()
         except:
             try:
                 posts = requests.get(node.hostname + 'posts/').json()
-            except Exception as e:
+            except Exception:
                 posts = {}
         while True:
             for post in posts.get('posts',[]):
                 try:
                     author = Author.objects.get(uuid=post['author']['id'])
                 except:
-                    author = Author(uuid=post['author']['id'],
-                                    username=post['author']['displayName'],
-                                    password='password',
-                                    github=post['author']['github'],
-                                    host=node)
+                    try:
+                        author = Author(uuid=post['author']['id'],
+                                        username=post['author']['displayName'],
+                                        password='password',
+                                        github=post['author']['github'],
+                                        host=node)
+                        author.save()
+                    except IntegrityError:
+                        author.username = author.username+'('+trimmed_name+')'
                     author.save()
-                comments = post.get('comments',[])
+                
+                print("CONSOLE: post:", post)
+                print("CONSOLE: vars(post):", vars(post))
 
-                title = post.get('title', 'NOTITLEFOUND')
-                if any(x in title for x in ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico']):
-                    image = title
-                    link = post.get('content', 'NOCONTENTFOUND')
-                    new_title = "Image"
-                    new_content = ""
-                    post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
-                     title=new_title,
+                new_post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
+                     title=post.get('title', 'NOTITLEFOUND'),
                      source=post.get('source', node),
                      origin=post.get('source', node),
-                     content=new_content,
+                     content=post.get('content', 'NOCONTENTFOUND')[:5000],
                      description=post.get('description', 'NODESCRIPTIONFOUND'),
-                     contentType='text/plain',
+                     contentType=post.get('contentType', 'text/plain'),
                      author=author,
-                     #categories
+                     categories='remote',
                      published=post.get('published', 'NOPUBLISHDATEFOUND'),
                      unlisted=post.get('unlisted', False),
                      visibility=post.get('visibility','PUBLIC'),
-                     image=image,
-                     link_to_image=link,
-                     #visibleTo
+                     image=post.get('image', None),
+                     link_to_image=post.get('link', post.get('link_to_image', None))
                      )
-                else:
-                    post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
-                        title=post.get('title', 'NOTITLEFOUND'),
-                        source=post.get('source', node),
-                        origin=post.get('source', node),
-                        content=post.get('content', 'NOCONTENTFOUND')[:5000],
-                        description=post.get('description', 'NODESCRIPTIONFOUND'),
-                        contentType=post.get('contentType', 'text/plain'),
-                        author=author,
-                        #categories
-                        published=post.get('published', 'NOPUBLISHDATEFOUND'),
-                        unlisted=post.get('unlisted', False),
-                        visibility=post.get('visibility','PUBLIC'),
-                        #visibleTo
-                        )
-                post.save()
+
+                if any(x in title for x in ['.png', '.jpg', '.jpeg', '.gif', '.svg', '.ico']):
+                    new_post.image = title
+                    new_post.link_to_image = post.get('content', 'NOCONTENTFOUND')
+                    new_post.title = 'Image'
+                    new_post.content = None
+                elif re.findall('.*\[(.*?)\]\((.*)\)', new_post.content)
+                    new_post.contentType='text/markdown'
+                elif any(x in content for x in ['#', '*', '_'])
+                    new_post.contentType='text/markdown'
+                new_post.save()
+
+                comments = post.get('comments',[])
                 for comment in comments:
                      try:
                          author = Author.objects.get(uuid=comment['author']['id'])

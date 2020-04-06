@@ -30,8 +30,6 @@ class Post(models.Model):
     source = models.CharField(default=settings.HOSTNAME, max_length=100)
     origin = models.CharField(default=settings.HOSTNAME, max_length=100)
     description = models.CharField(default="", max_length=100, blank=True)
-
-    # TODO: should not give users the choice of type
     contentTypeChoices = [("text/markdown",     'text/markdown'),
                           ("text/plain",        'text/plain'),
                           ("application/base64", 'application/base64'),

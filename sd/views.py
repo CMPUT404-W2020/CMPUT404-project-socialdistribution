@@ -726,6 +726,14 @@ def get_image(request, pk):
                 target = Author.objects.get(uuid=post.author)
             except:
                 return render(request, 'sd/404.html', status=404) #Author not found, return Not Found
+            
+            if user.uuid==post.author:
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format) #200
 
             my_friends = Friend.objects.filter(Q(author=user.uuid) | Q(friend=user.uuid))
             friend_check = my_friends.objects.filter(Q(author=target.uuid) | Q(friend=target.uuid))
@@ -794,12 +802,12 @@ def edit_post(request, post_id):
         else:
             data = request.POST
             post.title = data['title']
-            post.description = data['description']
             post.content = data['content']
-            post.source = data['source']
             post.contentType = data['contentType']
+            post.description = data['description']
             post.categories = data['categories']
             post.visibility = data['visibility']
+            post.visibleTo = date['visibleTo']
             post.unlisted = data['unlisted']
             post.save()
             return redirect('my_feed')
