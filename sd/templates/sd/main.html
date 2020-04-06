@@ -112,7 +112,7 @@
 									{% if post.uuid == comment.post %}
 										<div class = "commentitem">
 											<div id = "commentauthor"> {{comment.author}} </div>
-											<div id = "commentdate"> {{comment.published}} <br> </div>
+											<div id = "commentdate"> {{comment.published | date:"d-m-Y h:M"}} <br> </div>
 											<div id = "commentbody"> <p> {{ comment.comment }} <br> </p> </div>
 										</div>
 									{% endif %}
