@@ -418,7 +418,7 @@ def login(request):
         except:
             request.session['authenticated'] = False
             errors = "No account found for "+user_name+". Please check the spelling and try again."
-            return render(request, 'sd/login.html', {'user':user_name, 'errors':errors})
+            return render(request, 'sd/login.html', {'username':user_name, 'errors':errors})
 
         if (pass_word != user.password) and not (check_password(pass_word, user.password)):
             errors = "Invalid password, please try again."
@@ -428,10 +428,6 @@ def login(request):
             errors = "Unverified user. Please wait until the administrators approve your account."
             return render(request, 'sd/login.html', {'username':user_name, 'errors':errors})
 
-        try:
-            user = Author.objects.get(username=user_name)
-        except AttributeError:
-            return render(request, 'sd/login.html', {'username':user_name, 'errors':'Something went wrong, please try again.'})
         request.session['authenticated'] = True
         key = user.uuid
         request.session['auth-user'] = str(key)
