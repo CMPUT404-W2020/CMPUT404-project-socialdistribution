@@ -10,7 +10,7 @@ def valid_method(request):
 
 def authenticated(request):
     try:
-        return request.session['authenticated'] and get_current_user(request)
+        return request.session['authenticated'] and get_current_user(request).verified:
     except :
         return False
 
@@ -87,7 +87,7 @@ def load_github_feed(user):
             print("CONSOLE: repo_names", repo_names)
             for r in repo_names:
                 commit_data = json.loads(requests.get('https://api.github.com/repos/'+user.github+'/' + r + '/commits').content.decode())
-             for com in commit_data:
+            for com in commit_data:
                     d = com['commit']['author']['date'].split('T')[0].split('-')
                     date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
                     if(current-date).days < 30:
