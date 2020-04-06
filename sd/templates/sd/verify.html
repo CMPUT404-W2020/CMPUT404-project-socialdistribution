@@ -27,14 +27,13 @@ function loadBar() {
     <div class="header" id="header">
     </div>
 
-    <div class="table" id="content">
+    <div class="feeditem" id="content">
 		{% for user in unverified %}
-		<div id={{user.uuid}} class="feeditem">
-			<hr class="greyline">
-			<span class="searchauthor">{{user.username}}</span>
-			<span class="searchrelation"> From {{user.host}} </span>
-			<button class="button" id="save-button" onclick="confirmVerify('{{user.uuid}}')">VERIFY</button>
-		</div>
+		<hr class="greyline">
+		<span class="searchauthor">{{user.username}}</span>
+		<span class="searchrelation"> From {{user.host}} </span>
+		<button class="button" id="save-button" onclick="confirmVerify('{{user.uuid}}')">VERIFY</button>
+		<br>
 		{% endfor %}
 	</div>
 </body>
