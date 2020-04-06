@@ -100,7 +100,7 @@ def load_github_feed(user):
                                 print("CONSOLE: Error creating Github post", e)
                         else:
                             pass
-        except (ConnectionError, IndexError, KeyError) as e:
+        except (ConnectionError, IndexError, KeyError, UnboundLocalError) as e:
             print("CONSOLE: ",e)
 
 def load_foreign_databases():
