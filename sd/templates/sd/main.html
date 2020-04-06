@@ -74,11 +74,11 @@
 		                <div id = "date"> {{post.published}} <br> <br> </div>
 						<div id = "title">{{post.title}} <br> <br> </div>
 						{% if post.image %}
-							<a href="image/{{post.uuid}}">
+							<a id="imagelink" href="image/{{post.uuid}}">
 								<img class="feedimage" src="image/{{post.uuid}}" alt="Image">
 							</a>
 		                {% elif post.link_to_image %}
-			                <a href="{{post.link_to_image}}">
+			                <a id="imagelink" href="{{post.link_to_image}}">
 			                	<img class="feedimage" src="{{post.link_to_image}}" alt="Link to Image">
 			                </a>
 						{% endif %}

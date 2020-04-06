@@ -313,6 +313,11 @@ p label {
   margin-bottom: 2em;
 }
 
+#imagelink{
+  display:block;
+  width:400px
+}
+
 
 /* comments */
 
