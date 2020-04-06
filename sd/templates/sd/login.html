@@ -30,9 +30,14 @@
         <form method = "POST" action="{% url 'login' %}">
             {% csrf_token %}
             Username<br>
-            <input name="username" hint="Username"><br>
+            <input name="username" hint="Username" {% if username %} placeholder="{{username}}" {% else %} placeholder="Username"{% endif %} style="padding-left: 0.5em"><br>
             <br>Password<br>
-            <input name="password" hint="Password" type="password"><br>
+            <input name="password" hint="Password" type="password" placeholder="Password" style="padding-left: 0.5em"><br>
+            {% if errors %}
+            <div id="error-message">
+                {{errors}}
+            </div>
+            {% endif %}
             <input type="submit" value="LOGIN" id="login-button">
         </form>
         <p>New user? Register <a id="signuplink" href="{% url 'register' %}">here</a></p>

@@ -12,6 +12,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.db.models import Q
 from django.http import HttpResponse, HttpResponsePermanentRedirect, HttpResponse
 from django.core.files.storage import FileSystemStorage
+from django.db import IntegrityError
 import social_distribution.settings
 import requests
 import commonmark
@@ -416,21 +417,23 @@ def login(request):
             user = Author.objects.get(username=user_name)
         except:
             request.session['authenticated'] = False
-            print("CONSOLE: "+user_name+" not found, please try again")
-            return redirect('login')
+            errors = "No account found for username="+user_name+". Please check the spelling and try again."
+            return render(request, 'sd/login.html', {'user':user.username, 'errors':errors})
 
         if (pass_word != user.password) and not (check_password(pass_word, user.password)):
-            print("CONSOLE: Incorrect password for " +
-                  user_name+", please try again")
-            return redirect('login')
+            errors = "Invalid password, please try again."
+            return render(request, 'sd/login.html', {'username':user.username, 'errors':errors})
+        
+        elif not user.verified:
+            errors = "Unverified user. Please wait until the administrators approve your account."
+            return render(request, 'sd/login.html', {'username':user.username, 'errors':errors})
 
         request.session['authenticated'] = True
         user = Author.objects.get(username=user_name)
         key = user.uuid
         request.session['auth-user'] = str(key)
         request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
-        print("CONSOLE: "+user.username +
-              " successfully logged in, redirecting to feed")
+
         load_foreign_databases()
         return redirect('my_feed')
     else:
@@ -453,20 +456,25 @@ def register(request):
         if request.method == "GET":
             return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False})
         info = request._post
-        friend_serializer = CreateAuthorSerializer(data=info)
-        if friend_serializer.is_valid():
-            friend_serializer.save()
-            request.session['authenticated'] = True
-            user = Author.objects.get(
-                username=friend_serializer.data['username'])
-            key = user.uuid
-            request.session['auth-user'] = str(key)
-            request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
-            print("CONSOLE: "+user.username +
-                  " successfully registered! Redirecting to your feed")
-            return redirect('my_feed')
-        else:
-            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False})
+        try:
+            author_serializer = CreateAuthorSerializer(data=info)
+            if author_serializer.is_valid():
+                author_serializer.save()
+                request.session['authenticated'] = True
+                user = Author.objects.get(
+                    username=author_serializer.data['username'])
+                key = user.uuid
+                request.session['auth-user'] = str(key)
+                request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
+                print("CONSOLE: "+user.username +
+                    " successfully registered! Redirecting to your feed")
+                return redirect('my_feed')
+            else:
+                errors = "Username taken"
+                return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
+        except IntegrityError as i:
+            errors = "Username taken"
+            return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
     else:
         return HttpResponse(status_code=405)
 
@@ -834,6 +842,9 @@ def edit_account(request):
             return render(request, 'sd/edit_account.html', {'form': form, 'current_user': user, 'authenticated': True})
         else:
             data = request.POST
+            if Author.objects.filter(username=data['username']).exclude(uuid=user.uuid):
+                errors = "Username taken"
+                return render(request, 'sd/edit_account.html', {'form': EditAccountForm(instance=user), 'current_user': user, 'authenticated': True, 'errors':errors})
             user.first_name = data['first_name']
             user.last_name = data['last_name']
             user.username = data['username']
