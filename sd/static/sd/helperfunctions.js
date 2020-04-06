@@ -50,6 +50,42 @@ function confirmDelete(post) {
   }
 }
 
+function confirmVerify(user) {
+  var yes = confirm(
+    "Verify user?"
+  );
+
+  if (yes) {
+    const origin = window.location.origin;
+    const data = {
+      target_author: user
+    };
+    fetch(origin + "/verify", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(function(response) {
+      if (!response.ok){
+        throw Error(response.statusText)
+      }
+      return response
+    })
+    .then(function(response) {
+      alert(
+        `User verified!`
+        );
+        location.reload();
+      })
+      .catch(function(error) {
+        alert(
+          "Couldn't verify user.\nPlease try again later."
+          );
+      });
+  }
+
 function simpleText() {
   var simple = document.getElementById("orange-button");
   simple.style.borderColor = "black";
