@@ -309,7 +309,7 @@ def notifications(request):
         if authenticated(request) and user:
 
             # Get all friend requests
-            fr_requests = FriendRequest.objects.filter(Q(to_author=user))
+            fr_requests = FriendRequest.objects.filter(Q(to_author=user) & Q(rejected=False))
             all_requests = []
             for a in fr_requests:
                 entry = {}
@@ -483,7 +483,6 @@ def logout(request):
         print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
-            print("CONSOLE: Logging out " + user.username)
             try:
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
@@ -492,10 +491,25 @@ def logout(request):
                 pass
             return redirect('login')
         else:
-            print("CONSOLE: Redirecting from logout because no one is logged in.")
             return redirect('login')
     else:
         return HttpResponse(status_code=405)
+
+@csrf_exempt
+def rejectrequest(request):
+    if request.method == "POST":
+        try:
+            user = get_current_user(request)
+            data = json.loads(request.body)
+            target = Author.objects.get(username=data['target_author'])
+            fr = FriendRequest.objects.get(Q(to_author=user.uuid) & Q(from_author=target.uuid))
+            fr.rejected=True
+            fr.save()
+            return HttpResponse()
+        except Exception as e:
+            print("SOMETHING BROKE:",e)
+            return HttpResponse(status_code=500)
+    return HttpResponse(status_code=405)
 
 
 @csrf_exempt
@@ -508,8 +522,6 @@ def friendrequest(request):
         try:
             user = get_current_user(request)
             if not authenticated(request) or not user:
-                print(
-                    "CONSOLE: Redirecting from friendrequest because no one is logged in.")
                 return redirect('login')
             data = json.loads(request.body)
 

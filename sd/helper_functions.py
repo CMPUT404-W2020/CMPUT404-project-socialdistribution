@@ -84,7 +84,6 @@ def load_github_feed(user):
                     date = datetime.datetime(int(d[0]), int(d[1]), int(d[2]))
                     if(current-date).days < 30:
                         repo_names.append(repo['name'])
-            print("CONSOLE: repo_names", repo_names)
             for r in repo_names:
                 commit_data = json.loads(requests.get('https://api.github.com/repos/'+user.github+'/' + r + '/commits').content.decode())
             for com in commit_data:
@@ -95,13 +94,12 @@ def load_github_feed(user):
                         if not exists:
                             try:
                                 Post.objects.create(title = "Commit to "+r, source=user.host, description=com['node_id'], contentType = 2, content = com['commit']['author']['date'].split('T')[0]+': '+com['committer']['login'].upper()+': '+com['commit']['message'], author = user, categories = 'github', visibility='PRIVATE', unlisted=False, link_to_image=com['committer']['avatar_url'])
-                                print("CONSOLE: Created a Github post: "+com['commit']['message'])
                             except Exception as e:
-                                print("CONSOLE: Error creating Github post", e)
+                                pass
                         else:
                             pass
-        except (ConnectionError, IndexError, KeyError) as e:
-            print("CONSOLE: ",e)
+        except:
+            pass
 
 def load_foreign_databases():
     for node in Node.objects.exclude(hostname=settings.HOSTNAME):
@@ -144,10 +142,14 @@ def load_foreign_databases():
                     author = Author.objects.get(uuid=post['author']['id'])
                 except:
                     try:
+                        if 'github.com/' in post['author']['github']:
+                            gh = post['author']['github'].split('github.com/')[0]
+                        else:
+                            gh = post['author']['github']
                         author = Author(uuid=post['author']['id'],
                                         username=post['author']['displayName'],
                                         password='password',
-                                        github=post['author']['github'],
+                                        github=gh,
                                         host=node)
                         author.save()
                     except IntegrityError:
@@ -158,8 +160,6 @@ def load_foreign_databases():
                                         host=node)
                         author.save()
                 
-                print("CONSOLE: post:", post)
-
                 new_post = Post(uuid=post.get('id', 'NOUUIDFOUND'),
                      title=post.get('title', 'NOTITLEFOUND'),
                      source=post.get('source', node),
