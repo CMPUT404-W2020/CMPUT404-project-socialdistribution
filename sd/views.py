@@ -85,7 +85,6 @@ def verify(request):
             target.save()
             return HttpResponse()
         except Exception as e:
-            print("CONSOLE: Couldn't verify:",e, locals())
             return HttpResponse(status_code=500)
     else:
         return HttpResponse(status_code=405)
@@ -122,20 +121,14 @@ def feed(request):
                     if their_pub_posts:
                         all_posts = all_posts.union(their_pub_posts)
 
-                    # if f_user.host == user.host:
-                    #     server_spec_posts = Post.objects.filter(
-                    #         Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
-                    #     if server_spec_posts:
-                    #         all_posts = all_posts.union(server_spec_posts)
-
                     spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
                         visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
                     if spec_posts:
                         all_posts = all_posts.union(spec_posts)
 
                     if f_user.uuid in friend_ids:
-                        friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
-                            visibility='FRIENDS') & Q(unlisted=False))
+                        friend_posts = Post.objects.filter(Q(author=f_user.uuid) & (Q(
+                            visibility='FRIENDS')|Q(visibility='FOAF')) & Q(unlisted=False))
                         if f_user.host == user.host:
                             server_spec_posts = Post.objects.filter(
                                 Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
@@ -526,15 +519,12 @@ def friendrequest(request):
             obj is returned in case 2 friend request to be deleted
             """
             if relationship == 1:
-                print("CONSOLE: "+user.username+" and " +
-                      target.username+" are already friends!")
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
                     info = {'follower': targetuuid, 'following': user.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from target to user")
                         s.save()
                 follows2 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
@@ -542,7 +532,6 @@ def friendrequest(request):
                     info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from user to target")
                         s.save()
                 # creates Follow objects in case they don't already exist
                 return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
@@ -553,42 +542,35 @@ def friendrequest(request):
                 if friend.is_valid():
                     friend.save()
                     obj.delete()
-                    print("CONSOLE: "+user.username+" and " +
-                          target.username+" are now friends!")
                 else:
-                    print("CONSOLE: friendserializer error:", friend.errors)
+                    return HttpResponse(status_code=500)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
                     info = {'follower': target.uuid, 'following': user.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from target to user")
                         s.save()
                     else:
-                        print("CONSOLE: followserializer error:", s.errors)
+                        return HttpResponse(status_code=500)
                 follows2 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows2:
                     info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from user to target")
                         s.save()
                     else:
-                        print("CONSOLE: followserializer error (2):", s.errors)
+                        return HttpResponse(status_code=500)
                 return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
 
             elif relationship == 3:
-                print("CONSOLE: "+user.username+" is already following " +
-                      target.username+". Returning")
                 follows1 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows1:
                     info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from user to target")
                         s.save()
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
@@ -598,21 +580,17 @@ def friendrequest(request):
                 friendreq_serializer = FriendRequestSerializer(data=info)
                 if friendreq_serializer.is_valid():
                     friendreq_serializer.save()
-                    print("CONSOLE: "+user.username +
-                          " sent a friend request to "+target.username)
                 else:
-                    print("CONSOLE: friendreq_serializer errors:",
-                          friendreq_serializer.errors)
+                    return HttpResponse(status_code=500)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
                     info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from user to target")
                         s.save()
                     else:
-                        print("CONSOLE: followserializer error:", s.errors)
+                        return HttpResponse(status_code=500)
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
         except Exception as e:
@@ -744,7 +722,7 @@ def get_image(request, pk):
             for j in f2:
                 friend_ids.append(j['author'])
             friend_check = my_friends.filter(Q(author=target.uuid) | Q(friend=target.uuid))
-            if friend_check and post.visibility=="FRIENDS":
+            if friend_check and (post.visibility=="FRIENDS" or post.visibility=="FOAF"):
                 img_format = post.image.name.split('.')[-1]
                 outfile = open('temp.'+img_format, 'wb')
                 outfile.write(base64.b64decode(post.link_to_image))
