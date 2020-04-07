@@ -763,7 +763,7 @@ def get_image(request, pk):
             if post.visibility == "FOAF":
                 for friend in friend_ids:
                     friends_of_friends = Friend.objects.filter(Q(author=friend)).exclude(friend=user).union(Friend.objects.filter(Q(friend=friend)).exclude(author=user))
-                foaf_check = friends_of_friends.objects.filter(Q(author=target.uuid) | Q(friend=target.uuid))
+                foaf_check = friends_of_friends.filter(Q(author=target.uuid) | Q(friend=target.uuid))
                 if foaf_check:
                     img_format = post.image.name.split('.')[-1]
                     outfile = open('temp.'+img_format, 'wb')
