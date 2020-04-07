@@ -736,6 +736,13 @@ def get_image(request, pk):
                     return HttpResponse(out, content_type='image/'+img_format) #200
 
             my_friends = Friend.objects.filter(Q(author=user.uuid) | Q(friend=user.uuid))
+            f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
+            f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
+            friend_ids = []
+            for i in f1:
+                friend_ids.append(i['friend'])
+            for j in f2:
+                friend_ids.append(j['author'])
             friend_check = my_friends.filter(Q(author=target.uuid) | Q(friend=target.uuid))
             if friend_check and post.visibility=="FRIENDS":
                 img_format = post.image.name.split('.')[-1]
@@ -754,10 +761,8 @@ def get_image(request, pk):
                     return HttpResponse(out, content_type='image/'+img_format) #200
 
             if post.visibility == "FOAF":
-                friends_of_friends = Friend.objects.none()
-                for friend in my_friends:
-                    their_friends = Friend.objects.filter(Q(author=friend.uuid)).exclude(friend=user).union(Friend.objects.filter(Q(friend=friend.uuid)).exclude(author=user))
-                    friends_of_friends = friends_of_friends.union(their_friends)
+                for friend in friend_ids:
+                    friends_of_friends = Friend.objects.filter(Q(author=friend)).exclude(friend=user).union(Friend.objects.filter(Q(friend=friend)).exclude(author=user))
                 foaf_check = friends_of_friends.objects.filter(Q(author=target.uuid) | Q(friend=target.uuid))
                 if foaf_check:
                     img_format = post.image.name.split('.')[-1]
