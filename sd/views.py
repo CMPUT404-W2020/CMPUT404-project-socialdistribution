@@ -735,9 +735,10 @@ def get_image(request, pk):
 
             try:
                 user = get_current_user(request)
-                target = Author.objects.get(uuid=post.author)
-            except:
-                print('CONSOLE: Exception line 740', locals())
+                author_id = post.author
+                target = Author.objects.get(author_id)
+            except Exception as e:
+                print('CONSOLE: Exception line 740', locals(), e)
                 return render(request, 'sd/404.html', status=404) #Author not found, return Not Found
             
             if user==target:
