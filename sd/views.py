@@ -738,7 +738,7 @@ def get_image(request, pk):
             except:
                 return render(request, 'sd/404.html', status=404) #Author not found, return Not Found
             
-            if user.uuid==post.author:
+            if user==post.author:
                 img_format = post.image.name.split('.')[-1]
                 outfile = open('temp.'+img_format, 'wb')
                 outfile.write(base64.b64decode(post.link_to_image))
