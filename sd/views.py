@@ -720,6 +720,7 @@ def get_image(request, pk):
         try:
             post = Post.objects.get(uuid=pk)
         except:
+            print('CONSOLE: Exception line 723', locals())
             return render(request, 'sd/404.html', status=404) #Can't find user, return Not Found
 
         if post.image and post.link_to_image:
@@ -736,6 +737,7 @@ def get_image(request, pk):
                 user = get_current_user(request)
                 target = Author.objects.get(uuid=post.author)
             except:
+                print('CONSOLE: Exception line 740', locals())
                 return render(request, 'sd/404.html', status=404) #Author not found, return Not Found
             
             if user==target:
@@ -786,10 +788,13 @@ def get_image(request, pk):
                 with open(outfile.name, 'rb') as out:
                     return HttpResponse(out, content_type='image/'+img_format) #200
         
+            print('CONSOLE: Exception line 791', locals())
             return render(request, 'sd/401.html', status=401) #Checked all the rules and you're not allowed to see it
         else:
+            print('CONSOLE: Exception line 794', locals())
             return render(request, 'sd/404.html', status=404) #Can't find no image/link to image        
     else:
+        print('CONSOLE: Exception line 797', locals())
         return HttpResponse(status_code=405) # Bad Method
 
 
