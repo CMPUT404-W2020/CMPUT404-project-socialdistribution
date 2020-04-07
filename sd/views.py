@@ -128,7 +128,7 @@ def feed(request):
 
                     if f_user.uuid in friend_ids:
                         friend_posts = Post.objects.filter(Q(author=f_user.uuid) & (Q(
-                            visibility='FRIENDS')|Q(visibility='FOAF')) & Q(unlisted=False))
+                            visibility='FRIENDS') | Q(visibility='FOAF')) & Q(unlisted=False))
                         if f_user.host == user.host:
                             server_spec_posts = Post.objects.filter(
                                 Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
