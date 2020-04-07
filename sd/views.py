@@ -93,7 +93,6 @@ def verify(request):
 
 def feed(request):
     if valid_method(request):
-        print("CONSOLE: request.method:", request.method)
         if request.method == 'GET':
             user = get_current_user(request)
             if authenticated(request) and user:
@@ -192,7 +191,6 @@ def feed(request):
 
                 return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comments':comments, 'all_authors':ret_authors})
             else:
-                print("CONSOLE: Redirecting from Feed because no one is logged in")
                 return redirect('login')
         elif request.method=="POST":
             data = request.POST
@@ -215,7 +213,6 @@ def account(request):
             page = 'sd/account.html'
             return render(request, page, {'current_user': user, 'authenticated': True})
         else:
-            print("CONSOLE: Redirecting from Account to because no one is logged in")
             return redirect('login')
     else:
         return HttpResponse(status_code=405)
@@ -227,7 +224,6 @@ def search(request):
     print_state(request)
     user = get_current_user(request)
     if not (authenticated(request) and user):
-        print("CONSOLE: Redirecting from Search because no one is logged in")
         return redirect('login')
 
     # Get all authors
@@ -378,7 +374,6 @@ def notifications(request):
 
             return render(request, 'sd/notifications.html', context)
         else:
-            print("CONSOLE: Redirecting from Notifications because no one is logged in")
             return redirect('login')
     else:
         return HttpResponse(status_code=405)
@@ -400,7 +395,6 @@ def login(request):
         print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
-            print("CONSOLE: Logging out " + user.username)
             try:
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
@@ -444,7 +438,6 @@ def register(request):
         print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
-            print("CONSOLE: Logging out " + user.username)
             try:
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
@@ -465,8 +458,6 @@ def register(request):
                 key = user.uuid
                 request.session['auth-user'] = str(key)
                 request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
-                print("CONSOLE: "+user.username +
-                    " successfully registered! Redirecting to your feed")
                 return redirect('my_feed')
             else:
                 errors = "Username taken"
@@ -507,7 +498,6 @@ def rejectrequest(request):
             fr.save()
             return HttpResponse()
         except Exception as e:
-            print("SOMETHING BROKE:",e)
             return HttpResponse(status_code=500)
     return HttpResponse(status_code=405)
 
@@ -535,7 +525,6 @@ def friendrequest(request):
             4 --> no relationship exists yet; create one
             obj is returned in case 2 friend request to be deleted
             """
-            print("CONSOLE: Relationship: ", relationship)
             if relationship == 1:
                 print("CONSOLE: "+user.username+" and " +
                       target.username+" are already friends!")
@@ -720,7 +709,6 @@ def get_image(request, pk):
         try:
             post = Post.objects.get(uuid=pk)
         except:
-            print('CONSOLE: Exception line 723', locals())
             return render(request, 'sd/404.html', status=404) #Can't find user, return Not Found
 
         if post.image and post.link_to_image:
@@ -736,8 +724,7 @@ def get_image(request, pk):
             try:
                 user = get_current_user(request)
                 target = post.author
-            except Exception as e:
-                print('CONSOLE: Exception line 740', locals(), e)
+            except:
                 return render(request, 'sd/404.html', status=404) #Author not found, return Not Found
             
             if user==target:
@@ -749,7 +736,7 @@ def get_image(request, pk):
                     return HttpResponse(out, content_type='image/'+img_format) #200
 
             my_friends = Friend.objects.filter(Q(author=user.uuid) | Q(friend=user.uuid))
-            friend_check = my_friends.objects.filter(Q(author=target.uuid) | Q(friend=target.uuid))
+            friend_check = my_friends.filter(Q(author=target.uuid) | Q(friend=target.uuid))
             if friend_check and post.visibility=="FRIENDS":
                 img_format = post.image.name.split('.')[-1]
                 outfile = open('temp.'+img_format, 'wb')
@@ -788,13 +775,10 @@ def get_image(request, pk):
                 with open(outfile.name, 'rb') as out:
                     return HttpResponse(out, content_type='image/'+img_format) #200
         
-            print('CONSOLE: Exception line 791', locals())
             return render(request, 'sd/401.html', status=401) #Checked all the rules and you're not allowed to see it
         else:
-            print('CONSOLE: Exception line 794', locals())
             return render(request, 'sd/404.html', status=404) #Can't find no image/link to image        
     else:
-        print('CONSOLE: Exception line 797', locals())
         return HttpResponse(status_code=405) # Bad Method
 
 
@@ -803,13 +787,10 @@ def edit_post(request, post_id):
         print_state(request)
         user = get_current_user(request)
         if not authenticated(request) or not user:
-            print("CONSOLE: Redirecting from edit_post because no one is logged in.")
             return redirect('login')
 
         post = Post.objects.get(uuid=post_id)
         if(user.uuid != post.author_id):
-            print(
-                "CONSOLE: Redirecting from edit_post because the post does not belong to logged in user.")
             return redirect('my_feed')
 
         if request.method == "GET":
@@ -839,14 +820,10 @@ def delete_post(request, post_id):
             post = Post.objects.get(uuid=post_id)
             if post.author.uuid == user.uuid:
                 post.delete()
-                print("CONSOLE: Post deleted successfully.")
             else:
-                print("CONSOLE: Unable to delete post.")
                 return HttpResponse(status_code=403)
             return HttpResponse()
         else:
-            print(
-                "CONSOLE: Redirecting from Delete post function because no one is logged in")
             return redirect('login')
     else:
         return HttpResponse(status_code=405)
@@ -857,7 +834,6 @@ def edit_account(request):
         print_state(request)
         user = get_current_user(request)
         if not authenticated(request) or not user:
-            print("CONSOLE: Redirecting from edit_post because no one is logged in.")
             return redirect('login')
 
         details = Author.objects.get(uuid=user.uuid)
