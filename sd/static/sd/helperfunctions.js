@@ -187,7 +187,7 @@ function sendRequest(author) {
     });
 }
 
-function sendRequest(author) {
+function rejectRequest(author) {
   const origin = window.location.origin;
 
   const data = {
