@@ -187,6 +187,39 @@ function sendRequest(author) {
     });
 }
 
+function sendRequest(author) {
+  const origin = window.location.origin;
+
+  const data = {
+    target_author: author
+  };
+  fetch(origin + "/rejectrequest", {
+    method: "POST",
+    headers: {
+      "Accept": "application/json",
+      "Content-Type": "application/json"
+    },
+    body: JSON.stringify(data)
+  })
+  .then(function(response) {
+    if (!response.ok){
+      throw Error(response.statusText)
+    }
+    return response
+  })
+  .then(function(response) {
+    alert(
+      `Friend request rejected.\nYou can still follow ${author} by searching for them.`
+      );
+      location.reload();
+    })
+    .catch(function(error) {
+      alert(
+        "Your request not be processed at this time.\nPlease try again later."
+        );
+    });
+}
+
 function removeFriend(author) {
   var yes = confirm(
     "Would you like to remove this friend?\nThis author can still follow your posts even if you remove them as a friend."

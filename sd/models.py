@@ -81,6 +81,7 @@ class FriendRequest(models.Model):
     from_author = models.ForeignKey(
         Author, on_delete=models.CASCADE, related_name="from_author")
     date = models.DateTimeField(auto_now_add=True)
+    rejected = models.BooleanField(default=False)
 
 
 class Follow(models.Model):
