@@ -227,7 +227,7 @@ input[type=checkbox]{
   width: 5em;
 }
 
-.icons {
+img.icons {
   vertical-align: middle;
   float: right;
   padding-bottom: 1.2em;
