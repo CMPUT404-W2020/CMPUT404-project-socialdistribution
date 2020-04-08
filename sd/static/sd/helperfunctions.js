@@ -90,7 +90,7 @@ function confirmDeleteUser(author) {
       })
       .catch(function(error) {
         alert(
-          "Couldn't verify user.\nPlease try again later."
+          "Couldn't delete user.\nPlease try again later."
           );
       });
     }
@@ -106,7 +106,7 @@ function confirmVerify(author) {
     const data = {
       target_author: author
     };
-    fetch(origin + "/verify", {
+    fetch(origin + "/verifyuser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
