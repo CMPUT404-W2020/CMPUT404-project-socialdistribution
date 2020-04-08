@@ -38,7 +38,6 @@ urlpatterns = [
     path('logout/', logout, name='logout'),
     path('register/', register, name='register'),
     path('newpost', new_post, name='new_post'),
-    path('edit/<uuid:pk>', edit_post, name='edit_post'),
     path('feed', feed, name="my_feed"),
     path('notifications', notifications, name='notifications'),
     path('edit_post/<uuid:post_id>', edit_post, name='edit_post'),

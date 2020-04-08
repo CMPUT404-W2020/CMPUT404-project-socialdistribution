@@ -556,7 +556,19 @@ posts/<uuid>/comments
 
     /search              (allows the user to search for other users. From the search results, they can follow/unfollow users and see their current relationship to them)
     /notifications       (displays the user's notification of requests and a list of other users that they follow or are friends with)
+    /verify              (accessible only to superusers; allows the admin to verify/delete unverified users, or delete existing users)
 
+## AJAX
+
+### Fetch Paths:
+
+    /verifyuser         (Sets verified to True for the user specificied in the body of the request which will allow that user to log in and use the site)
+    /deleteuser         (deletes the user specificied in the body of the request)
+    /rejectrequest      (sets the rejected value of a friendrequest  specificied in the body of the request to True so it doesn't show as a new/pending request)
+    /friendrequest      (creates a follow object to the user specificied in the body of the request and sends them a friend request)
+    /unfollow           (unfollows the user specificied in the body of the request)
+    /deletepost         (deletes the post specificed in the body of the request)
+    
 ## Testing
 
 There is a script for running tests. The tests require selenium, which should be installed when you run `pip install -r requirements.txt` from the root directory of the project. Next, you need Firefox installed on your machine. Lastly, you need gecko installed on your machine, which can be done on a Mac by running `brew install gecko`. Then, ensure the test script is executable or run `chmod +x runtests.sh` to make it executable. Now, run `./runtests.sh` to run the tests! There are basic tests for the models and views as well as integration tests for all the major functionality. The tests should take approximately 4 minutes to run, so please be patient.
@@ -568,3 +580,4 @@ The following functions do not have automated tests as they all have alerts and 
 * Unfollow another author
 
 It is possible that one of tests will fail on a unique key constraint. This is because we are testing the registration of a new user and this test communicates with our live server. To resolve this issue and have the test pass, login to [https://cmput-404.herokuapp.com/admin] with username "warren" and password "cmput404", navigate to the 'Users' tab, and delete the user with username 'Selenium'.
+
