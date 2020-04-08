@@ -307,6 +307,12 @@ input[type=checkbox]{
 #postBody {
   color: black;
   text-align: center;
+
+}
+
+img.post-content{
+  box-sizing: border-box;
+  max-width: 100%
 }
 
 .markdown-image{
