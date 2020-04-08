@@ -593,23 +593,6 @@ form>.row {
   margin: 0.2em;
 }
 
-#button1 {
-  color: white;
-  font-size: 1em;
-  width: auto;
-  float: right;
-  background-color: #9dc7ba;
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  padding: 0.4em;
-  margin-top:-0.5em;
-  text-align: center;
-}
-
-#button1:hover {
-  background-color: #9dc7baa2;
-  cursor: pointer;
-}
 
 #cancel-button{
   width: auto;
@@ -854,6 +837,47 @@ form>.row {
 .search-results {
   margin-top: 2em;
 }
+
+.addbutton{
+  outline:none;
+  border-radius: 50%;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-color: grey;
+  margin-left: 1em;
+  background-color: white;
+  width: 1.6em;
+  height: 1.6em;
+  border: 1.5px solid black;
+  color: black;
+  float: right;
+}
+
+.addbutton:hover {
+  color: #9dc7ba;
+  cursor: pointer;
+}
+
+.minusbutton{
+  outline:none;
+  border-radius: 50%;
+  font-size: 1.1em;
+  font-weight: bold;
+  text-color: grey;
+  margin-left: 1em;
+  background-color: white;
+  width: 1.6em;
+  height: 1.6em;
+  border: 1.5px solid black;
+  color: black;
+  float: right;
+}search
+
+.minusbutton:hover {
+  color: #ed9a00;
+  cursor: pointer;
+}
+
 
 .addminusbutton{
   outline:none;

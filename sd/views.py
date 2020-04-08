@@ -22,7 +22,6 @@ def explore(request):
     if valid_method(request):
         if request.method == "GET":
             user = get_current_user(request)
-            print_state(request)
             if user:
                 posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(
                     unlisted=False)).exclude(author_id=user.uuid).order_by('-published')
@@ -74,7 +73,8 @@ def verify(request):
     if request.method == "GET":
         if authenticated(request) and get_current_user(request).is_superuser and get_current_user(request).is_staff:
             unverified = Author.objects.filter(Q(verified=False))
-            return render(request, 'sd/verify.html', {'unverified': unverified})
+            all_users = Author.objects.all()
+            return render(request, 'sd/verify.html', {'unverified': unverified, 'allusers': all_users})
         else:
             return render(request, 'sd/401.html', status=401)
     elif request.method == "POST":
@@ -84,11 +84,23 @@ def verify(request):
             target.verified = True
             target.save()
             return HttpResponse()
-        except Exception as e:
+        except:
             return HttpResponse(status_code=500)
     else:
         return HttpResponse(status_code=405)
 
+@csrf_exempt
+def deleteuser(request):
+    if request.method=="POST":
+        try:
+            data = json.loads(request.body)
+            target = Author.objects.get(uuid=data['target_author'])
+            target.delete()
+            return HttpResponse()
+        except:
+            return HttpResponse(status_code=500)
+    else:
+        return HttpResponse(status_code=405)
 
 def feed(request):
     if valid_method(request):
@@ -200,7 +212,6 @@ def feed(request):
 
 def account(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
             page = 'sd/account.html'
@@ -214,7 +225,6 @@ def account(request):
 def search(request):
     if not valid_method(request):
         return HttpResponse(status_code=405)
-    print_state(request)
     user = get_current_user(request)
     if not (authenticated(request) and user):
         return redirect('login')
@@ -293,7 +303,6 @@ def search(request):
 
 def notifications(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
 
@@ -374,7 +383,6 @@ def notifications(request):
 
 def post_comment(request, post_id):
     if valid_method(request):
-        print_state(request)
         comments = Comment.objects.filter(post=post_id)
         result = paginated_result(
             request, comments, CommentSerializer, "comments", query="comments")
@@ -385,7 +393,6 @@ def post_comment(request, post_id):
 
 def login(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
             try:
@@ -428,7 +435,6 @@ def login(request):
 
 def register(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
             try:
@@ -464,7 +470,6 @@ def register(request):
 
 def logout(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
             try:
@@ -498,7 +503,6 @@ def rejectrequest(request):
 @csrf_exempt
 def friendrequest(request):
     if valid_method(request):
-        print_state(request)
         if request.method == "GET":
             return HttpResponse(status_code=405)
 
@@ -630,10 +634,8 @@ def unfollow(request):
 
 def new_post(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if not authenticated(request) or not user:
-            print("CONSOLE: Redirecting from new_post because no one is logged in.")
             return redirect('login')
 
         if request.method == "GET":
@@ -658,10 +660,8 @@ def new_post(request):
                     temp = temp.decode('utf-8')    
                     post.link_to_image = temp
                     post.save()
-                    print('CONSOLE: Post successful! Redirecting to your feed.\nLocals:',locals())
                     return redirect('my_feed')
                 else:
-                    print('CONSOLE: Post failed, please try again.\nLocal variables',locals())
                     return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
             else:
                 info = dict(request._post)
@@ -673,10 +673,8 @@ def new_post(request):
                 if form.is_valid():
                     post = form.save()
                     post.save()
-                    print('CONSOLE: Post successful! Redirecting to your feed.')
                     return redirect('my_feed')
                 else:
-                    print('CONSOLE: Post failed, please try again.')
                     return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
     else:
         return HttpResponse(status_code=405)
@@ -767,7 +765,6 @@ def get_image(request, pk):
 
 def edit_post(request, post_id):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if not authenticated(request) or not user:
             return redirect('login')
@@ -814,7 +811,6 @@ def delete_post(request, post_id):
 
 def edit_account(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if not authenticated(request) or not user:
             return redirect('login')

@@ -87,8 +87,8 @@
             <span class="searchrelation"> Follows You </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> ${aHost} </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="rejectRequest('${aName}')">-</button>
-            <button class="addminusbutton" id="${btn_id}" onclick="sendRequest('${aName}')">+</button>
+            <button class="minusbutton" id="${btn_id}" onclick="rejectRequest('${aName}')">-</button>
+            <button class="addbutton" id="${btn_id}" onclick="sendRequest('${aName}')">+</button>
             </div>`;
         }
         notificationContent += '</span>';
@@ -123,7 +123,7 @@
             <span class="searchrelation"> Friends </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> ${fHost} </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="removeFriend('${fId}')">-</button>
+            <button class="minusbutton" id="${btn_id}" onclick="removeFriend('${fId}')">-</button>
             </div>`;
         }
         friendsContent += '</span>';
@@ -149,7 +149,7 @@
             <span class="searchrelation"> Following </span>
             <span class="bluedot"></span>
             <span class="searchrelation"> ${fHost} </span>
-            <button class="addminusbutton" id="${btn_id}" onclick="unfollow('${fId}')">-</button>
+            <button class="minusbutton" id="${btn_id}" onclick="unfollow('${fId}')">-</button>
             </div>`;
         }
         followingContent += '</span>';

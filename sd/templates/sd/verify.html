@@ -32,9 +32,19 @@ function loadBar() {
 		{% for user in unverified %}
 		<hr class="greyline">
 		<span class="searchauthor">{{user.username}}</span>
-		<span class="searchrelation"> From {{user.host}} </span>
-		<button type="button" id="button1" onclick="confirmVerify('{{user.uuid}}')">VERIFY</button>
-		<button type="button" id="button1" onclick="confirmVerify('{{user.uuid}}')">VERIFY</button>
+		<span class="searchrelation"> From {{user.host.hostname}} </span>
+		<button class="addbutton" id="button1" onclick="confirmVerify('{{user.uuid}}')">+</button>
+		<button class="minusbutton" id="button1" onclick="confirmDeleteUser('{{user.uuid}}')">-</button>
+		<br>
+		{% endfor %}
+	</div>
+	<div class="allusers">
+		<h1>All Users</h1>
+		{% for user in allusers %}
+		<hr class="greyline">
+		<span class="searchauthor">{{user.username}}</span>
+		<span class="searchrelation"> From {{user.host.hostname}} </span>
+		<button class="minusbutton" id="button1" onclick="confirmDeleteUser('{{user.uuid}}')">-</button>
 		<br>
 		{% endfor %}
 	</div>
