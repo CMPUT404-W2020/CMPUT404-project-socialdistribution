@@ -238,7 +238,12 @@ input[type=checkbox]{
 
 .content-image {
   box-sizing: border-box;
-  max-width: 100%
+  max-width: 100%;
+  max-height: 10em;
+  display: block;
+  padding-bottom: 2em;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .icons#lasticon {
@@ -332,7 +337,8 @@ input[type=checkbox]{
 
 
 .feedimage {
-  max-width: 10em;
+  box-sizing: border-box;
+  max-width: 100%;
   max-height: 10em;
   display: block;
   padding-bottom: 2em;
