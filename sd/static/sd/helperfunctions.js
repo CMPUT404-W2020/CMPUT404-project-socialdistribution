@@ -50,6 +50,43 @@ function confirmDelete(post) {
   }
 }
 
+function confirmDeleteUser(author) {
+  var yes = confirm(
+    "Verify user?"
+  );
+
+  if (yes) {
+    const origin = window.location.origin;
+    const data = {
+      target_author: author
+    };
+    fetch(origin + "/deleteuser", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(data)
+    })
+    .then(function(response) {
+      if (!response.ok){
+        throw Error(response.statusText)
+      }
+      return response
+    })
+    .then(function(response) {
+      alert(
+        `User deleted!`
+        );
+        location.reload();
+      })
+      .catch(function(error) {
+        alert(
+          "Couldn't verify user.\nPlease try again later."
+          );
+      });
+    }
+}
+
 function confirmVerify(author) {
   var yes = confirm(
     "Verify user?"
@@ -85,7 +122,7 @@ function confirmVerify(author) {
           );
       });
     }
-  }
+}
 
 function simpleText() {
   var simple = document.getElementById("orange-button");

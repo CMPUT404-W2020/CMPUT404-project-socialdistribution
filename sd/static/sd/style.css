@@ -97,17 +97,6 @@ hr {
   margin-bottom: 1em;
 }
 
-
-button{
-  outline:none;
-}
-
-button:hover {
-  cursor: pointer;
-}
-
-
-  /* general form styling */
 input {
   text-align: left;
   height: 1.5em;
@@ -318,7 +307,6 @@ input[type=checkbox]{
 #postBody {
   color: black;
   text-align: center;
-  max-width: ;
 }
 
 .markdown-image{
@@ -593,23 +581,6 @@ form>.row {
   margin: 0.2em;
 }
 
-#button1 {
-  color: white;
-  font-size: 1em;
-  width: auto;
-  float: right;
-  background-color: #9dc7ba;
-  border-radius: 10px;
-  border: 1.5px solid #f0f0f0;
-  padding: 0.4em;
-  margin-top:-0.5em;
-  text-align: center;
-}
-
-#button1:hover {
-  background-color: #9dc7baa2;
-  cursor: pointer;
-}
 
 #cancel-button{
   width: auto;
@@ -855,12 +826,11 @@ form>.row {
   margin-top: 2em;
 }
 
-.addminusbutton{
+.addbutton{
   outline:none;
   border-radius: 50%;
   font-size: 1.1em;
   font-weight: bold;
-  text-color: grey;
   margin-left: 1em;
   background-color: white;
   width: 1.6em;
@@ -868,7 +838,48 @@ form>.row {
   border: 1.5px solid black;
   color: black;
   float: right;
-}search
+}
+
+.addbutton:hover {
+  color: #9dc7ba;
+  cursor: pointer;
+  border: 1.5px solid #9dc7ba;
+}
+
+.minusbutton{
+  outline:none;
+  border-radius: 50%;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-left: 1em;
+  background-color: white;
+  width: 1.6em;
+  height: 1.6em;
+  border: 1.5px solid black;
+  color: black;
+  float: right;
+}
+
+.minusbutton:hover {
+  color: #ed9a00;
+  cursor: pointer;
+  border: 1.5px solid #ed9a00;
+}
+
+
+.addminusbutton{
+  outline:none;
+  border-radius: 50%;
+  font-size: 1.1em;
+  font-weight: bold;
+  margin-left: 1em;
+  background-color: white;
+  width: 1.6em;
+  height: 1.6em;
+  border: 1.5px solid black;
+  color: black;
+  float: right;
+}
 
 .addminusbutton:hover {
   color: #ed9a00;

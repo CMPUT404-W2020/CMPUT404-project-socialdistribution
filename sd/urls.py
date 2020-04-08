@@ -102,4 +102,5 @@ urlpatterns = [
     path('edit_account', edit_account, name='edit_account'),
     path('unfollow', unfollow, name='unfollow'),
     path('verify', verify, name='verify'),
+    path('deleteuser', deleteuser, name='deleteuser'),
 ]

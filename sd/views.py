@@ -17,12 +17,10 @@ import social_distribution.settings
 import requests
 import commonmark
 
-
 def explore(request):
     if valid_method(request):
         if request.method == "GET":
             user = get_current_user(request)
-            print_state(request)
             if user:
                 posts = Post.objects.filter(Q(visibility='PUBLIC') & Q(
                     unlisted=False)).exclude(author_id=user.uuid).order_by('-published')
@@ -69,31 +67,8 @@ def explore(request):
     else:
         return HttpResponse(status_code=405)
 
-@csrf_exempt
-def verify(request):
-    if request.method == "GET":
-        if authenticated(request) and get_current_user(request).is_superuser and get_current_user(request).is_staff:
-            unverified = Author.objects.filter(Q(verified=False))
-            return render(request, 'sd/verify.html', {'unverified': unverified})
-        else:
-            return render(request, 'sd/401.html', status=401)
-    elif request.method == "POST":
-        try:
-            data = json.loads(request.body)
-            target = Author.objects.get(uuid=data['target_author'])
-            target.verified = True
-            target.save()
-            return HttpResponse()
-        except Exception as e:
-            print("CONSOLE: Couldn't verify:",e, locals())
-            return HttpResponse(status_code=500)
-    else:
-        return HttpResponse(status_code=405)
-
-
 def feed(request):
     if valid_method(request):
-        print("CONSOLE: request.method:", request.method)
         if request.method == 'GET':
             user = get_current_user(request)
             if authenticated(request) and user:
@@ -123,20 +98,14 @@ def feed(request):
                     if their_pub_posts:
                         all_posts = all_posts.union(their_pub_posts)
 
-                    # if f_user.host == user.host:
-                    #     server_spec_posts = Post.objects.filter(
-                    #         Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
-                    #     if server_spec_posts:
-                    #         all_posts = all_posts.union(server_spec_posts)
-
                     spec_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
                         visibility='PRIVATE') & Q(unlisted=False) & Q(visibleTo__contains=user.username))
                     if spec_posts:
                         all_posts = all_posts.union(spec_posts)
 
                     if f_user.uuid in friend_ids:
-                        friend_posts = Post.objects.filter(Q(author=f_user.uuid) & Q(
-                            visibility='FRIENDS') & Q(unlisted=False))
+                        friend_posts = Post.objects.filter(Q(author=f_user.uuid) & (Q(
+                            visibility='FRIENDS') | Q(visibility='FOAF')) & Q(unlisted=False))
                         if f_user.host == user.host:
                             server_spec_posts = Post.objects.filter(
                                 Q(author=f_user.uuid) & Q(visibility='SERVERONLY') & Q(unlisted=False))
@@ -192,7 +161,6 @@ def feed(request):
 
                 return render(request, 'sd/main.html', {'current_user': user, 'authenticated': True, 'results': results, 'comments':comments, 'all_authors':ret_authors})
             else:
-                print("CONSOLE: Redirecting from Feed because no one is logged in")
                 return redirect('login')
         elif request.method=="POST":
             data = request.POST
@@ -209,13 +177,11 @@ def feed(request):
 
 def account(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
             page = 'sd/account.html'
             return render(request, page, {'current_user': user, 'authenticated': True})
         else:
-            print("CONSOLE: Redirecting from Account to because no one is logged in")
             return redirect('login')
     else:
         return HttpResponse(status_code=405)
@@ -224,10 +190,8 @@ def account(request):
 def search(request):
     if not valid_method(request):
         return HttpResponse(status_code=405)
-    print_state(request)
     user = get_current_user(request)
     if not (authenticated(request) and user):
-        print("CONSOLE: Redirecting from Search because no one is logged in")
         return redirect('login')
 
     # Get all authors
@@ -304,7 +268,6 @@ def search(request):
 
 def notifications(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
 
@@ -378,7 +341,6 @@ def notifications(request):
 
             return render(request, 'sd/notifications.html', context)
         else:
-            print("CONSOLE: Redirecting from Notifications because no one is logged in")
             return redirect('login')
     else:
         return HttpResponse(status_code=405)
@@ -386,7 +348,6 @@ def notifications(request):
 
 def post_comment(request, post_id):
     if valid_method(request):
-        print_state(request)
         comments = Comment.objects.filter(post=post_id)
         result = paginated_result(
             request, comments, CommentSerializer, "comments", query="comments")
@@ -397,15 +358,13 @@ def post_comment(request, post_id):
 
 def login(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
-            print("CONSOLE: Logging out " + user.username)
             try:
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
                 request.session.flush()
-            except KeyError as k:
+            except:
                 pass
 
         if request.method == "GET":
@@ -441,15 +400,13 @@ def login(request):
 
 def register(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
-            print("CONSOLE: Logging out " + user.username)
             try:
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
                 request.session.flush()
-            except KeyError as k:
+            except:
                 pass
 
         if request.method == "GET":
@@ -465,13 +422,11 @@ def register(request):
                 key = user.uuid
                 request.session['auth-user'] = str(key)
                 request.session['SESSION_EXPIRE_AT_BROWSER_CLOSE'] = True
-                print("CONSOLE: "+user.username +
-                    " successfully registered! Redirecting to your feed")
                 return redirect('my_feed')
             else:
                 errors = "Username taken"
                 return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
-        except IntegrityError as i:
+        except:
             errors = "Username taken"
             return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
     else:
@@ -480,7 +435,6 @@ def register(request):
 
 def logout(request):
     if valid_method(request):
-        print_state(request)
         user = get_current_user(request)
         if authenticated(request) and user:
             try:
@@ -495,6 +449,224 @@ def logout(request):
     else:
         return HttpResponse(status_code=405)
 
+def new_post(request):
+    if valid_method(request):
+        user = get_current_user(request)
+        if not authenticated(request) or not user:
+            return redirect('login')
+
+        if request.method == "GET":
+            form = NewPostForm()
+            return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
+
+        else:
+            if request.FILES:
+                info = dict(request._post)
+                for i in info:
+                    if isinstance(info[i], list):
+                        info[i] = info[i][0]
+                info['author'] = user.uuid
+                form = NewPostForm(info, request.FILES)
+                if form.is_valid():
+                    post = form.save()
+                    post.save()
+                    with open(post.link_to_image, "rb") as image:
+                        temp = base64.b64encode(image.read())    
+                    temp = temp.decode('utf-8')    
+                    post.link_to_image = temp
+                    post.save()
+                    return redirect('my_feed')
+                else:
+                    return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
+            else:
+                info = dict(request._post)
+                for i in info:
+                    if isinstance(info[i], list):
+                        info[i] = info[i][0]
+                info['author'] = user.uuid
+                form = NewPostForm(info)
+                if form.is_valid():
+                    post = form.save()
+                    post.save()
+                    return redirect('my_feed')
+                else:
+                    return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
+    else:
+        return HttpResponse(status_code=405)
+
+
+def get_image(request, pk):
+    if request.method == "GET":
+        try:
+            post = Post.objects.get(uuid=pk)
+        except:
+            return render(request, 'sd/404.html', status=404) #Can't find user, return Not Found
+
+        if post.image and post.link_to_image:
+
+            if post.visibility=="PUBLIC":
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format) #200
+
+            try:
+                user = get_current_user(request)
+                target = post.author
+            except:
+                return render(request, 'sd/404.html', status=404) #Author not found, return Not Found
+            
+            if user==target:
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format) #200
+
+            my_friends = Friend.objects.filter(Q(author=user.uuid) | Q(friend=user.uuid))
+            f1 = Friend.objects.filter(Q(author=user.uuid)).values('friend')
+            f2 = Friend.objects.filter(Q(friend=user.uuid)).values('author')
+            friend_ids = []
+            for i in f1:
+                friend_ids.append(i['friend'])
+            for j in f2:
+                friend_ids.append(j['author'])
+            friend_check = my_friends.filter(Q(author=target.uuid) | Q(friend=target.uuid))
+            if friend_check and (post.visibility=="FRIENDS" or post.visibility=="FOAF"):
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format) #200
+
+            if friend_check and post.visibility=="SERVERONLY" and target.host==user.host:
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format) #200
+
+            if post.visibility == "FOAF":
+                for friend in friend_ids:
+                    friends_of_friends = Friend.objects.filter(Q(author=friend)|Q(friend=friend)).exclude(author=user).exclude(friend=user)
+                foaf_check = friends_of_friends.filter(Q(author=target.uuid) | Q(friend=target.uuid))
+                if foaf_check:
+                    img_format = post.image.name.split('.')[-1]
+                    outfile = open('temp.'+img_format, 'wb')
+                    outfile.write(base64.b64decode(post.link_to_image))
+                    outfile.close()
+                    with open(outfile.name, 'rb') as out:
+                        return HttpResponse(out, content_type='image/'+img_format) #200
+            
+            if post.visibility == "PRIVATE" and user.username in post.visibleTo:
+                img_format = post.image.name.split('.')[-1]
+                outfile = open('temp.'+img_format, 'wb')
+                outfile.write(base64.b64decode(post.link_to_image))
+                outfile.close()
+                with open(outfile.name, 'rb') as out:
+                    return HttpResponse(out, content_type='image/'+img_format) #200
+        
+            return render(request, 'sd/401.html', status=401) #Checked all the rules and you're not allowed to see it
+        else:
+            return render(request, 'sd/404.html', status=404) #Can't find no image/link to image        
+    else:
+        return HttpResponse(status_code=405) # Bad Method
+
+
+def edit_post(request, post_id):
+    if valid_method(request):
+        user = get_current_user(request)
+        if not authenticated(request) or not user:
+            return redirect('login')
+
+        post = Post.objects.get(uuid=post_id)
+        if(user.uuid != post.author_id):
+            return redirect('my_feed')
+
+        if request.method == "GET":
+            form = EditPostForm(instance=post)
+            return render(request, 'sd/edit_post.html', {'form': form, 'current_user': user, 'authenticated': True})
+        else:
+            data = request.POST
+            post.title = data['title']
+            post.content = data['content']
+            post.contentType = data['contentType']
+            post.description = data['description']
+            post.categories = data['categories']
+            post.visibility = data['visibility']
+            post.visibleTo = data['visibleTo']
+            post.unlisted = data['unlisted']
+            post.save()
+            return redirect('my_feed')
+    else:
+        return HttpResponse(status_code=405)
+
+def edit_account(request):
+    if valid_method(request):
+        user = get_current_user(request)
+        if not authenticated(request) or not user:
+            return redirect('login')
+
+        if request.method == "GET":
+            form = EditAccountForm(instance=user)
+            return render(request, 'sd/edit_account.html', {'form': form, 'current_user': user, 'authenticated': True})
+        else:
+            data = request.POST
+            if Author.objects.filter(username=data['username']).exclude(uuid=user.uuid):
+                errors = "Username taken"
+                return render(request, 'sd/edit_account.html', {'form': EditAccountForm(instance=user), 'current_user': user, 'authenticated': True, 'errors':errors})
+            user.first_name = data['first_name']
+            user.last_name = data['last_name']
+            user.username = data['username']
+            user.email = data['email']
+            user.bio = data['bio']
+            user.github = data['github']
+            user.save()
+            return redirect('account')
+    else:
+        return HttpResponse(status_code=405)
+
+"""AJAX Requests"""
+
+@csrf_exempt
+def verify(request):
+    if request.method == "GET":
+        if authenticated(request) and get_current_user(request).is_superuser and get_current_user(request).is_staff:
+            unverified = Author.objects.filter(Q(verified=False))
+            all_users = Author.objects.all()
+            return render(request, 'sd/verify.html', {'unverified': unverified, 'allusers': all_users})
+        else:
+            return render(request, 'sd/401.html', status=401)
+    elif request.method == "POST":
+        try:
+            data = json.loads(request.body)
+            target = Author.objects.get(uuid=data['target_author'])
+            target.verified = True
+            target.save()
+            return HttpResponse()
+        except:
+            return HttpResponse(status_code=500)
+    else:
+        return HttpResponse(status_code=405)
+
+@csrf_exempt
+def deleteuser(request):
+    if request.method=="POST":
+        try:
+            data = json.loads(request.body)
+            target = Author.objects.get(uuid=data['target_author'])
+            target.delete()
+            return HttpResponse()
+        except:
+            return HttpResponse(status_code=500)
+    else:
+        return HttpResponse(status_code=405)
+
 @csrf_exempt
 def rejectrequest(request):
     if request.method == "POST":
@@ -506,8 +678,7 @@ def rejectrequest(request):
             fr.rejected=True
             fr.save()
             return HttpResponse()
-        except Exception as e:
-            print("SOMETHING BROKE:",e)
+        except:
             return HttpResponse(status_code=500)
     return HttpResponse(status_code=405)
 
@@ -515,7 +686,6 @@ def rejectrequest(request):
 @csrf_exempt
 def friendrequest(request):
     if valid_method(request):
-        print_state(request)
         if request.method == "GET":
             return HttpResponse(status_code=405)
 
@@ -535,17 +705,13 @@ def friendrequest(request):
             4 --> no relationship exists yet; create one
             obj is returned in case 2 friend request to be deleted
             """
-            print("CONSOLE: Relationship: ", relationship)
             if relationship == 1:
-                print("CONSOLE: "+user.username+" and " +
-                      target.username+" are already friends!")
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
                     info = {'follower': targetuuid, 'following': user.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from target to user")
                         s.save()
                 follows2 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
@@ -553,7 +719,6 @@ def friendrequest(request):
                     info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from user to target")
                         s.save()
                 # creates Follow objects in case they don't already exist
                 return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
@@ -564,42 +729,35 @@ def friendrequest(request):
                 if friend.is_valid():
                     friend.save()
                     obj.delete()
-                    print("CONSOLE: "+user.username+" and " +
-                          target.username+" are now friends!")
                 else:
-                    print("CONSOLE: friendserializer error:", friend.errors)
+                    return HttpResponse(status_code=500)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
                     info = {'follower': target.uuid, 'following': user.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from target to user")
                         s.save()
                     else:
-                        print("CONSOLE: followserializer error:", s.errors)
+                        return HttpResponse(status_code=500)
                 follows2 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows2:
                     info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from user to target")
                         s.save()
                     else:
-                        print("CONSOLE: followserializer error (2):", s.errors)
+                        return HttpResponse(status_code=500)
                 return HttpResponse(json.dumps({'status': 'friends'}), content_type='application/json')
 
             elif relationship == 3:
-                print("CONSOLE: "+user.username+" is already following " +
-                      target.username+". Returning")
                 follows1 = Follow.objects.filter(
                     Q(follower=user.uuid) & Q(following=target.uuid))
                 if not follows1:
                     info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from user to target")
                         s.save()
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
@@ -609,24 +767,20 @@ def friendrequest(request):
                 friendreq_serializer = FriendRequestSerializer(data=info)
                 if friendreq_serializer.is_valid():
                     friendreq_serializer.save()
-                    print("CONSOLE: "+user.username +
-                          " sent a friend request to "+target.username)
                 else:
-                    print("CONSOLE: friendreq_serializer errors:",
-                          friendreq_serializer.errors)
+                    return HttpResponse(status_code=500)
                 follows1 = Follow.objects.filter(
                     Q(follower=target.uuid) & Q(following=user.uuid))
                 if not follows1:
                     info = {'follower': user.uuid, 'following': target.uuid}
                     s = FollowSerializer(data=info)
                     if s.is_valid():
-                        print("CONSOLE: Created a Follow from user to target")
                         s.save()
                     else:
-                        print("CONSOLE: followserializer error:", s.errors)
+                        return HttpResponse(status_code=500)
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
-        except Exception as e:
+        except:
             return HttpResponse(status_code=500)
     else:
         return HttpResponse(status_code=405)
@@ -654,177 +808,12 @@ def unfollow(request):
                     fr = FriendRequest.objects.create(to_author=user, from_author=target)
 
                 return HttpResponse()
-            except Exception as e:
+            except:
                 return HttpResponse(status_code=500)
         else:
             return HttpResponse(status_code=401)
     else:
         return HttpResponse(status_code=405)
-
-def new_post(request):
-    if valid_method(request):
-        print_state(request)
-        user = get_current_user(request)
-        if not authenticated(request) or not user:
-            print("CONSOLE: Redirecting from new_post because no one is logged in.")
-            return redirect('login')
-
-        if request.method == "GET":
-            form = NewPostForm()
-            return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
-
-        else:
-            if request.FILES:
-                myfile = request.FILES['image']
-                info = dict(request._post)
-                for i in info:
-                    if isinstance(info[i], list):
-                        info[i] = info[i][0]
-                info['author'] = user.uuid
-                form = NewPostForm(info, request.FILES)
-                if form.is_valid():
-                    post = form.save()
-                    post.link_to_image = 'media/'+post.image.name
-                    post.save()
-                    with open(post.link_to_image, "rb") as image:
-                        temp = base64.b64encode(image.read())    
-                    temp = temp.decode('utf-8')    
-                    post.link_to_image = temp
-                    post.save()
-                    print('CONSOLE: Post successful! Redirecting to your feed.\nLocals:',locals())
-                    return redirect('my_feed')
-                else:
-                    print('CONSOLE: Post failed, please try again.\nLocal variables',locals())
-                    return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
-            else:
-                info = dict(request._post)
-                for i in info:
-                    if isinstance(info[i], list):
-                        info[i] = info[i][0]
-                info['author'] = user.uuid
-                form = NewPostForm(info)
-                if form.is_valid():
-                    post = form.save()
-                    post.save()
-                    print('CONSOLE: Post successful! Redirecting to your feed.')
-                    return redirect('my_feed')
-                else:
-                    print('CONSOLE: Post failed, please try again.')
-                    return render(request, 'sd/new_post.html', {'form': form, 'current_user': user, 'authenticated': True})
-    else:
-        return HttpResponse(status_code=405)
-
-
-def get_image(request, pk):
-    if request.method == "GET":
-        try:
-            post = Post.objects.get(uuid=pk)
-        except:
-            return render(request, 'sd/404.html', status=404) #Can't find user, return Not Found
-
-        if post.image and post.link_to_image:
-
-            if post.visibility=="PUBLIC":
-                img_format = post.image.name.split('.')[-1]
-                outfile = open('temp.'+img_format, 'wb')
-                outfile.write(base64.b64decode(post.link_to_image))
-                outfile.close()
-                with open(outfile.name, 'rb') as out:
-                    return HttpResponse(out, content_type='image/'+img_format) #200
-
-            try:
-                user = get_current_user(request)
-                target = Author.objects.get(uuid=post.author)
-            except:
-                return render(request, 'sd/404.html', status=404) #Author not found, return Not Found
-            
-            if user.uuid==post.author:
-                img_format = post.image.name.split('.')[-1]
-                outfile = open('temp.'+img_format, 'wb')
-                outfile.write(base64.b64decode(post.link_to_image))
-                outfile.close()
-                with open(outfile.name, 'rb') as out:
-                    return HttpResponse(out, content_type='image/'+img_format) #200
-
-            my_friends = Friend.objects.filter(Q(author=user.uuid) | Q(friend=user.uuid))
-            friend_check = my_friends.objects.filter(Q(author=target.uuid) | Q(friend=target.uuid))
-            if friend_check and post.visibility=="FRIENDS":
-                img_format = post.image.name.split('.')[-1]
-                outfile = open('temp.'+img_format, 'wb')
-                outfile.write(base64.b64decode(post.link_to_image))
-                outfile.close()
-                with open(outfile.name, 'rb') as out:
-                    return HttpResponse(out, content_type='image/'+img_format) #200
-
-            if friend_check and post.visibility=="SERVERONLY" and target.host==user.host:
-                img_format = post.image.name.split('.')[-1]
-                outfile = open('temp.'+img_format, 'wb')
-                outfile.write(base64.b64decode(post.link_to_image))
-                outfile.close()
-                with open(outfile.name, 'rb') as out:
-                    return HttpResponse(out, content_type='image/'+img_format) #200
-
-            if post.visibility == "FOAF":
-                friends_of_friends = Friend.objects.none()
-                for friend in my_friends:
-                    their_friends = Friend.objects.filter(Q(author=friend.uuid)).exclude(friend=user.uuid).union(Author.objects.filter(Q(friend=friend.uuid)).exclude(author=user.uuid))
-                    friends_of_friends = friends_of_friends.union(their_friends)
-                foaf_check = friends_of_friends.objects.filter(Q(author=target.uuid) | Q(friend=target.uuid))
-                if foaf_check:
-                    img_format = post.image.name.split('.')[-1]
-                    outfile = open('temp.'+img_format, 'wb')
-                    outfile.write(base64.b64decode(post.link_to_image))
-                    outfile.close()
-                    with open(outfile.name, 'rb') as out:
-                        return HttpResponse(out, content_type='image/'+img_format) #200
-            
-            if post.visibility == "PRIVATE" and user.username in post.visibleTo:
-                img_format = post.image.name.split('.')[-1]
-                outfile = open('temp.'+img_format, 'wb')
-                outfile.write(base64.b64decode(post.link_to_image))
-                outfile.close()
-                with open(outfile.name, 'rb') as out:
-                    return HttpResponse(out, content_type='image/'+img_format) #200
-        
-            return render(request, 'sd/401.html', status=401) #Checked all the rules and you're not allowed to see it
-        else:
-            return render(request, 'sd/404.html', status=404) #Can't find no image/link to image        
-    else:
-        return HttpResponse(status_code=405) # Bad Method
-
-
-def edit_post(request, post_id):
-    if valid_method(request):
-        print_state(request)
-        user = get_current_user(request)
-        if not authenticated(request) or not user:
-            print("CONSOLE: Redirecting from edit_post because no one is logged in.")
-            return redirect('login')
-
-        post = Post.objects.get(uuid=post_id)
-        if(user.uuid != post.author_id):
-            print(
-                "CONSOLE: Redirecting from edit_post because the post does not belong to logged in user.")
-            return redirect('my_feed')
-
-        if request.method == "GET":
-            form = EditPostForm(instance=post)
-            return render(request, 'sd/edit_post.html', {'form': form, 'current_user': user, 'authenticated': True})
-        else:
-            data = request.POST
-            post.title = data['title']
-            post.content = data['content']
-            post.contentType = data['contentType']
-            post.description = data['description']
-            post.categories = data['categories']
-            post.visibility = data['visibility']
-            post.visibleTo = data['visibleTo']
-            post.unlisted = data['unlisted']
-            post.save()
-            return redirect('my_feed')
-    else:
-        return HttpResponse(status_code=405)
-
 
 @csrf_exempt
 def delete_post(request, post_id):
@@ -834,43 +823,10 @@ def delete_post(request, post_id):
             post = Post.objects.get(uuid=post_id)
             if post.author.uuid == user.uuid:
                 post.delete()
-                print("CONSOLE: Post deleted successfully.")
             else:
-                print("CONSOLE: Unable to delete post.")
                 return HttpResponse(status_code=403)
             return HttpResponse()
         else:
-            print(
-                "CONSOLE: Redirecting from Delete post function because no one is logged in")
             return redirect('login')
-    else:
-        return HttpResponse(status_code=405)
-
-
-def edit_account(request):
-    if valid_method(request):
-        print_state(request)
-        user = get_current_user(request)
-        if not authenticated(request) or not user:
-            print("CONSOLE: Redirecting from edit_post because no one is logged in.")
-            return redirect('login')
-
-        details = Author.objects.get(uuid=user.uuid)
-        if request.method == "GET":
-            form = EditAccountForm(instance=user)
-            return render(request, 'sd/edit_account.html', {'form': form, 'current_user': user, 'authenticated': True})
-        else:
-            data = request.POST
-            if Author.objects.filter(username=data['username']).exclude(uuid=user.uuid):
-                errors = "Username taken"
-                return render(request, 'sd/edit_account.html', {'form': EditAccountForm(instance=user), 'current_user': user, 'authenticated': True, 'errors':errors})
-            user.first_name = data['first_name']
-            user.last_name = data['last_name']
-            user.username = data['username']
-            user.email = data['email']
-            user.bio = data['bio']
-            user.github = data['github']
-            user.save()
-            return redirect('account')
     else:
         return HttpResponse(status_code=405)

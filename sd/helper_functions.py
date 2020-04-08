@@ -25,7 +25,6 @@ def get_current_user(request):
 
 
 def paginated_result(request, objects, serializer, keyword, **result):
-    print('CONSOLE: request details:', request.GET)
     page_num = int(request.GET.get('page', 1))
     size = int(request.GET.get('size', 10))
     first_result = size*(page_num-1)
@@ -43,14 +42,6 @@ def paginated_result(request, objects, serializer, keyword, **result):
         result["next"] = page_num + 1
     result[keyword] = list(serializer(objects[first_result:last_result], many=True).data)
     return result
-
-
-def print_state(request):
-    user = get_current_user(request)
-    if user and authenticated(request):
-        print("CONSOLE: Authenticated user: "+user.username)
-    else:
-        print("CONSOLE: Browsing as non-authenticated user.")
 
 
 def get_relationship(user, target):
