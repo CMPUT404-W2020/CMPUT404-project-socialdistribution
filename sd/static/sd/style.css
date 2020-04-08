@@ -6,6 +6,12 @@
    https://www.w3schools.com/howto/howto_css_fixed_sidebar.asp
 */
 
+
+img{
+  box-sizing: border-box;
+  max-width: 100%
+}
+
 body {
   margin: 0px;
   font-style: normal;

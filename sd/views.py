@@ -31,10 +31,7 @@ def explore(request):
             for p in posts:
                 if p.contentType == 'text/markdown':
                     # make it html
-                    new_content = commonmark.commonmark(p.content)
-                    if '<img' in new_content:
-                        index=new_content.index('<img')
-                        p.content = new_content[index:index+5] + 'class=\"content-image\" ' +new_content[index+5:]
+                    p.content = commonmark.commonmark(p.content)
             results = paginated_result(
                 request, posts, GetPostSerializer, "feed", query="feed")
             is_authenticated = authenticated(request)
