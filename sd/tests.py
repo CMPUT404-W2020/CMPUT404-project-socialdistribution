@@ -169,14 +169,6 @@ class URLTests(SimpleTestCase):
         r = resolve('/notifications')
         self.assertEqual(r.func, notifications)
 
-    def test_get_friendrequest(self):
-        r = resolve('/friendrequest')
-        self.assertEqual(r.func, friendrequest)
-
-    def test_get_media(self):
-        r = resolve('/media/1')
-        self.assertEqual(r.func, get_image)
-
     def test_get_search(self):
         r = resolve('/search')
         self.assertEqual(r.func, search)
@@ -210,6 +202,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
     def test_login_failure_bad_pass(self):
@@ -223,6 +216,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
         assert driver.current_url == self.live_server_url + "login"
+        assert len(driver.find_elements_by_id("error-message")) == 1
 
     def test_login_failure_no_user(self):
         # test unsuccessful login, wrong password
@@ -235,6 +229,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
         assert driver.current_url == self.live_server_url + "login"
+        assert len(driver.find_elements_by_id("error-message")) == 1
 
     def test_side_bar_post_auth(self):
         # test locate sidebar and press all the buttons
@@ -248,6 +243,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         # ensure the page is loaded before continuing
@@ -277,6 +273,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         # ensure the page is loaded before continuing
@@ -307,6 +304,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         # ensure the page is loaded before continuing
@@ -335,6 +333,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         time.sleep(2)
@@ -357,6 +356,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         # ensure the page is loaded before continuing
@@ -383,13 +383,13 @@ class IntegratedTests(StaticLiveServerTestCase):
         content.send_keys("This is the content of my post! It was made by Selenium, isn't that neat?")
 
         content_type = Select(driver.find_element_by_id("id_contentType"))
-        content_type.select_by_visible_text("text/plain")
+        content_type.select_by_visible_text("Plaintext")
 
         privacy = Select(driver.find_element_by_id("id_visibility"))
         privacy.select_by_visible_text("Public")
 
         unlisted = Select(driver.find_element_by_id("id_unlisted"))
-        unlisted.select_by_visible_text("LISTED")
+        unlisted.select_by_visible_text("Listed")
 
         # submit a new post
         submit = driver.find_element_by_id("bluebackground-button")
@@ -408,6 +408,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         time.sleep(2)
@@ -430,6 +431,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         time.sleep(2)
@@ -466,6 +468,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         time.sleep(2)
@@ -481,7 +484,9 @@ class IntegratedTests(StaticLiveServerTestCase):
                 b.click()
                 break
 
-        assert driver.current_url == self.live_server_url + "feed?page=2"
+        time.sleep(2)
+
+        assert driver.current_url == self.live_server_url + "feed?page=2&size=10"
 
         # find back button
         buttons = driver.find_elements_by_xpath('.//span[@id="blue-button"]')
@@ -490,7 +495,9 @@ class IntegratedTests(StaticLiveServerTestCase):
                 b.click()
                 break
 
-        assert driver.current_url == self.live_server_url + "feed?page=1"
+        time.sleep(2)
+
+        assert driver.current_url == self.live_server_url + "feed?page=1&size=10"
         
     def test_account_auth(self):
         # Login
@@ -502,6 +509,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         time.sleep(2)
@@ -541,6 +549,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         time.sleep(2)
@@ -587,6 +596,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         p_word.send_keys("cmput404")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
+        time.sleep(5)
         assert driver.current_url == self.live_server_url + "feed"
 
         time.sleep(2)
@@ -605,7 +615,7 @@ class IntegratedTests(StaticLiveServerTestCase):
         logout_btn.click()
         assert driver.current_url == self.live_server_url + "login"
 
-    def register(self):
+    def test_register(self):
         # find and click register button
         driver = self.driver
         driver.get(self.live_server_url + "login")
@@ -632,35 +642,31 @@ class IntegratedTests(StaticLiveServerTestCase):
         email = driver.find_element_by_name("email")
         email.send_keys("selenium@test.ca")
 
-        submit = driver.find_element_by_id("login-button")
+        submit = driver.find_element_by_id("signup-button")
         submit.click()
         time.sleep(2)
-
-        # check that the user was logged in and brought to the feed
-        assert driver.current_url == self.live_server_url + "feed"
-        time.sleep(2)
-
-        # logout
-        account = driver.find_element_by_xpath('//img[@alt="Account"]')
-        account.click()
-        time.sleep(2)
-        assert driver.current_url == self.live_server_url + "account"
-
-        logout_btn = driver.find_element_by_xpath("//input[@value='LOGOUT']")
-        logout_btn.click()
         assert driver.current_url == self.live_server_url + "login"
 
-        # log back in with the new user
         u_name = driver.find_element_by_name("username")
         u_name.send_keys("Selenium")
         p_word = driver.find_element_by_name("password")
         p_word.send_keys("testing")
         login_btn = driver.find_element_by_id("login-button")
         login_btn.click()
-        assert driver.current_url == self.live_server_url + "feed"
 
-    def edit_account(self):
+        assert len(driver.find_elements_by_id("error-message")) == 1
+
+    def test_edit_account(self):
         driver = self.driver
+        driver.get(self.live_server_url + "login")
+        u_name = driver.find_element_by_name("username")
+        u_name.send_keys("JamesSmith")
+        p_word = driver.find_element_by_name("password")
+        p_word.send_keys("cmput404")
+        login_btn = driver.find_element_by_id("login-button")
+        login_btn.click()
+        time.sleep(5)
+        assert driver.current_url == self.live_server_url + "feed"
 
         time.sleep(2)
         # find account button
@@ -677,17 +683,13 @@ class IntegratedTests(StaticLiveServerTestCase):
         time.sleep(2)
 
         f_name = driver.find_element_by_id("id_first_name")
-        assert f_name.get_attribute("value") == "Selenium"
+        assert f_name.get_attribute("value") == "James"
 
         l_name = driver.find_element_by_id("id_last_name")
-        assert l_name.get_attribute("value") == "Tester"
+        assert l_name.get_attribute("value") == "Smith"
 
         u_name = driver.find_element_by_id("id_username")
-        assert u_name.get_attribute("value") == "Selenium"
+        assert u_name.get_attribute("value") == "JamesSmith"
 
         email = driver.find_element_by_id("id_email")
-        assert email.get_attribute("value") == "selenium@test.ca"
-
-    def test_register_then_edit(self):
-        self.register()
-        self.edit_account()
+        assert email.get_attribute("value") == "James@test.ca"
