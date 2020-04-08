@@ -310,11 +310,6 @@ input[type=checkbox]{
 
 }
 
-img.post-content{
-  box-sizing: border-box;
-  max-width: 100%
-}
-
 .markdown-image{
   max-width: 10em;
   max-height: 10em;
@@ -937,6 +932,11 @@ float: left;
 font-size: small;
 max-height: 300em;
 width: 100%;
+}
+
+img{
+  box-sizing: border-box;
+  max-width: 100%
 }
 
 
