@@ -227,7 +227,7 @@ input[type=checkbox]{
   width: 5em;
 }
 
-img.icons {
+.icons {
   vertical-align: middle;
   float: right;
   padding-bottom: 1.2em;
@@ -934,12 +934,6 @@ max-height: 300em;
 width: 100%;
 }
 
-img{
-  box-sizing: border-box;
-  max-width: 100%
-}
-
-
 /* Notifications Page */
 .notifications-list{
   margin-top: 7em;
@@ -987,4 +981,9 @@ img{
 
 .arrow-down:hover{
   cursor: pointer;
+}
+
+img{
+  box-sizing: border-box;
+  max-width: 100%
 }
