@@ -27,7 +27,7 @@ function loadBar() {
     <div class="header" id="header">
     </div>
 
-    <div class="newusers">
+    <div class="newusers" id="newusers_verify">
 		<h1>Unverified Users</h1>
 		{% for user in unverified %}
 		<hr class="greyline">
@@ -38,7 +38,7 @@ function loadBar() {
 		<br>
 		{% endfor %}
 	</div>
-	<div class="allusers">
+	<div class="newusers" id="allusers_verify">
 		<h1>All Users</h1>
 		{% for user in allusers %}
 		<hr class="greyline">
