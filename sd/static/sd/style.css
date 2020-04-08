@@ -97,17 +97,6 @@ hr {
   margin-bottom: 1em;
 }
 
-
-button{
-  outline:none;
-}
-
-button:hover {
-  cursor: pointer;
-}
-
-
-  /* general form styling */
 input {
   text-align: left;
   height: 1.5em;
@@ -890,7 +879,7 @@ form>.row {
   border: 1.5px solid black;
   color: black;
   float: right;
-}search
+}
 
 .addminusbutton:hover {
   color: #ed9a00;
