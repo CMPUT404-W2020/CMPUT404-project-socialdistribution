@@ -33,8 +33,8 @@ function loadBar() {
 		<hr class="greyline">
 		<span class="searchauthor">{{user.username}}</span>
 		<span class="searchrelation"> From {{user.host.hostname}} </span>
-		<button class="addbutton" id="button1" onclick="confirmVerify('{{user.uuid}}')">+</button>
 		<button class="minusbutton" id="button1" onclick="confirmDeleteUser('{{user.uuid}}')">-</button>
+		<button class="addbutton" id="button1" onclick="confirmVerify('{{user.uuid}}')">+</button>
 		<br>
 		{% endfor %}
 	</div>

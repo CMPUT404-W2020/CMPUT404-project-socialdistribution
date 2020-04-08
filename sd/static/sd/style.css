@@ -842,7 +842,6 @@ form>.row {
   border-radius: 50%;
   font-size: 1.1em;
   font-weight: bold;
-  text-color: grey;
   margin-left: 1em;
   background-color: white;
   width: 1.6em;
@@ -855,6 +854,7 @@ form>.row {
 .addbutton:hover {
   color: #9dc7ba;
   cursor: pointer;
+  border: 1.5px solid #9dc7ba;
 }
 
 .minusbutton{
@@ -862,7 +862,6 @@ form>.row {
   border-radius: 50%;
   font-size: 1.1em;
   font-weight: bold;
-  text-color: grey;
   margin-left: 1em;
   background-color: white;
   width: 1.6em;
@@ -875,6 +874,7 @@ form>.row {
 .minusbutton:hover {
   color: #ed9a00;
   cursor: pointer;
+  border: 1.5px solid #ed9a00;
 }
 
 
@@ -883,7 +883,6 @@ form>.row {
   border-radius: 50%;
   font-size: 1.1em;
   font-weight: bold;
-  text-color: grey;
   margin-left: 1em;
   background-color: white;
   width: 1.6em;

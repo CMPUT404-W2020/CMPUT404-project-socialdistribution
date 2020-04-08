@@ -17,7 +17,6 @@ import social_distribution.settings
 import requests
 import commonmark
 
-
 def explore(request):
     if valid_method(request):
         if request.method == "GET":
@@ -399,7 +398,7 @@ def login(request):
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
                 request.session.flush()
-            except KeyError as k:
+            except:
                 pass
 
         if request.method == "GET":
@@ -441,7 +440,7 @@ def register(request):
                 request.session['authenticated'] = False
                 request.session.pop('auth-user')
                 request.session.flush()
-            except KeyError as k:
+            except:
                 pass
 
         if request.method == "GET":
@@ -461,7 +460,7 @@ def register(request):
             else:
                 errors = "Username taken"
                 return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
-        except IntegrityError as i:
+        except:
             errors = "Username taken"
             return render(request, 'sd/register.html', {'current_user': None, 'authenticated': False, 'errors':errors, 'first_name':info['first_name'], 'last_name':info['last_name'], 'username':info['username'], 'email':info['email']})
     else:
@@ -495,7 +494,7 @@ def rejectrequest(request):
             fr.rejected=True
             fr.save()
             return HttpResponse()
-        except Exception as e:
+        except:
             return HttpResponse(status_code=500)
     return HttpResponse(status_code=405)
 
@@ -597,7 +596,7 @@ def friendrequest(request):
                         return HttpResponse(status_code=500)
 
                 return HttpResponse(json.dumps({'status': 'following'}), content_type='application/json')
-        except Exception as e:
+        except:
             return HttpResponse(status_code=500)
     else:
         return HttpResponse(status_code=405)
@@ -625,7 +624,7 @@ def unfollow(request):
                     fr = FriendRequest.objects.create(to_author=user, from_author=target)
 
                 return HttpResponse()
-            except Exception as e:
+            except:
                 return HttpResponse(status_code=500)
         else:
             return HttpResponse(status_code=401)
@@ -644,7 +643,6 @@ def new_post(request):
 
         else:
             if request.FILES:
-                myfile = request.FILES['image']
                 info = dict(request._post)
                 for i in info:
                     if isinstance(info[i], list):
@@ -653,7 +651,6 @@ def new_post(request):
                 form = NewPostForm(info, request.FILES)
                 if form.is_valid():
                     post = form.save()
-                    post.link_to_image = 'media/'+post.image.name
                     post.save()
                     with open(post.link_to_image, "rb") as image:
                         temp = base64.b64encode(image.read())    
@@ -815,7 +812,6 @@ def edit_account(request):
         if not authenticated(request) or not user:
             return redirect('login')
 
-        details = Author.objects.get(uuid=user.uuid)
         if request.method == "GET":
             form = EditAccountForm(instance=user)
             return render(request, 'sd/edit_account.html', {'form': form, 'current_user': user, 'authenticated': True})
