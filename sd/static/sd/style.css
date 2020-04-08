@@ -938,8 +938,6 @@ max-height: 300em;
 width: 100%;
 }
 
-    index=content.index('<img')
-
 /* Notifications Page */
 .notifications-list{
   margin-top: 7em;
