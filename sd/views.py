@@ -30,8 +30,8 @@ def explore(request):
 
             for p in posts:
                 if p.contentType == 'text/markdown':
-                    # make it html
-                    p.content = commonmark.commonmark(p.content)
+                    temp_content = commonmark.commonmark(p.content)
+                    p.content = temp_content.replace('<img', '<img class=\"content-image\"')
             results = paginated_result(
                 request, posts, GetPostSerializer, "feed", query="feed")
             is_authenticated = authenticated(request)
