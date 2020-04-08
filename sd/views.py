@@ -136,8 +136,8 @@ def feed(request):
                 all_posts = all_posts.distinct().order_by('-published')
                 for p in all_posts:
                     if p.contentType == 'text/markdown':
-                        # make it html
-                        p.content = commonmark.commonmark(p.content)
+                        temp_content = commonmark.commonmark(p.content)
+                        p.content = temp_content.replace('<img', '<img class=\"content-image\"')
                 results = paginated_result(
                     request, all_posts, GetPostSerializer, "feed", query="feed")
                 all_comments = Comment.objects.all().order_by('published')
