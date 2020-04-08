@@ -236,6 +236,11 @@ input[type=checkbox]{
   padding-left: 1em;
 }
 
+.content-image {
+  box-sizing: border-box;
+  max-width: 100%
+}
+
 .icons#lasticon {
   padding-right: 6.5em;
 }
@@ -307,7 +312,6 @@ input[type=checkbox]{
 #postBody {
   color: black;
   text-align: center;
-
 }
 
 .markdown-image{
@@ -934,6 +938,7 @@ max-height: 300em;
 width: 100%;
 }
 
+
 /* Notifications Page */
 .notifications-list{
   margin-top: 7em;
@@ -981,9 +986,4 @@ width: 100%;
 
 .arrow-down:hover{
   cursor: pointer;
-}
-
-img{
-  box-sizing: border-box;
-  max-width: 100%
 }
