@@ -31,7 +31,7 @@ def explore(request):
             for p in posts:
                 if p.contentType == 'text/markdown':
                     # make it html
-                    p.content = commonmark.commonmark(p.content)
+                    p.content = commonmark.commonmark(p.content+'{: style="box-sizing: border-box; max-width: 100%"}')
             results = paginated_result(
                 request, posts, GetPostSerializer, "feed", query="feed")
             is_authenticated = authenticated(request)
