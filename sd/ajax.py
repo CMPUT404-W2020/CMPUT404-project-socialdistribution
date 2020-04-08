@@ -200,11 +200,9 @@ def deletepost(request):
         try:
             data = json.loads(request.body)
             user = get_current_user(request)
-            target = Post.objects.get(uuid=data['target_post'])
-            target.delete()
+            post = Post.objects.get(uuid=data['target_post'])
             if authenticated(request) and user:
-                post = Post.objects.get(uuid=post_id)
-                if post.author.uuid == user.uuid:
+                if post.author == user:
                     post.delete()
                 else:
                     return HttpResponse(status_code=403) #logged in but not correct user
