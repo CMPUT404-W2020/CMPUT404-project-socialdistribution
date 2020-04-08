@@ -236,6 +236,11 @@ input[type=checkbox]{
   padding-left: 1em;
 }
 
+.content-image {
+  box-sizing: border-box;
+  max-width: 100%;
+}
+
 .icons#lasticon {
   padding-right: 6.5em;
 }
@@ -327,12 +332,8 @@ input[type=checkbox]{
 
 
 .feedimage {
-  max-width: 10em;
-  max-height: 10em;
-  display: block;
-  padding-bottom: 2em;
-  margin-left: auto;
-  margin-right: auto;
+  box-sizing: border-box;
+  max-width: 100%;
 }
 
 .navigate-feed{
@@ -932,7 +933,6 @@ font-size: small;
 max-height: 300em;
 width: 100%;
 }
-
 
 /* Notifications Page */
 .notifications-list{

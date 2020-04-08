@@ -33,20 +33,29 @@ function confirmDelete(post) {
     "Are you sure you want to delete this post?\nThis action cannot be undone."
   );
 
+  const data = {
+    target_post: post
+  };
+
   if (yes) {
-    fetch(origin + "/delete/" + post, {
+    fetch(origin + "/deletepost", {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json"
-      }
-    }).then(response => {
-      if (response.status === 403) {
-        console.log("Forbidden: Cannot delete posts of other users");
-      } else {
-        console.log("Post deleted");
-      }
-      location.reload();
-    });
+      },
+      body: JSON.stringify(data)
+    })
+    .then(function(response) {
+      alert(
+        `Post deleted!`
+        );
+        location.reload();
+      })
+      .catch(function(error) {
+        alert(
+          "Couldn't delete post.\nPlease try again later."
+          );
+      });
   }
 }
 
@@ -81,7 +90,7 @@ function confirmDeleteUser(author) {
       })
       .catch(function(error) {
         alert(
-          "Couldn't verify user.\nPlease try again later."
+          "Couldn't delete user.\nPlease try again later."
           );
       });
     }
@@ -97,7 +106,7 @@ function confirmVerify(author) {
     const data = {
       target_author: author
     };
-    fetch(origin + "/verify", {
+    fetch(origin + "/verifyuser", {
       method: "POST",
       headers: {
         "Content-Type": "application/json"
