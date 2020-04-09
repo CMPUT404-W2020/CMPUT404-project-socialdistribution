@@ -465,10 +465,9 @@ def new_post(request):
                 if form.is_valid():
                     post = form.save()
                     post.save()
-                    with open(post.link_to_image, "rb") as image:
+                    with open(post.image, "rb") as image:
                         temp = base64.b64encode(image.read())    
-                    temp = temp.decode('utf-8')    
-                    post.link_to_image = temp
+                    post.link_to_image = temp.decode('utf-8')
                     post.save()
                     return redirect('my_feed')
                 else:
