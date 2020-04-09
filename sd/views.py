@@ -465,7 +465,7 @@ def new_post(request):
                 if form.is_valid():
                     post = form.save()
                     post.save()
-                    with open(post.image, "rb") as image:
+                    with open(post.link_to_image, "rb") as image:
                         temp = base64.b64encode(image.read())    
                     post.link_to_image = temp.decode('utf-8')
                     post.save()
