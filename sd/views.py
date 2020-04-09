@@ -464,6 +464,7 @@ def new_post(request):
                 form = NewPostForm(info, request.FILES)
                 if form.is_valid():
                     post = form.save()
+                    post.link_to_image = 'media/'+post.image.name
                     post.save()
                     with open(post.link_to_image, "rb") as image:
                         temp = base64.b64encode(image.read())    
