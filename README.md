@@ -100,17 +100,19 @@ Choose how you display yourself to others by editing the information on your **_
 
 Every post you create has several **_privacy_** options to choose from. If you set your post to **_public_**, then it will show on the explore page of all other users directly or indirectly connected to the Squawk server. Alternatively, you can restrict your post to the personal feeds of your **_friends_**, **_friends of friends_**, **_server only_**, or a spectific group of users with **_private_** posts. For added privacy, select **_unlisted_** and your post will only be visible to the aforementioned audience if you provide them with the direct link. If you change your mind later, you can easily edit your own posts and change their privacy setting.
 
+All users have unlimited **_image storage_** hosted by our site. When creating a post, upload an image and it will automatically get a url on our site. Right click an image on your feed to copy the url. The image will have all of the privacy settings of the parent post. 
+
 
 ## Admin Access
 
-You can access the admin page through https://cmput-404.herokuapp.com/admin and using the credentials:
+Site administrators have the ability to verify or deny new user requests, edit and delete current users, and add and remove nodes. To verify or delete users, sign in to an admin account and go to https://cmput-404.herokuapp.com/verify. You can then click the plus or minus button to verify or delete users, respectively. 
+
+To edit current users or connect with other nodes, you can access the admin page through https://cmput-404.herokuapp.com/admin.
+
+For both pages, you can use the credentials:
 
     username: warren
     password: cmput404
-
-When running locally, you can run this command to create a superuser and access the admin interface:
-
-    python3 manage.py createsuperuser
 
 ## API Information:
 
