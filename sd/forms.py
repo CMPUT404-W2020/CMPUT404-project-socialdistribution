@@ -64,7 +64,7 @@ class NewPostForm(forms.ModelForm):
             'content': forms.Textarea(attrs={'required':'true'}),
             'title': forms.Textarea(attrs={'required':'true'}),
             'description': forms.Textarea(),
-            'link_to_image': forms.Textarea(attrs={'placeholder':'https://example-photo=link.png'}),
+            # 'link_to_image': forms.Textarea(attrs={'placeholder':'https://example-photo=link.png'}),
             'categories': forms.Textarea(attrs={'placeholder': 'comma-separated tags'}),
             'visibleTo': forms.Textarea(attrs={'placeholder': 'comma-separated usernames'})
         }
